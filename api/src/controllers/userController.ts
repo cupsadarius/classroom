@@ -1,0 +1,73 @@
+/// <reference path="../../typings/tsd.d.ts"/>
+import {Request, Response, Router} from 'express';
+import {userService} from '../services/userService';
+import User from '../models/User';
+const router = Router();
+
+/* GET home page. */
+router.get('/', (req: Request, res: Response) => {
+    userService.getUsers().then(
+        (users: User[]) => {
+            res.status(200);
+            res.json(users);
+        },
+        (error: Object) => {
+            res.status(400);
+            res.json(error);
+        }
+    );
+});
+
+router.post('/', (req: Request, res: Response) => {
+    userService.saveUser(req.body).then(
+        (userId: string) => {
+            res.status(200);
+            res.json(userId);
+        },
+        (error) => {
+            res.status(400);
+            res.json(error);
+        }
+    );
+});
+
+router.get('/:id', (req: Request, res: Response) => {
+    userService.getById(req.params.id).then(
+        (user: User) => {
+            res.status(200);
+            res.json(user);
+        },
+        (error: Object) => {
+            res.status(400);
+            res.json(error);
+        }
+    );
+});
+
+router.put('/:id', (req: Request, res: Response) => {
+    userService.update(req.params.id, req.body).then(
+        (user: User) => {
+            res.status(200);
+            res.json(user);
+        },
+        (error: Object) => {
+            res.status(400);
+            res.json(error);
+        }
+    );
+});
+
+router.delete('/:id', (req: Request, res: Response) => {
+    userService.delete(req.params.id).then(
+        () => {
+            res.status(200);
+            res.end();
+        },
+        (error: Object) => {
+            res.status(400);
+            res.json(error);
+        }
+    );
+});
+
+export default router;

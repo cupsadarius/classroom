@@ -7,7 +7,7 @@ import * as bodyParser from 'body-parser';
 export default function loadExpressConfigs(app: express.Express) {
     app.use(logger('dev'));
     app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.urlencoded({extended: false}));
     app.use(cookieParser()); //tslint:disable-line
     return app;
 }
