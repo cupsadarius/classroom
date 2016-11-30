@@ -1,0 +1,64 @@
+version: '2'
+services:
+  traefik:
+    image: traefik
+    command: --web --docker --docker.domain=$MAIN_DOMAIN --logLevel=DEBUG
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+    networks:
+      - default
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - traefik
+    labels:
+      - "traefik.backend=monitoring"
+      - "traefik.frontend.rule=Host:monitoring.${MAIN_DOMAIN}"
+
+  rethinkdb:
+    image: rethinkdb
+    ports:
+      - 8050:8080
+      - 28015:28015
+    volumes:
+      - ./db:/data
+    depends_on:
+      - traefik
+    labels:
+      - "traefik.backend=db"
+      - "traefik.frontend.rule=Host:db.${MAIN_DOMAIN}"
+    networks:
+      - default
+
+  api:
+    build:
+      context: ./api
+    image: classroom:api
+    depends_on:
+      - traefik
+      - rethinkdb
+    expose:
+      - 80
+    networks:
+      - default
+    volumes:
+      - ./api:/usr/classroom/api
+    labels:
+        - "traefik.backend=api"
+        - "traefik.frontend.rule=Host:api.${MAIN_DOMAIN}"
+volumes:
+  storage:
+    driver: local
+networks:
+  default:
+    external:
+      name: classroom

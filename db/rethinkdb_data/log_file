@@ -1,0 +1,65 @@
+2016-11-30T12:41:19.606154822 0.013360s warn: Parent directory of log file (/data/rethinkdb_data/log_file) could not be synced. (Invalid argument)
+2016-11-30T12:41:19.606416859 0.013622s notice: Recursively removing directory /data/rethinkdb_data/tmp
+2016-11-30T12:41:19.608052782 0.015258s warn: Failed to sync parent directory of "/data/rethinkdb_data/tmp" (errno: 22 - Invalid argument). You may encounter data loss in case of a system failure. (Is the file located on a filesystem that doesn't support directory sync? e.g. VirtualBox shared folders)
+2016-11-30T12:41:19.612651250 0.019859s notice: Initializing directory /data/rethinkdb_data
+2016-11-30T12:41:19.613006946 0.020212s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/data/rethinkdb_data' did not already exist or is empty.)
+2016-11-30T12:41:19.613128588 0.020334s notice: Running rethinkdb 2.3.5~0jessie (GCC 4.9.2)...
+2016-11-30T12:41:19.616089969 0.023297s notice: Running on Linux 4.4.27-boot2docker x86_64
+2016-11-30T12:41:19.616345201 0.023550s notice: Loading data from directory /data/rethinkdb_data
+2016-11-30T12:41:19.625883887 0.033089s warn: Failed to sync parent directory of "/data/rethinkdb_data/tmp/metadata.create" (errno: 22 - Invalid argument). You may encounter data loss in case of a system failure. (Is the file located on a filesystem that doesn't support directory sync? e.g. VirtualBox shared folders)
+2016-11-30T12:41:19.636811138 0.044016s warn: Failed to sync parent directory of "/data/rethinkdb_data/tmp/metadata.create" (errno: 22 - Invalid argument). You may encounter data loss in case of a system failure. (Is the file located on a filesystem that doesn't support directory sync? e.g. VirtualBox shared folders)
+2016-11-30T12:41:19.642185860 0.049391s warn: Failed to sync parent directory of "/data/rethinkdb_data/metadata" (errno: 22 - Invalid argument). You may encounter data loss in case of a system failure. (Is the file located on a filesystem that doesn't support directory sync? e.g. VirtualBox shared folders)
+2016-11-30T12:41:19.646794559 0.054001s info: Automatically using cache size of 784 MB
+2016-11-30T12:41:19.647962478 0.055168s notice: Listening for intracluster connections on port 29015
+2016-11-30T12:41:19.648676304 0.055881s notice: Listening for client driver connections on port 28015
+2016-11-30T12:41:19.648972632 0.056178s notice: Listening for administrative HTTP connections on port 8080
+2016-11-30T12:41:19.650254448 0.057459s notice: Listening on cluster addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%62
+2016-11-30T12:41:19.650799525 0.058005s notice: Listening on driver addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%62
+2016-11-30T12:41:19.651278870 0.058484s notice: Listening on http addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%62
+2016-11-30T12:41:19.651283458 0.058488s notice: Server ready, "4e4af32914aa_rvh" dc85f1ca-e14e-4f16-a14c-84e32148eedd
+2016-11-30T12:42:07.034450318 47.441656s warn: Received invalid clustering header from [::ffff:172.18.0.2]:46230, closing connection -- something might be connecting to the wrong port.
+2016-11-30T12:42:07.358829085 47.766036s warn: Received invalid clustering header from [::ffff:172.18.0.2]:46232, closing connection -- something might be connecting to the wrong port.
+2016-11-30T12:45:36.664264127 0.016536s warn: Parent directory of log file (/data/rethinkdb_data/log_file) could not be synced. (Invalid argument)
+2016-11-30T12:45:36.668670401 0.020944s notice: Running rethinkdb 2.3.5~0jessie (GCC 4.9.2)...
+2016-11-30T12:45:36.672248819 0.024521s notice: Running on Linux 4.4.27-boot2docker x86_64
+2016-11-30T12:45:36.672494732 0.024766s notice: Loading data from directory /data/rethinkdb_data
+2016-11-30T12:45:36.679377320 0.031649s warn: Failed to sync parent directory of "/data/rethinkdb_data/metadata" (errno: 22 - Invalid argument). You may encounter data loss in case of a system failure. (Is the file located on a filesystem that doesn't support directory sync? e.g. VirtualBox shared folders)
+2016-11-30T12:45:36.691636220 0.043908s info: Automatically using cache size of 772 MB
+2016-11-30T12:45:36.695042807 0.047314s notice: Listening for intracluster connections on port 29015
+2016-11-30T12:45:36.695882513 0.048153s notice: Listening for client driver connections on port 28015
+2016-11-30T12:45:36.696538253 0.048809s notice: Listening for administrative HTTP connections on port 8080
+2016-11-30T12:45:36.697668699 0.049939s notice: Listening on cluster addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%74
+2016-11-30T12:45:36.698749545 0.051020s notice: Listening on driver addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%74
+2016-11-30T12:45:36.699542055 0.051813s notice: Listening on http addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%74
+2016-11-30T12:45:36.699695409 0.051966s notice: Server ready, "4e4af32914aa_rvh" dc85f1ca-e14e-4f16-a14c-84e32148eedd
+2016-11-30T13:04:27.312365315 0.011259s warn: Parent directory of log file (/data/rethinkdb_data/log_file) could not be synced. (Invalid argument)
+2016-11-30T13:04:27.316265192 0.015161s notice: Running rethinkdb 2.3.5~0jessie (GCC 4.9.2)...
+2016-11-30T13:04:27.318606653 0.017501s notice: Running on Linux 4.4.27-boot2docker x86_64
+2016-11-30T13:04:27.318719258 0.017612s notice: Loading data from directory /data/rethinkdb_data
+2016-11-30T13:04:27.321344891 0.020238s warn: Failed to sync parent directory of "/data/rethinkdb_data/metadata" (errno: 22 - Invalid argument). You may encounter data loss in case of a system failure. (Is the file located on a filesystem that doesn't support directory sync? e.g. VirtualBox shared folders)
+2016-11-30T13:04:27.342096375 0.040991s info: Automatically using cache size of 724 MB
+2016-11-30T13:04:27.349816579 0.048710s notice: Listening for intracluster connections on port 29015
+2016-11-30T13:04:27.350692373 0.049585s notice: Listening for client driver connections on port 28015
+2016-11-30T13:04:27.351591338 0.050484s notice: Listening for administrative HTTP connections on port 8080
+2016-11-30T13:04:27.352678260 0.051571s notice: Listening on cluster addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%118
+2016-11-30T13:04:27.355130179 0.054023s notice: Listening on driver addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%118
+2016-11-30T13:04:27.356041247 0.054934s notice: Listening on http addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%118
+2016-11-30T13:04:27.356060086 0.054953s notice: Server ready, "4e4af32914aa_rvh" dc85f1ca-e14e-4f16-a14c-84e32148eedd
+2016-11-30T13:09:25.129677444 297.828571s notice: Server got SIGTERM from pid 0, uid 0; shutting down...
+2016-11-30T13:09:25.129827525 297.828720s notice: Shutting down client connections...
+2016-11-30T13:09:25.129901046 297.828794s notice: All client connections closed.
+2016-11-30T13:09:25.129902859 297.828796s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2016-11-30T13:09:25.130078489 297.828971s notice: Storage engine shut down.
+2016-11-30T13:10:54.347213695 0.016526s warn: Parent directory of log file (/data/rethinkdb_data/log_file) could not be synced. (Invalid argument)
+2016-11-30T13:10:54.353874626 0.023187s notice: Running rethinkdb 2.3.5~0jessie (GCC 4.9.2)...
+2016-11-30T13:10:54.357327721 0.026639s notice: Running on Linux 4.4.27-boot2docker x86_64
+2016-11-30T13:10:54.357506931 0.026817s notice: Loading data from directory /data/rethinkdb_data
+2016-11-30T13:10:54.363911200 0.033221s warn: Failed to sync parent directory of "/data/rethinkdb_data/metadata" (errno: 22 - Invalid argument). You may encounter data loss in case of a system failure. (Is the file located on a filesystem that doesn't support directory sync? e.g. VirtualBox shared folders)
+2016-11-30T13:10:54.369609167 0.038920s info: Automatically using cache size of 698 MB
+2016-11-30T13:10:54.371449116 0.040759s notice: Listening for intracluster connections on port 29015
+2016-11-30T13:10:54.372135271 0.041445s notice: Listening for client driver connections on port 28015
+2016-11-30T13:10:54.372670771 0.041980s notice: Listening for administrative HTTP connections on port 8080
+2016-11-30T13:10:54.373652365 0.042962s notice: Listening on cluster addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%138
+2016-11-30T13:10:54.374437502 0.043747s notice: Listening on driver addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%138
+2016-11-30T13:10:54.375272705 0.044582s notice: Listening on http addresses: 127.0.0.1, 172.18.0.3, ::1, fe80::42:acff:fe12:3%138
+2016-11-30T13:10:54.375290707 0.044600s notice: Server ready, "4e4af32914aa_rvh" dc85f1ca-e14e-4f16-a14c-84e32148eedd
