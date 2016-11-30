@@ -18,7 +18,6 @@ export class UserService {
             const repo = this.getUserRepository();
             repo.count({email: user.getEmail()}).then((count: number) => {
                 if (!count) {
-                    console.log(user);
                     repo.insert(user).then(
                         (userId: string) => {
                             defer.resolve(userId);
