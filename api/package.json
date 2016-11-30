@@ -1,7 +1,7 @@
 {
   "name": "classroom-api",
   "scripts": {
-    "start": "/usr/classroom/api/node_modules/.bin/gulp"
+    "start": "./loadHosts.sh && /usr/classroom/api/node_modules/.bin/gulp"
   },
   "version": "1.0.0",
   "description": "Api for classroom",
@@ -24,9 +24,9 @@
     "gulp-mocha": "^2.2.0",
     "gulp-tslint": "^6.1.3",
     "gulp-typescript": "^2.10.0",
-    "mongoose": "^4.6.8",
     "morgan": "~1.6.1",
     "q": "^1.4.1",
+    "rethinkdb": "^2.3.3",
     "serve-favicon": "~2.3.0",
     "superagent": "^1.7.1",
     "tsd": "^0.6.5",

@@ -18,6 +18,7 @@ COPY package.json /usr/classroom/api/
 RUN npm install
 
 COPY . /usr/classroom/api
+
 RUN ./node_modules/.bin/gulp build
 
 CMD [ "npm", "run", "-s", "start"]

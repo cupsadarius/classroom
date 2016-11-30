@@ -2,10 +2,19 @@
 import {Request, Response} from 'express';
 import * as express from 'express';
 import loadExpressConfigs from './configs/express';
+import initDb from './configs/rethink';
 import router from './configs/router';
 // import helpers
 import ErrorWithStatus from './helpers/ErrorWithStatus';
 
+initDb().then(
+  () => {
+    console.log('DB initialized successfully');
+  },
+  (err) => {
+    console.log('DB failed to load', err);
+  }
+);
 // init app
 let app = express();
 

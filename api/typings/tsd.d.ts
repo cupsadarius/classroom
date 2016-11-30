@@ -11,3 +11,5 @@
 /// <reference path="mocha/mocha.d.ts" />
 /// <reference path="mongoose/mongoose.d.ts" />
 /// <reference path="es6-shim/es6-shim.d.ts" />
+/// <reference path="q/q.d.ts" />
+/// <reference path="rethinkdb/rethinkdb.d.ts" />
