@@ -25,7 +25,7 @@ app.use((req: Request, res: Response, next: Function) => {
 // error handlers
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (process.env.APP_ENV === 'development') {
   app.use((err: ErrorWithStatus, req: Request, res: Response, next: Function) => {
     res.status(err.status || 500);
     res.json({

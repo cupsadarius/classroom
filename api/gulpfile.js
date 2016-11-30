@@ -20,6 +20,8 @@ gulp.task("lint", () =>
         .pipe(tslint.report())
 );
 
+gulp.task('build', ['ts']);
+
 gulp.task('clean', function () {
     return gulp
         .src([
