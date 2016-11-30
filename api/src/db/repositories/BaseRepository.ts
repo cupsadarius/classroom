@@ -34,15 +34,17 @@ export default class BaseRepository {
         const defer = Q.defer();
         r.table(this.table).insert(data)
             .run(this.connection, (err: Object, result: DbResult) => {
+                console.log(err, result);
                 if (err) {
-                    return defer.reject(err);
+                    defer.reject(err);
+                } else {
+                    defer.resolve(result.generated_keys[0]);
                 }
-                defer.resolve(result.generated_keys[0]);
             });
         return defer.promise;
     }
 
-    public update(filter: Object, data: Object) {
+    public update(filter: Object | string, data: Object) {
         const defer = Q.defer();
         if (typeof filter === 'string') {
             filter = {id: filter};
@@ -80,10 +82,21 @@ export default class BaseRepository {
         return defer.promise;
     }
 
-    public getAll(ids: string[]) {
+    public getAllByIds(ids: string[]) {
         const defer = Q.defer();
         const query = r.table(this.table);
         query.getAll.apply(query, ids).run(this.connection, (err: Object, result: Cursor) => {
+            if (err) {
+                return defer.reject(err);
+            }
+            defer.resolve(result.toArray());
+        });
+        return defer.promise;
+    }
+
+    public getAll() {
+        const defer = Q.defer();
+        r.table(this.table).run(this.connection, (err: Object, result: Cursor) => {
             if (err) {
                 return defer.reject(err);
             }

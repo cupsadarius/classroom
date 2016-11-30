@@ -39,7 +39,7 @@ export class Database extends EventEmitter {
     }
 
     public getRepo(name: string): BaseRepository {
-        const repo: BaseRepository = repos[name] as BaseRepository;
+        const repo: BaseRepository = repos[name];
         repo.setConnection(this.connection);
         return repo;
     }
