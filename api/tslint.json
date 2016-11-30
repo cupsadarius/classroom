@@ -1,0 +1,183 @@
+{
+  "extends": ["tslint:latest"],
+  "rulesDirectory": [
+    "node_modules/tslint-microsoft-contrib"
+  ],
+  "rules": {
+    "class-name": true,
+    "comment-format": [
+      true,
+      "check-space"
+    ],
+    "curly": true,
+    "indent": [
+      true,
+      "spaces"
+    ],
+    "interface-name": [true, "never-prefix"],
+    "max-line-length": [false],
+    "member-access": true,
+    "member-ordering": [true, "variables-before-functions"],
+    "new-parens": true,
+    "no-any": true,
+    "no-duplicate-variable": true,
+    "no-eval": true,
+    "no-inferrable-types": true,
+    "no-internal-module": true,
+    "no-invalid-this": [true, "check-function-in-method"],
+    "no-shadowed-variable": true,
+    "no-trailing-whitespace": true,
+    "no-var-keyword": true,
+    "no-var-requires": true,
+    "object-literal-sort-keys": false,
+    "one-line": [
+      true,
+      "check-open-brace",
+      "check-whitespace"
+    ],
+    "ordered-imports":[false, "lowercase-first"],
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "semicolon": [
+      true,
+      "always"
+    ],
+    "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
+    "typedef-whitespace": [
+      true,
+      {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      }
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords"
+    ],
+    "whitespace": [
+      true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-separator",
+      "check-type"
+    ],
+
+    // Microsoft Contrib Rules (To be further evaluated)
+    "promise-must-complete": true,
+    "prefer-const": true,
+    "no-empty-interfaces": true,
+    "no-empty-line-after-opening-brace": true,
+
+    /*
+     * Security Rules. The following rules should be turned on because they find security issues
+     * or are recommended in the Microsoft Secure Development Lifecycle (SDL)
+     */
+    "no-banned-terms": true,
+    "no-cookies": true,
+    "no-delete-expression": true,
+    "no-disable-auto-sanitization": true,
+    "no-document-domain": true,
+    "no-document-write": true,
+    "no-duplicate-key": true,
+
+    "no-exec-script": true,
+    "no-function-constructor-with-string-args": true,
+    "no-inner-html": true,
+    "no-octal-literal": true,
+    "no-reserved-keywords": false,
+    "no-string-based-set-immediate": true,
+    "no-string-based-set-interval": true,
+    "no-string-based-set-timeout": true,
+
+    /**
+      * Common Bugs and Correctness. The following rules should be turned on because they find
+      * common bug patterns in the code or enforce type safety.
+      */
+    "chai-vague-errors": true,
+    "forin": true,
+    "jquery-deferred-must-complete": true,
+    "label-position": true,
+    "label-undefined": true,
+    "mocha-avoid-only": true,
+    "no-arg": true,
+    "no-backbone-get-set-outside-model": false,
+    "no-bitwise": true,
+    "no-conditional-assignment": true,
+    "no-console": [false, "debug", "info", "log", "time", "timeEnd", "trace"],
+    "no-constant-condition": true,
+    "no-control-regex": true,
+    "no-debugger": true,
+    "no-duplicate-case": true,
+    "no-empty": true,
+    "no-increment-decrement": false,
+    "no-invalid-regexp": true,
+    "no-jquery-raw-elements": true,
+    "no-regex-spaces": true,
+    "no-sparse-arrays": true,
+    "no-stateless-class": true,
+    "no-string-literal": true,
+    "no-unnecessary-bind": true,
+    "no-unnecessary-override": true,
+    "no-unused-expression": true,
+    "no-unused-variable": [true],
+    "no-use-before-declare": true,
+    "no-with-statement": true,
+    "radix": true,
+    "switch-default": true,
+    "use-isnan": true,
+    "use-named-parameter": true,
+    "valid-typeof": true,
+
+    /**
+      * Code Clarity. The following rules should be turned on because they make the code
+      * generally more clear to the reader.
+      */
+    "export-name": false,
+    "function-name": true,
+    "import-name": false,
+    "jsdoc-format": true,
+    "max-func-body-length": [true, 100, {"ignore-parameters-to-function-regex": "describe"}],
+    "missing-jsdoc": false,
+    "no-construct": true,
+    "no-constructor-vars": true,
+    "no-default-export": false,
+    "no-for-in": true,
+    "no-function-expression": true,
+    "no-null-keyword": false, // turn no-null-keyword off and use undefined to mean not initialized and null to mean without a value
+    "no-require-imports": true,
+    "no-typeof-undefined": true,
+    "no-unnecessary-local-variable": true,
+    "no-var-self": true,
+    "one-variable-per-declaration": true,
+    "prefer-array-literal": true,
+
+    /**
+      * Whitespace related rules. The only recommended whitespace strategy is to pick a single format and
+      * be consistent.
+      */
+    "align": [true, "parameters", "arguments", "statements"],
+    "eofline": true,
+    "no-consecutive-blank-lines": true,
+
+    /**
+      * Controversial/Configurable rules.
+      */
+    "ban": false,                // only enable this if you have some code pattern that you want to ban
+    "no-namespace": false,       // only enable this if you are not using modules/namespaces
+    "no-reference": false,        // in general you should use a module system and not /// reference imports
+    "no-unexternalized-strings": false, // the VS Code team has a specific localization process that this rule enforces
+    // pick one of the two following type-cast formats and use it consistently
+    "prefer-type-cast": false,
+    "no-angle-bracket-type-assertion": true
+  }
+}

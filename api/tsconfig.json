@@ -1,0 +1,30 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "declaration": true,
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outDir": "_compiled",
+    "inlineSourceMap": false,
+    "sourceMap": true,
+    "target": "ES5",
+    "rootDir": ".",
+    "noFallthroughCasesInSwitch": true,
+    "allowJs": false
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot",
+    "_compiled",
+    "tools",
+    "bin"
+  ],
+  "include": [
+    "tests/*.ts","tests/**/*.ts", "src/**/*.ts"
+  ],
+  "atom": {
+    "rewriteTsconfig": false
+  }
+}
