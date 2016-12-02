@@ -34,7 +34,6 @@ export default class BaseRepository {
         const defer = Q.defer();
         r.table(this.table).insert(data)
             .run(this.connection, (err: Object, result: DbResult) => {
-                console.log(err, result);
                 if (err) {
                     defer.reject(err);
                 } else {
@@ -54,7 +53,7 @@ export default class BaseRepository {
                 if (err) {
                     return defer.reject(err);
                 }
-                defer.resolve(result.replaced);
+                defer.resolve(result.replaced || result.unchanged);
             });
         return defer.promise;
     }
@@ -77,7 +76,11 @@ export default class BaseRepository {
             if (err) {
                 return defer.reject(err);
             }
-            defer.resolve(result);
+            if (result) {
+                defer.resolve(result);
+            } else {
+                defer.reject(null);
+            }
         });
         return defer.promise;
     }
@@ -89,7 +92,11 @@ export default class BaseRepository {
             if (err) {
                 return defer.reject(err);
             }
-            defer.resolve(result.toArray());
+            if (result) {
+                defer.resolve(result.toArray());
+            } else {
+                defer.reject(null);
+            }
         });
         return defer.promise;
     }
@@ -100,7 +107,11 @@ export default class BaseRepository {
             if (err) {
                 return defer.reject(err);
             }
-            defer.resolve(result.toArray());
+            if (result) {
+                defer.resolve(result.toArray());
+            } else {
+                defer.reject(null);
+            }
         });
         return defer.promise;
     }
@@ -116,7 +127,11 @@ export default class BaseRepository {
                     return defer.reject(err);
                 }
 
-                defer.resolve(result.toArray());
+                if (result) {
+                    defer.resolve(result.toArray());
+                } else {
+                    defer.reject(null);
+                }
             });
         return defer.promise;
     }

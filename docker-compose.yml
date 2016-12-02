@@ -53,8 +53,10 @@ services:
     volumes:
       - ./api:/usr/classroom/api
     labels:
-        - "traefik.backend=api"
-        - "traefik.frontend.rule=Host:api.${MAIN_DOMAIN}"
+      - "traefik.backend=api"
+      - "traefik.frontend.rule=Host:api.${MAIN_DOMAIN}"
+    environment:
+      - "SECRET=${SECRET}"
 volumes:
   storage:
     driver: local

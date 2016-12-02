@@ -22,12 +22,12 @@ export class UserService {
                         (userId: string) => {
                             defer.resolve(userId);
                         },
-                        (error: Object) => {
-                            defer.reject(error);
+                        () => {
+                            defer.reject('Error while inserting user.');
                         }
                     );
                 } else {
-                    defer.reject({message: `An user with the ${user.getEmail()} email address already exists in the datbase.`});
+                    defer.reject(`An user with the ${user.getEmail()} email address already exists in the datbase.`);
                 }
             });
         }
@@ -42,8 +42,8 @@ export class UserService {
             (users: User[]) => {
                 defer.resolve(users);
             },
-            (error: Object) => {
-                defer.reject(error);
+            () => {
+                defer.reject('Error while retrieving users.');
             }
         );
 
@@ -58,8 +58,24 @@ export class UserService {
             (user: User) => {
                 defer.resolve(user);
             },
-            (error: Object) => {
-                defer.reject(error);
+            () => {
+                defer.reject('Error while retrieving user.');
+            }
+        );
+
+        return defer.promise;
+    }
+
+    public getByEmail(email: string, allInfo = false) {
+        const defer = Q.defer();
+        const repo = this.getUserRepository();
+
+        repo.getByEmail(email, allInfo).then(
+            (user: User) => {
+                defer.resolve(user);
+            },
+            () => {
+                defer.reject('Error while retrieving user.');
             }
         );
 
@@ -86,14 +102,14 @@ export class UserService {
                                 defer.resolve(user);
                             }
                         },
-                        (error: Object) => {
-                            defer.reject(error);
+                        () => {
+                            defer.reject('Error while updating users');
                         }
                     );
                 }
             },
-            (error: Object) => {
-                defer.reject(error);
+            () => {
+                defer.reject('Error while retrieving user.');
             }
         );
 
@@ -108,8 +124,8 @@ export class UserService {
             () => {
                 defer.resolve();
             },
-            (error: Object) => {
-                defer.reject(error);
+            () => {
+                defer.reject('Error while deleting user.');
             }
         );
 
