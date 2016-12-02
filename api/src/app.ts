@@ -22,7 +22,7 @@ let app = express();
 app = loadExpressConfigs(app);
 
 // load router
-app.use(router);
+app.use('/v1', router);
 
 // catch 404 and forward to error handler
 app.use((req: Request, res: Response, next: Function) => {
