@@ -20,7 +20,7 @@ export default class User extends BaseModel {
 
     constructor() {
         super();
-        this.roles = [];
+        this.roles = ['ROLE_USER'];
         this.firstName = '';
         this.lastName = '';
         this.email = '';

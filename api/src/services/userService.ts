@@ -14,7 +14,6 @@ export class UserService {
         } else {
             user.setSalt(authService.createSalt());
             user.setPassword(authService.hashPassword(user.getSalt(), data.password));
-            user.setRoles(['ROLE_USER']);
             const repo = this.getUserRepository();
             repo.count({email: user.getEmail()}).then((count: number) => {
                 if (!count) {

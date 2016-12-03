@@ -4,7 +4,7 @@ import {authService} from '../services/authService';
 import ErrorResponse from '../helpers/ErrorResponse';
 import SuccessResponse from '../helpers/SuccessResponse';
 import {authenticated} from '../helpers/midlewares/authenticated';
-import {authorizedWithRoleUser} from '../helpers/midlewares/authorizedWithRole';
+import {authorizedWithRole} from '../helpers/midlewares/authorizedWithRole';
 const router = Router();
 
 /* GET home page. */
@@ -21,7 +21,7 @@ router.post('/authenticate', (req: Request, res: Response) => {
     );
 });
 
-router.get('/current-user', authenticated, authorizedWithRoleUser, (req: Request, res: Response) => {
+router.get('/current-user', authenticated, authorizedWithRole('ROLE_USER'), (req: Request, res: Response) => {
     if (req.user) {
         res.status(200);
         res.json(new SuccessResponse(req.user));

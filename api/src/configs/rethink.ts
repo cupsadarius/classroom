@@ -9,7 +9,6 @@ import DatabaseSchema from '../db/schema';
 const schema = new DatabaseSchema();
 schema.addTable('users', {});
 schema.addTable('blacklist', {});
-
 db.setSchema(schema);
 
 // init database connection
