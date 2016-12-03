@@ -3,4 +3,4 @@
 export MAIN_DOMAIN="classroom.dkr"
 export SECRET="snasdnadnfiaufnwiqnfyq394bfqiyefbiqw3bfqiw"
 
-docker-compose -p classroom -f ./docker-compose.yml up -d
+docker-compose scale $1=$2
