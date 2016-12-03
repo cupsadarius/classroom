@@ -15,3 +15,5 @@
 /// <reference path="rethinkdb/rethinkdb.d.ts" />
 /// <reference path="jsonwebtoken/jsonwebtoken.d.ts" />
 /// <reference path="crypto-js/crypto-js.d.ts" />
+/// <reference path="multer/multer.d.ts" />
+/// <reference path="uuid/uuid.d.ts" />

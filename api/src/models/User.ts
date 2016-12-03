@@ -91,8 +91,8 @@ export default class User extends BaseModel {
         }
     }
 
-    public validate(): boolean {
-        let error = false;
+    public isValid(): boolean {
+        let error = true;
 
         if (this.firstName.length < 3) {
             this.errors.firstName = this.generateErrorMessage('first name', this.firstName);

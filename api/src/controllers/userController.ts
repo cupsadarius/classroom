@@ -25,7 +25,7 @@ router.get('/', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, 
 router.post('/', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
     userService.saveUser(req.body).then(
         (userId: string) => {
-            res.status(200);
+            res.status(201);
             res.json(new SuccessResponse(userId));
         },
         (error) => {
@@ -64,7 +64,7 @@ router.put('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Reques
 router.delete('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
     userService.delete(req.params.id).then(
         () => {
-            res.status(200);
+            res.status(204);
             res.end();
         },
         (error: Object) => {

@@ -10,8 +10,7 @@ export class AttendeeService {
     public saveAttendee(data: DbUser, isTeacher = false) {
         const defer = Q.defer();
         const attendee = this.populate(data);
-        console.log(data, isTeacher);
-        if (attendee.validate()) {
+        if (!attendee.isValid()) {
             defer.reject(attendee.getErrors());
         } else {
             attendee.setSalt(authService.createSalt());
@@ -97,7 +96,7 @@ export class AttendeeService {
                 let attendee = this.populate(userData);
                 data.password = data.password ? authService.hashPassword(attendee.getSalt(), data.password) : attendee.getPassword();
                 attendee = this.populate(data, attendee);
-                if (attendee.validate()) {
+                if (!attendee.isValid()) {
                     defer.reject(attendee.getErrors());
                 } else {
                     repo.update(id, attendee).then(

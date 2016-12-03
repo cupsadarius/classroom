@@ -9,7 +9,7 @@ export class UserService {
     public saveUser(data: DbUser) {
         const defer = Q.defer();
         const user = this.populate(data);
-        if (user.validate()) {
+        if (!user.isValid()) {
             defer.reject(user.getErrors());
         } else {
             user.setSalt(authService.createSalt());
@@ -90,7 +90,7 @@ export class UserService {
                 let user = this.populate(userData);
                 data.password = data.password ? authService.hashPassword(user.getSalt(), data.password) : user.getPassword();
                 user = this.populate(data, user);
-                if (user.validate()) {
+                if (!user.isValid()) {
                     defer.reject(user.getErrors());
                 } else {
                     repo.update(id, user).then(

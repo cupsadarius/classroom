@@ -24,7 +24,7 @@ router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER') , (req: Reques
 router.post('/', (req: Request, res: Response) => {
     attendeeService.saveAttendee(req.body).then(
         (userId: string) => {
-            res.status(200);
+            res.status(201);
             res.json(new SuccessResponse(userId));
         },
         (error) => {
@@ -63,7 +63,7 @@ router.put('/:id', authenticated, authorizedWithRole('ROLE_STUDENT'), (req: Requ
 router.delete('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
     attendeeService.delete(req.params.id).then(
         () => {
-            res.status(200);
+            res.status(204);
             res.end();
         },
         (error: Object) => {
