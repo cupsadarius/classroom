@@ -1,19 +1,18 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 import {Request, Response, Router} from 'express';
-import {userService} from '../services/userService';
+import {attendeeService} from '../services/attendeeService';
 import SuccessResponse from '../helpers/SuccessResponse';
 import ErrorResponse from '../helpers/ErrorResponse';
 import {authenticated} from '../helpers/midlewares/authenticated';
 import {authorizedWithRole} from '../helpers/midlewares/authorizedWithRole';
-import User from '../models/User';
+import Attendee from '../models/Attendee';
 const router = Router();
 
-/* GET home page. */
-router.get('/', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
-    userService.getUsers().then(
-        (users: User[]) => {
+router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER') , (req: Request, res: Response) => {
+    attendeeService.getAttendees().then(
+        (teachers: Attendee[]) => {
             res.status(200);
-            res.json(new SuccessResponse(users));
+            res.json(new SuccessResponse(teachers));
         },
         (error: Object) => {
             res.status(400);
@@ -22,8 +21,8 @@ router.get('/', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, 
     );
 });
 
-router.post('/', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
-    userService.saveUser(req.body).then(
+router.post('/', (req: Request, res: Response) => {
+    attendeeService.saveAttendee(req.body).then(
         (userId: string) => {
             res.status(200);
             res.json(new SuccessResponse(userId));
@@ -35,11 +34,11 @@ router.post('/', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request,
     );
 });
 
-router.get('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
-    userService.getById(req.params.id).then(
-        (user: User) => {
+router.get('/:id', authenticated, authorizedWithRole('ROLE_STUDENT'), (req: Request, res: Response) => {
+    attendeeService.getById(req.params.id).then(
+        (teacher: Attendee) => {
             res.status(200);
-            res.json(new SuccessResponse(user));
+            res.json(new SuccessResponse(teacher));
         },
         (error: Object) => {
             res.status(400);
@@ -48,9 +47,9 @@ router.get('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Reques
     );
 });
 
-router.put('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
-    userService.update(req.params.id, req.body).then(
-        (user: User) => {
+router.put('/:id', authenticated, authorizedWithRole('ROLE_STUDENT'), (req: Request, res: Response) => {
+    attendeeService.update(req.params.id, req.body).then(
+        (user: Attendee) => {
             res.status(200);
             res.json(new SuccessResponse(user));
         },
@@ -62,7 +61,7 @@ router.put('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Reques
 });
 
 router.delete('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
-    userService.delete(req.params.id).then(
+    attendeeService.delete(req.params.id).then(
         () => {
             res.status(200);
             res.end();
