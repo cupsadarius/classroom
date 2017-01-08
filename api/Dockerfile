@@ -2,7 +2,7 @@ FROM node:6.5-slim
 # Create app directory
 RUN mkdir -p /usr/classroom/api
 WORKDIR /usr/classroom/api
-EXPOSE 80
+EXPOSE 3000
 
 # Set environment vars
 ENV APP_ENV development
@@ -11,7 +11,7 @@ ENV TZ Europe/Bucharest
 ENV DB_HOST db.classroom.dkr
 ENV DB_PORT 28015
 ENV DB_NAME classroom
-ENV PORT 80
+ENV PORT 3000
 
 # Install app dependencies
 COPY package.json /usr/classroom/api/

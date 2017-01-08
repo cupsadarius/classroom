@@ -1,0 +1,17 @@
+[ignore]
+.*/public/.*
+.*/build/.*
+.*/node_modules/flux/.*
+.*/node_modules/fbjs/.*
+.*/node_modules/babel-.*/.*
+.*/node_modules/.*[^e]\.json$
+.*/node_modules/.*\(lib\|test\).*\.json$
+
+[include]
+
+[libs]
+flow_lib
+
+[options]
+esproposal.class_static_fields=enable
+esproposal.class_instance_fields=enable

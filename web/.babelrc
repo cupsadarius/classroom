@@ -1,0 +1,32 @@
+{
+  "presets": ["es2015-loose", "stage-2", "react"],
+
+  "plugins": [
+    "syntax-class-properties",
+    "transform-class-properties",
+    "transform-es3-property-literals",
+    "syntax-async-functions",
+    "transform-async-to-generator",
+    "syntax-decorators",
+    "transform-decorators",
+    "syntax-function-bind",
+    "transform-function-bind"
+  ],
+
+  "env": {
+    "development": {
+      "plugins": [["react-transform", {
+        "transforms": [{
+          "transform": "react-transform-catch-errors",
+          "imports": [
+            "react",
+            "redbox-react"
+          ]
+        }, {
+          "transform": "livereactload/babel-transform",
+          "imports": ["react"]
+        }]
+      }]]
+    }
+  }
+}

@@ -47,7 +47,7 @@ services:
       - traefik
       - rethinkdb
     expose:
-      - 80
+      - 3000
     networks:
       - default
     volumes:
@@ -57,6 +57,23 @@ services:
       - "traefik.frontend.rule=Host:api.${MAIN_DOMAIN}"
     environment:
       - "SECRET=${SECRET}"
+
+  web:
+    build:
+      context: ./web
+    image: classroom:web
+    depends_on:
+      - traefik
+    ports:
+      - 3000:80
+    networks:
+      - default
+    volumes:
+      - ./web/public:/usr/share/nginx/html
+    labels:
+      - "traefik.backend=web"
+      - "traefik.frontend.rule=Host:web.${MAIN_DOMAIN}"
+
 volumes:
   storage:
     driver: local
