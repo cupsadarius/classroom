@@ -3,8 +3,8 @@ import {Request, Response, Router} from 'express';
 import {authService} from '../services/authService';
 import ErrorResponse from '../helpers/ErrorResponse';
 import SuccessResponse from '../helpers/SuccessResponse';
-import {authenticated} from '../helpers/midlewares/authenticated';
-import {authorizedWithRole} from '../helpers/midlewares/authorizedWithRole';
+import {authenticated} from '../middlewares/authenticated';
+import {authorizedWithRole} from '../middlewares/authorizedWithRole';
 const router = Router();
 
 /* GET home page. */

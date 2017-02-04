@@ -1,7 +1,7 @@
-/// <reference path="../../../typings/tsd.d.ts"/>
+/// <reference path="../../typings/tsd.d.ts"/>
 import {Request, Response} from 'express';
-import {authService} from '../../services/authService';
-import ErrorResponse from '../ErrorResponse';
+import {authService} from '../services/authService';
+import ErrorResponse from '../helpers/ErrorResponse';
 
 export let authenticated = (req: Request, res: Response, next: Function) => {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];

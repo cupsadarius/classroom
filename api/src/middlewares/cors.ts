@@ -1,4 +1,4 @@
-/// <reference path="../../../typings/tsd.d.ts"/>
+/// <reference path="../../typings/tsd.d.ts"/>
 import {Request, Response} from 'express';
 
 export let cors = (req: Request, res: Response, next: Function) => {

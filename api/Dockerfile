@@ -11,7 +11,8 @@ ENV TZ Europe/Bucharest
 ENV DB_HOST db.classroom.dkr
 ENV DB_PORT 28015
 ENV DB_NAME classroom
-ENV PORT 3000
+ENV PORT 80
+ENV SECRET "snasdnadnfiaufnwiqnfyq394bfqiyefbiqw3bfqiw"
 
 # Install app dependencies
 COPY package.json /usr/classroom/api/

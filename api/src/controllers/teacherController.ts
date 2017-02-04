@@ -3,8 +3,8 @@ import {Request, Response, Router} from 'express';
 import {attendeeService} from '../services/attendeeService';
 import SuccessResponse from '../helpers/SuccessResponse';
 import ErrorResponse from '../helpers/ErrorResponse';
-import {authenticated} from '../helpers/midlewares/authenticated';
-import {authorizedWithRole} from '../helpers/midlewares/authorizedWithRole';
+import {authenticated} from '../middlewares/authenticated';
+import {authorizedWithRole} from '../middlewares/authorizedWithRole';
 import Attendee from '../models/Attendee';
 const router = Router();
 

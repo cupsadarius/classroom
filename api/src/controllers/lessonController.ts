@@ -1,8 +1,8 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 import {Request, Response, Router} from 'express';
-import {authenticated} from '../helpers/midlewares/authenticated';
-import {authorizedWithRole} from '../helpers/midlewares/authorizedWithRole';
-import {upload} from '../helpers/midlewares/uploader';
+import {authenticated} from '../middlewares/authenticated';
+import {authorizedWithRole} from '../middlewares/authorizedWithRole';
+import {upload} from '../middlewares/uploader';
 import {lessonService} from '../services/lessonService';
 import ErrorResponse from '../helpers/ErrorResponse';
 import SuccessResponse from '../helpers/SuccessResponse';

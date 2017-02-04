@@ -1,16 +1,13 @@
 version: '2'
 services:
-  traefik:
-    image: traefik
-    command: --web --docker --docker.domain=$MAIN_DOMAIN --logLevel=DEBUG
+  proxy:
+    image: jwilder/nginx-proxy
     ports:
       - 80:80
-      - 8080:8080
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /dev/null:/traefik.toml
     networks:
       - default
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 
   portainer:
     image: portainer/portainer
@@ -19,23 +16,21 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - traefik
-    labels:
-      - "traefik.backend=monitoring"
-      - "traefik.frontend.rule=Host:monitoring.${MAIN_DOMAIN}"
+      - proxy
+    environment:
+      VIRTUAL_HOST: monitoring.classroom.dkr
 
   rethinkdb:
     image: rethinkdb
     ports:
-      - 8050:8080
+      - 8080:8080
       - 28015:28015
     volumes:
       - ./db:/data
     depends_on:
-      - traefik
-    labels:
-      - "traefik.backend=db"
-      - "traefik.frontend.rule=Host:db.${MAIN_DOMAIN}"
+      - proxy
+    environment:
+      VIRTUAL_HOST: db.classroom.dkr
     networks:
       - default
 
@@ -44,35 +39,30 @@ services:
       context: ./api
     image: classroom:api
     depends_on:
-      - traefik
+      - proxy
       - rethinkdb
     expose:
-      - 3000
+      - 80
     networks:
       - default
-    volumes:
-      - ./api:/usr/classroom/api
-    labels:
-      - "traefik.backend=api"
-      - "traefik.frontend.rule=Host:api.${MAIN_DOMAIN}"
     environment:
-      - "SECRET=${SECRET}"
+      VIRTUAL_HOST: api.classroom.dkr
 
   web:
     build:
       context: ./web
     image: classroom:web
     depends_on:
-      - traefik
-    ports:
-      - 3000:80
+      - proxy
+    expose:
+      - 80
     networks:
       - default
-    volumes:
-      - ./web/public:/usr/share/nginx/html
-    labels:
-      - "traefik.backend=web"
-      - "traefik.frontend.rule=Host:web.${MAIN_DOMAIN}"
+    environment:
+      VIRTUAL_HOST: web.classroom.dkr
+#    labels:
+#      - "traefik.backend=web"
+#      - "traefik.frontend.rule=Host:web.${MAIN_DOMAIN}"
 
 volumes:
   storage:
