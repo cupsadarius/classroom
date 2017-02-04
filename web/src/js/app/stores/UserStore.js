@@ -1,7 +1,7 @@
 /* @flow */
 
 import BaseStore, {generateCreateStore} from './BaseStore.js';
-import {UsersLoadedSuccessfullyEvent, SelectUserEvent} from '../events/UserEvents.js';
+import {UsersLoadedSuccessfullyEvent, SelectUserEvent, UserFormErrorsEvent} from '../events/UserEvents.js';
 import User from '../models/User.js';
 export class UserStore extends BaseStore {
   constructor() {
@@ -10,7 +10,8 @@ export class UserStore extends BaseStore {
     this.state = {
       users: null,
       selectedUser: new User(),
-    }
+      errors: null,
+    };
   }
 
   onUsersLoadedSuccessfullyEvent(event: UsersLoadedSuccessfullyEvent) {
@@ -23,6 +24,13 @@ export class UserStore extends BaseStore {
   onSelectUserEvent(event: SelectUserEvent) {
     const state = this.getState();
     state.selectedUser = event.user;
+    this.update(state);
+    this.emitChange();
+  }
+
+  onUserFormErrorsEvent(event: UserFormErrorsEvent) {
+    const state = this.getState();
+    state.errors = event.errors;
     this.update(state);
     this.emitChange();
   }

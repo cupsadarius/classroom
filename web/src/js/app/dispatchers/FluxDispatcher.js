@@ -6,7 +6,7 @@ class FluxDispatcher extends Dispatcher {
       throw new Error('FluxDispatcher.dispatch: no payload was given');
     }
 
-    console.log('UI event dispatched', payload);
+    console.info('Dispatcher: ', payload);
 
     super.dispatch(payload);
   }

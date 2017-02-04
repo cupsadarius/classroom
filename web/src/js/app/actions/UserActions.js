@@ -10,6 +10,12 @@ export class UserActions extends BaseAction {
   selectUser(user: User) {
     this.trigger(new userEvents.SelectUserEvent(user));
   }
+  saveUser(user: User) {
+    this.trigger(new userEvents.SaveUserEvent(user));
+  }
+  deleteUser(userId: String) {
+    this.trigger(new userEvents.DeleteUserEvent(userId));
+  }
 }
 
 export default new UserActions();

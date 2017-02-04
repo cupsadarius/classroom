@@ -26,7 +26,7 @@ export class UserService {
                         }
                     );
                 } else {
-                    defer.reject(`An user with the ${user.getEmail()} email address already exists in the datbase.`);
+                    defer.reject(`An user with the ${user.getEmail()} email address already exists in the database.`);
                 }
             });
         }

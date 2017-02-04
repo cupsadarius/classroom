@@ -7,19 +7,24 @@ import UsersPage from './app/pages/UsersPage.jsx';
 import LessonsPage from './app/pages/LessonsPage.jsx';
 import SessionsPage from './app/pages/SessionsPage.jsx';
 import ContainerPage from './app/pages/ContainerPage.jsx';
+import CategoriesPage from './app/pages/CategoriesPage.jsx';
 import ReactDOM from 'react-dom';
 
 // init api
 import {instantiateAuthApi} from './app/api/AuthApi.js';
 import {instantiateUserApi} from './app/api/UserApi.js';
+import {instantiateCategoryApi} from './app/api/CategoryApi.js';
 
 instantiateAuthApi();
 instantiateUserApi();
+instantiateCategoryApi();
 // init stores
 import {createStore as createAuthStore} from './app/stores/AuthStore.js';
 import {createStore as createUserStore} from './app/stores/UserStore.js';
+import {createStore as createCategoryStore} from './app/stores/CategoryStore.js';
 createAuthStore('auth');
 createUserStore('users');
+createCategoryStore('categories');
 
 export default class App extends BaseComponent {
   render(): React.Element {
@@ -32,6 +37,7 @@ export default class App extends BaseComponent {
           <Route path='users' component={UsersPage}/>
           <Route path='lessons' component={LessonsPage}/>
           <Route path='sessions' component={SessionsPage}/>
+          <Route path='categories' component={CategoriesPage}/>
         </Route>
       </Router>
     );

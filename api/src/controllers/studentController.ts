@@ -63,8 +63,8 @@ router.put('/:id', authenticated, authorizedWithRole('ROLE_STUDENT'), (req: Requ
 router.delete('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
     attendeeService.delete(req.params.id).then(
         () => {
-            res.status(204);
-            res.end();
+            res.status(200);
+            res.json(new SuccessResponse(''));
         },
         (error: Object) => {
             res.status(400);

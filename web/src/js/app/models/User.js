@@ -1,22 +1,22 @@
 /* @flow */
 
 export default class User {
-  id: String;
+  id: ?String;
   firstName: String;
   lastName: String;
   email: String;
-  salt: String;
+  salt: ?String;
   password: String;
   phoneNumber: String;
   roles: String[];
 
   constructor(data) {
-    this.id = '';
+    this.id = null;
     this.roles = ['ROLE_USER'];
     this.firstName = '';
     this.lastName = '';
     this.email = '';
-    this.salt = '';
+    this.salt = null;
     this.password = '';
     this.phoneNumber = '';
     if (data) this.populate(data);

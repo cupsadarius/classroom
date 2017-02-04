@@ -1,6 +1,6 @@
-const DB_HOST = process.env.DB_HOST;
-const DB_PORT = process.env.DB_PORT;
-const DB_NAME = process.env.DB_NAME;
+const DB_HOST = process.env.DB_HOST || 'db.classroom.dkr';
+const DB_PORT = process.env.DB_PORT || '28015';
+const DB_NAME = process.env.DB_NAME || 'classroom';
 
 import * as Q from 'q';
 import {db} from '../db/index';
@@ -10,6 +10,7 @@ const schema = new DatabaseSchema();
 schema.addTable('users', {});
 schema.addTable('blacklist', {});
 schema.addTable('lessons', {});
+schema.addTable('categories', {});
 
 db.setSchema(schema);
 

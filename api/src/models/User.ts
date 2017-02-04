@@ -20,7 +20,7 @@ export default class User extends BaseModel {
 
     constructor() {
         super();
-        this.roles = ['ROLE_USER'];
+        this.roles = null;
         this.firstName = '';
         this.lastName = '';
         this.email = '';
@@ -86,6 +86,9 @@ export default class User extends BaseModel {
     }
 
     public addRole(role: string) {
+        if (!this.roles) {
+            this.roles = [];
+        }
         if (!this.roles.filter((r) => r === role)) {
             this.roles.push(role);
         }

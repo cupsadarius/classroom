@@ -6,6 +6,7 @@ import User from '../../models/User.js';
 export type UserFormProps = {
   user: User,
   save: (user) => void,
+  errors: ?String,
 };
 
 export default class UserForm extends BaseComponent {
@@ -31,7 +32,6 @@ export default class UserForm extends BaseComponent {
   }
 
   handleChange(field, event) {
-    console.log(field, event.target.value);
     const user = this.state.user;
     user[`${field}`] = event.target.value;
     this.setState({user});
@@ -53,7 +53,7 @@ export default class UserForm extends BaseComponent {
 
   render(): React.Component {
     return (
-      <div>
+      <div className="userForm">
         <form>
           <div className="form-group">
             <label htmlFor="firstName">First Name</label>
@@ -94,6 +94,10 @@ export default class UserForm extends BaseComponent {
             <button type="button" className="col-xs-5 col-xs-offset-2 btn btn-default" onClick={this.clearForm.bind(this)}>Clear</button>
           </div>
         </form>
+        <div className="clearfix"></div>
+        <div className="errors">
+          {this.props.errors}
+        </div>
       </div>
     );
   }

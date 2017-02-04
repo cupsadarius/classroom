@@ -5,6 +5,7 @@ export default class Lesson extends BaseModel {
     private title: string;
     private description: string;
     private slides: Slide[];
+    private categoryId: string;
 
     constructor() {
         super();
@@ -41,5 +42,13 @@ export default class Lesson extends BaseModel {
 
     public isValid(): boolean {
         return true;
+    }
+
+    public setCategoryId(categoryId: string) {
+        this.categoryId = categoryId;
+    }
+
+    public getCategoryId(): string {
+        return this.categoryId;
     }
 }

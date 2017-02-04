@@ -1,18 +1,32 @@
 /// <reference path="../../typings/tsd.d.ts"/>
 import {Request, Response, Router} from 'express';
-import {attendeeService} from '../services/attendeeService';
-import SuccessResponse from '../helpers/SuccessResponse';
-import ErrorResponse from '../helpers/ErrorResponse';
 import {authenticated} from '../middlewares/authenticated';
 import {authorizedWithRole} from '../middlewares/authorizedWithRole';
-import Attendee from '../models/Attendee';
+import {categoryService} from '../services/categoryService';
+import ErrorResponse from '../helpers/ErrorResponse';
+import SuccessResponse from '../helpers/SuccessResponse';
+import Category from '../models/Category';
+
 const router = Router();
 
-router.get('/', authenticated, authorizedWithRole('ROLE_ADMIN') , (req: Request, res: Response) => {
-    attendeeService.getAttendees(true).then(
-        (teachers: Attendee[]) => {
+router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
+    categoryService.getAllCategories().then(
+        (categories: Category[]) => {
             res.status(200);
-            res.json(new SuccessResponse(teachers));
+            res.json(new SuccessResponse(categories));
+        },
+        (err: Object) => {
+            res.status(400);
+            res.json(new ErrorResponse(err));
+        }
+    );
+});
+
+router.post('/', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
+    categoryService.addCategory(req.body).then(
+        (categoryId: string) => {
+            res.status(201);
+            res.json(new SuccessResponse(categoryId));
         },
         (error: Object) => {
             res.status(400);
@@ -21,24 +35,11 @@ router.get('/', authenticated, authorizedWithRole('ROLE_ADMIN') , (req: Request,
     );
 });
 
-router.post('/', (req: Request, res: Response) => {
-    attendeeService.saveAttendee(req.body, true).then(
-        (userId: string) => {
-            res.status(201);
-            res.json(new SuccessResponse(userId));
-        },
-        (error) => {
-            res.status(400);
-            res.json(new ErrorResponse(error));
-        }
-    );
-});
-
 router.get('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
-    attendeeService.getById(req.params.id).then(
-        (teacher: Attendee) => {
+    categoryService.getById(req.params.id).then(
+        (category: Category) => {
             res.status(200);
-            res.json(new SuccessResponse(teacher));
+            res.json(new SuccessResponse(category));
         },
         (error: Object) => {
             res.status(400);
@@ -48,10 +49,10 @@ router.get('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Requ
 });
 
 router.put('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
-    attendeeService.update(req.params.id, req.body).then(
-        (user: Attendee) => {
+    categoryService.update(req.params.id, req.body).then(
+        (category: Category) => {
             res.status(200);
-            res.json(new SuccessResponse(user));
+            res.json(new SuccessResponse(category));
         },
         (error: Object) => {
             res.status(400);
@@ -60,8 +61,8 @@ router.put('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Requ
     );
 });
 
-router.delete('/:id', authenticated, authorizedWithRole('ROLE_ADMIN'), (req: Request, res: Response) => {
-    attendeeService.delete(req.params.id).then(
+router.delete('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
+    categoryService.delete(req.params.id).then(
         () => {
             res.status(200);
             res.json(new SuccessResponse(''));
