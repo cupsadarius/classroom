@@ -4,10 +4,15 @@ import BaseComponent, {React} from './BaseComponent.jsx';
 import {Link} from 'react-router';
 import LocalStorage from '../helpers/LocalStorage.js';
 import User from '../models/User.js';
+import {createStore} from '../stores/AuthStore.js';
 
 export default class Sidebar extends BaseComponent {
+  createStore() {
+    return createStore('auth');
+  }
+
   getCurrentUser() {
-    return LocalStorage.get('currentUser') ? new User(JSON.parse(LocalStorage.get('currentUser'))) : null;
+    return this.state.currentUser;
   }
 
   render(): React.Component {

@@ -18,3 +18,13 @@ export class UsersLoadedSuccessfullyEvent {
     this.users = users;
   }
 }
+
+export class SelectUserEvent {
+  className: String;
+  user: User;
+
+  constructor(user: User) {
+    this.className = 'SelectUserEvent';
+    this.user = user;
+  }
+}

@@ -1,0 +1,6 @@
+/.project
+.idea
+api/_compiled
+api/node_modules
+web/public
+web/node_modules

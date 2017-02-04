@@ -19,7 +19,7 @@ export default class User {
     this.salt = '';
     this.password = '';
     this.phoneNumber = '';
-    this.populate(data);
+    if (data) this.populate(data);
   }
 
   getId() {

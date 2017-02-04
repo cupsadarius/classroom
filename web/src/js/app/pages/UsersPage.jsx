@@ -4,7 +4,8 @@ import Sidebar from '../components/Sidebar.jsx';
 import UserForm from '../components/forms/UserForm.jsx';
 import UserActions from '../actions/UserActions.js';
 import {createStore} from '../stores/UserStore.js';
-import MD5 from '../helpers/MD5.js';
+import UsersTable from '../components/users/UsersTable.jsx';
+import User from '../models/User.js';
 
 export default class UsersPage extends BasePage {
 
@@ -16,23 +17,12 @@ export default class UsersPage extends BasePage {
     UserActions.loadUsers();
   }
 
-  getUserRows() {
-    return this.state.users ? this.state.users.map((user, index) => {
-      return (
-        <tr key={user.getId()} className="text-center">
-          <td>{index + 1}</td>
-          <td><img className="img-responsive img-circle" src={`https://www.gravatar.com/avatar/${MD5.hash(user.getEmail())}`} /></td>
-          <td>{`${user.getFirstName()} ${user.getLastName()}`}</td>
-          <td>{user.getEmail()}</td>
-          <td><i className="fa fa-edit"></i></td>
-          <td><i className="fa fa-remove"></i></td>
-        </tr>
-      )
-    }) : null;
+  selectUser(user: User) {
+    UserActions.selectUser(user);
   }
 
+
   render(): React.Element {
-    const userRows = this.getUserRows();
 
     return (
       <div className="row">
@@ -41,20 +31,8 @@ export default class UsersPage extends BasePage {
           <div className="row">
             <div className="col-xs-8">
               <h3>User Management</h3>
-              <table className="table table-responsive table-striped">
-                <thead>
-                  <tr>
-                    <th className="text-center text-capitalize">Index</th>
-                    <th className="text-center text-capitalize">Photo</th>
-                    <th className="text-center text-capitalize">Name</th>
-                    <th className="text-center text-capitalize">Email</th>
-                    <th colSpan="2" className="text-center text-capitalize">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="tab-content">
-                  {userRows}
-                </tbody>
-              </table>
+              <UsersTable users={this.state.users} selectUser={this.selectUser.bind(this)}/>
+
             </div>
             <div className="col-xs-4">
               <h3>{`${this.state.selectedUser ? 'Edit' : 'Add new'} user`}</h3>
