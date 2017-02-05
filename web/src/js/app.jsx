@@ -4,6 +4,8 @@ import BaseComponent, {React} from './app/components/BaseComponent.jsx';
 import LoginPage from './app/pages/LoginPage.jsx';
 import HomePage from './app/pages/HomePage.jsx';
 import UsersPage from './app/pages/UsersPage.jsx';
+import TeachersPage from './app/pages/TeachersPage.jsx';
+import StudentsPage from './app/pages/StudentsPage.jsx';
 import LessonsPage from './app/pages/LessonsPage.jsx';
 import SessionsPage from './app/pages/SessionsPage.jsx';
 import ContainerPage from './app/pages/ContainerPage.jsx';
@@ -34,10 +36,14 @@ export default class App extends BaseComponent {
           <IndexRoute component={LoginPage}/>
           <Route path='login' component={LoginPage}/>
           <Route path='home' component={HomePage}/>
-          <Route path='users' component={UsersPage}/>
-          <Route path='lessons' component={LessonsPage}/>
-          <Route path='sessions' component={SessionsPage}/>
-          <Route path='categories' component={CategoriesPage}/>
+          <Route path='management/'>
+            <Route path='users' component={UsersPage}/>
+            <Route path='teachers' component={TeachersPage}/>
+            <Route path='students' component={StudentsPage}/>
+            <Route path='lessons' component={LessonsPage}/>
+            <Route path='sessions' component={SessionsPage}/>
+            <Route path='categories' component={CategoriesPage}/>
+          </Route>
         </Route>
       </Router>
     );

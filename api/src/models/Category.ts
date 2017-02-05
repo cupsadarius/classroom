@@ -23,4 +23,5 @@ export default class Category extends BaseModel {
     public isValid(): boolean {
         return !!this.name && !!this.description;
     }
+
 }

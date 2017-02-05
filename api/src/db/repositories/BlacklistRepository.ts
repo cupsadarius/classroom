@@ -6,4 +6,4 @@ export class BlacklistRepository extends BaseRepository {
     }
 }
 
-export let blacklistRepository = new BlacklistRepository();
+export const blacklistRepository = new BlacklistRepository();

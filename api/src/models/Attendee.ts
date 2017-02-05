@@ -1,8 +1,8 @@
-import User from './User';
+import User, {UserData} from './User';
 
 export default class Attendee extends User {
-    constructor() {
-        super();
+    constructor(data?: UserData) {
+        super(data);
     }
 
     public setAsTeacher() {

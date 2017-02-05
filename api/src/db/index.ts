@@ -83,4 +83,4 @@ export class Database extends EventEmitter {
 
 }
 
-export let db = new Database();
+export const db = new Database();

@@ -4,7 +4,7 @@ var clean = require('gulp-clean');
 var server = require('gulp-develop-server');
 var mocha = require('gulp-mocha');
 var tslint = require("gulp-tslint");
-var serverTS = ["src/**/*.ts", "tests/*.ts", "tests/**/*.ts", "!node_modules/**", '!bin/**'];
+var serverTS = ["src/**/*.ts", "tests/*.ts", "tests/**/*.ts", "!node_modules/**", '!bin/**', '!typings/**'];
 var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('ts', ['clean'], function() {

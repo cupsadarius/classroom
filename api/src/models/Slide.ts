@@ -37,4 +37,5 @@ export default class Slide extends BaseModel {
     public setType(type: string) {
         this.type = type;
     }
+
 }

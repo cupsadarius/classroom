@@ -15,6 +15,7 @@ export type LessonData = {
     id: string,
     title: string,
     description: string,
+    categoryId: string,
     slides: SlideData[],
 };
 
@@ -32,6 +33,7 @@ export class LessonRepository extends BaseRepository {
                     lesson.setId(lessonItem.id);
                     lesson.setTitle(lessonItem.title);
                     lesson.setDescription(lessonItem.description);
+                    lesson.setCategoryId(lessonItem.categoryId);
                     const slides = lessonItem.slides.map((slideItem: SlideData) => {
                         const slide = new Slide();
                         slide.setId(slideItem.id);
@@ -56,4 +58,4 @@ export class LessonRepository extends BaseRepository {
     }
 }
 
-export let lessonRepository = new LessonRepository();
+export const lessonRepository = new LessonRepository();

@@ -116,4 +116,4 @@ export class CategoryService {
     }
 }
 
-export let categoryService = new CategoryService();
+export const categoryService = new CategoryService();

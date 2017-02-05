@@ -1,36 +1,21 @@
 import BaseRepository from './BaseRepository';
 import * as Q from 'q';
-import User from '../../models/User';
-
-export type DbUser = {
-    id: string;
-    firstName: string,
-    lastName: string,
-    email: string,
-    phoneNumber: string,
-    roles: string[],
-    salt: string,
-    password: string;
-};
+import User, {UserData} from '../../models/User';
+import hydratorFactory from '../hydrators';
 
 export class UserRepository extends BaseRepository {
     constructor() {
         super('users');
+
     }
 
     public getAllUsers() {
         const defer = Q.defer();
+        const hydrator = hydratorFactory.getHydrator(User);
         this.getAll().then(
-            (users: DbUser[]) => {
-                const mapped = users.map((user: DbUser) => {
-                    const userObj = new User();
-                    userObj.setId(user.id);
-                    userObj.setFirstName(user.firstName);
-                    userObj.setLastName(user.lastName);
-                    userObj.setEmail(user.email);
-                    userObj.setPhoneNumber(user.phoneNumber);
-                    userObj.setRoles(user.roles);
-                    return userObj;
+            (users: UserData[]) => {
+                const mapped = users.map((user: UserData) => {
+                    return hydrator.hydrate(new User(), user);
                 });
                 defer.resolve(mapped);
             },
@@ -44,21 +29,15 @@ export class UserRepository extends BaseRepository {
 
     public getByEmail(email: string, allInfo = false) {
         const defer = Q.defer();
+        const hydrator = hydratorFactory.getHydrator(User);
         this.filter({email}).then(
-            (users: DbUser[]) => {
+            (users: UserData[]) => {
                 const user = users.pop();
-                const userObj = new User();
-                userObj.setId(user.id);
-                userObj.setFirstName(user.firstName);
-                userObj.setLastName(user.lastName);
-                userObj.setEmail(user.email);
-                userObj.setPhoneNumber(user.phoneNumber);
-                userObj.setRoles(user.roles);
-                if (allInfo) {
-                    userObj.setPassword(user.password);
-                    userObj.setSalt(user.salt);
+                if (!allInfo) {
+                    user.password = '';
+                    user.salt = '';
                 }
-                defer.resolve(userObj);
+                defer.resolve(hydrator.hydrate(new User(), user));
             },
             (error: Object) => {
                 defer.reject(error);
@@ -70,16 +49,10 @@ export class UserRepository extends BaseRepository {
 
     public getById(id: string) {
         const defer = Q.defer();
+        const hydrator = hydratorFactory.getHydrator(User);
         this.get(id).then(
-            (user: DbUser) => {
-                const userObj = new User();
-                userObj.setId(user.id);
-                userObj.setFirstName(user.firstName);
-                userObj.setLastName(user.lastName);
-                userObj.setEmail(user.email);
-                userObj.setPhoneNumber(user.phoneNumber);
-                userObj.setRoles(user.roles);
-                defer.resolve(userObj);
+            (user: UserData) => {
+                defer.resolve(hydrator.hydrate(new User(), user));
             },
             (error: Object) => {
                 defer.reject(error);
@@ -90,4 +63,4 @@ export class UserRepository extends BaseRepository {
     }
 }
 
-export let userRepository = new UserRepository();
+export const userRepository = new UserRepository();

@@ -11,6 +11,7 @@ schema.addTable('users', {});
 schema.addTable('blacklist', {});
 schema.addTable('lessons', {});
 schema.addTable('categories', {});
+schema.addTable('classrooms', {});
 
 db.setSchema(schema);
 

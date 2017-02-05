@@ -3,7 +3,7 @@ import {Request, Response} from 'express';
 import {authService} from '../services/authService';
 import ErrorResponse from '../helpers/ErrorResponse';
 
-export let authenticated = (req: Request, res: Response, next: Function) => {
+export const authenticated = (req: Request, res: Response, next: Function) => {
     const token = req.body.token || req.query.token || req.headers['x-access-token'];
     if (!token) {
         res.status(401);

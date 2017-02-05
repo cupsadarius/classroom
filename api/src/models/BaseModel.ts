@@ -8,4 +8,5 @@ export default class BaseModel {
     public setId(id: string): void {
         this.id = id;
     }
+
 }

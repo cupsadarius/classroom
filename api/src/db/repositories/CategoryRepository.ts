@@ -54,4 +54,4 @@ export class CategoryRepository extends BaseRepository {
     }
 }
 
-export let categoryRepository = new CategoryRepository();
+export const categoryRepository = new CategoryRepository();

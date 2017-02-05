@@ -97,4 +97,4 @@ export class AuthService {
     }
 }
 
-export let authService = new AuthService();
+export const authService = new AuthService();

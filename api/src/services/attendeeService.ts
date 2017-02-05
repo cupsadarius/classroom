@@ -3,13 +3,15 @@ import * as Q from 'q';
 import Attendee from '../models/Attendee';
 import {authService} from './authService';
 import {db} from '../db/index';
-import {DbUser} from '../db/repositories/UserRepository';
+import {UserData} from '../models/User';
 import {AttendeeRepository} from '../db/repositories/AttendeeRepository';
+import hydratorFactory from '../db/hydrators';
 
 export class AttendeeService {
-    public saveAttendee(data: DbUser, isTeacher = false) {
+    public saveAttendee(data: UserData, isTeacher = false) {
         const defer = Q.defer();
-        const attendee = this.populate(data);
+        const hydrator = hydratorFactory.getHydrator(Attendee);
+        const attendee = hydrator.hydrate(new Attendee(), data) as Attendee;
         if (!attendee.isValid()) {
             defer.reject(attendee.getErrors());
         } else {
@@ -23,7 +25,7 @@ export class AttendeeService {
             const repo = this.getAttendeesRepository();
             repo.count({email: attendee.getEmail()}).then((count: number) => {
                 if (!count) {
-                    repo.insert(attendee).then(
+                    repo.insert(hydrator.dehydrate(attendee)).then(
                         (userId: string) => {
                             defer.resolve(userId);
                         },
@@ -87,19 +89,20 @@ export class AttendeeService {
         return defer.promise;
     }
 
-    public update(id: string, data: DbUser) {
+    public update(id: string, data: UserData) {
         const defer = Q.defer();
         const repo = this.getAttendeesRepository();
 
         repo.get(id).then(
-            (userData: DbUser) => {
-                let attendee = this.populate(userData);
+            (userData: UserData) => {
+                const hydrator = hydratorFactory.getHydrator(Attendee);
+                let attendee = hydrator.hydrate(new Attendee(), userData);
                 data.password = data.password ? authService.hashPassword(attendee.getSalt(), data.password) : attendee.getPassword();
-                attendee = this.populate(data, attendee);
+                attendee = hydrator.hydrate(attendee, data);
                 if (!attendee.isValid()) {
                     defer.reject(attendee.getErrors());
                 } else {
-                    repo.update(id, attendee).then(
+                    repo.update(id, hydrator.dehydrate(attendee)).then(
                         (updated: number) => {
                             if (updated) {
                                 attendee.setPassword('');
@@ -137,24 +140,9 @@ export class AttendeeService {
         return defer.promise;
     }
 
-    private populate(data: DbUser, user?: Attendee): Attendee {
-        const updatedUser = user ? user : new Attendee();
-        if (data.id || updatedUser.getId()) {
-            updatedUser.setId(data.id || updatedUser.getId());
-        }
-        updatedUser.setFirstName(data.firstName || updatedUser.getFirstName());
-        updatedUser.setLastName(data.lastName || updatedUser.getLastName());
-        updatedUser.setEmail(data.email || updatedUser.getEmail());
-        updatedUser.setPhoneNumber(data.phoneNumber || updatedUser.getPhoneNumber());
-        updatedUser.setPassword(data.password || updatedUser.getPassword());
-        updatedUser.setSalt(data.salt || updatedUser.getSalt());
-        updatedUser.setRoles(data.roles || updatedUser.getRoles());
-        return updatedUser;
-    }
-
     private getAttendeesRepository(): AttendeeRepository {
         return db.getRepo('attendeeRepository') as AttendeeRepository;
     }
 }
 
-export let attendeeService = new AttendeeService();
+export const attendeeService = new AttendeeService();

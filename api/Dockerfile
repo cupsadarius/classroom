@@ -1,4 +1,4 @@
-FROM node:6.5-slim
+FROM node:7.3-slim
 # Create app directory
 RUN mkdir -p /usr/classroom/api
 WORKDIR /usr/classroom/api
@@ -15,10 +15,9 @@ ENV PORT 80
 ENV SECRET "snasdnadnfiaufnwiqnfyq394bfqiyefbiqw3bfqiw"
 
 # Install app dependencies
-COPY package.json /usr/classroom/api/
-RUN npm install
-
 COPY . /usr/classroom/api
+
+RUN npm install
 
 RUN ./node_modules/.bin/gulp build
 

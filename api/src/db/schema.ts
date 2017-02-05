@@ -27,14 +27,14 @@ export default class DatabaseSchema extends EventEmitter {
     }
 
     public build() {
-        const promises: Promise<Object>[] = [];
+        const promises: Q.Promise<{}>[] = [];
         for (let i = 0; i < this.tables.length; i++) {
             promises.push(this.buildTable(this.tables[i]));
         }
         return Q.all(promises);
     }
 
-    public buildTable(table: Table): Promise<Object> {
+    public buildTable(table: Table): Q.Promise<{}> {
         const defer = Q.defer();
         rethink.tableList().contains(table.name)
             .do((tableExists: boolean) => {

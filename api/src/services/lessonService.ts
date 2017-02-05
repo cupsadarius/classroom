@@ -59,7 +59,7 @@ export class LessonService {
                 defer.resolve(this.populate(lessonData));
             },
             () => {
-                defer.reject('Failed to retreive lesson.');
+                defer.reject('Failed to retrieve lesson.');
             }
         );
         return defer.promise;
@@ -73,6 +73,7 @@ export class LessonService {
         }
         lesson.setTitle(lessonInfo.title || lesson.getTitle());
         lesson.setDescription(lessonInfo.description || lesson.getDescription());
+        lesson.setCategoryId(lessonInfo.categoryId || lesson.getCategoryId());
         if (slidesData) {
             slides = (slidesData as UploadData[]).map((slideItem: UploadData, index: number) => {
                 const slide = new Slide();
@@ -104,4 +105,4 @@ export class LessonService {
     }
 }
 
-export let lessonService = new LessonService();
+export const lessonService = new LessonService();

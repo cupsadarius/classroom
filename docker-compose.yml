@@ -26,7 +26,7 @@ services:
       - 8080:8080
       - 28015:28015
     volumes:
-      - ./db:/data
+      - storage:/data
     depends_on:
       - proxy
     environment:
@@ -60,9 +60,6 @@ services:
       - default
     environment:
       VIRTUAL_HOST: web.classroom.dkr
-#    labels:
-#      - "traefik.backend=web"
-#      - "traefik.frontend.rule=Host:web.${MAIN_DOMAIN}"
 
 volumes:
   storage:

@@ -40,10 +40,6 @@ export default class Lesson extends BaseModel {
         this.slides.push(slide);
     }
 
-    public isValid(): boolean {
-        return true;
-    }
-
     public setCategoryId(categoryId: string) {
         this.categoryId = categoryId;
     }
@@ -51,4 +47,9 @@ export default class Lesson extends BaseModel {
     public getCategoryId(): string {
         return this.categoryId;
     }
+
+    public isValid(): boolean {
+        return true;
+    }
+
 }

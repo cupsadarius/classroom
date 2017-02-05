@@ -8,6 +8,17 @@ export type UserErrors = {
     phoneNumber?: string,
 };
 
+export type UserData = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    salt: string;
+    password: string;
+    phoneNumber: string;
+    roles: string[];
+}
+
 export default class User extends BaseModel {
     private firstName: string;
     private lastName: string;
@@ -18,7 +29,7 @@ export default class User extends BaseModel {
     private roles: string[];
     private errors: UserErrors;
 
-    constructor() {
+    constructor(data?: UserData) {
         super();
         this.roles = null;
         this.firstName = '';

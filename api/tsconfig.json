@@ -9,7 +9,7 @@
     "outDir": "_compiled",
     "inlineSourceMap": false,
     "sourceMap": true,
-    "target": "ES5",
+    "target": "es5",
     "rootDir": ".",
     "noFallthroughCasesInSwitch": true,
     "allowJs": false

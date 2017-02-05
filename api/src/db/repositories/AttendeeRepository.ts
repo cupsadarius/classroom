@@ -1,22 +1,18 @@
-import {UserRepository, DbUser} from './UserRepository';
+import {UserRepository} from './UserRepository';
 import * as r from 'rethinkdb';
 import * as Q from 'q';
 import Attendee from '../../models/Attendee';
+import {UserData} from '../../models/User';
+import hydratorFactory from '../hydrators';
 
 export class AttendeeRepository extends UserRepository {
     public getAttendeesByRole(role: string) {
         const defer = Q.defer() ;
+        const hydrator = hydratorFactory.getHydrator(Attendee);
         this.filter(r.row('roles').contains(role)).then(
-            (attendees: DbUser[]) => {
-                const mapped = attendees.map((user: DbUser) => {
-                    const attendee = new Attendee();
-                    attendee.setId(user.id);
-                    attendee.setFirstName(user.firstName);
-                    attendee.setLastName(user.lastName);
-                    attendee.setEmail(user.email);
-                    attendee.setPhoneNumber(user.phoneNumber);
-                    attendee.setRoles(user.roles);
-                    return attendee;
+            (attendees: UserData[]) => {
+                const mapped = attendees.map((user: UserData) => {
+                    return hydrator.hydrate(new Attendee(), user);
                 });
                 defer.resolve(mapped);
             },
@@ -29,4 +25,4 @@ export class AttendeeRepository extends UserRepository {
     }
 }
 
-export let attendeeRepository = new AttendeeRepository();
+export const attendeeRepository = new AttendeeRepository();

@@ -93,7 +93,7 @@ export default class User {
   }
 
   hasRole(role) {
-    return this.roles && this.roles.filter((r) => r === role);
+    return this.roles && this.roles.filter((r) => r === role).length;
   }
 
   populate(data) {
