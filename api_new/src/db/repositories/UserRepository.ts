@@ -41,6 +41,10 @@ export class UserRepository extends BaseRepository {
             return e;
         }
     }
+
+    public getMapper(): UserMapper {
+        return this.mapper;
+    }
 }
 
 export const userRepository = new UserRepository();
