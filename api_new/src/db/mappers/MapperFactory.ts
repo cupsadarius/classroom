@@ -1,13 +1,11 @@
 import UserMapper from './UserMapper';
 import AttendeeMapper from './AttendeeMapper';
 import CategoryMapper from './CategoryMapper';
+import LessonMapper from './LessonMapper';
+import SlideMapper from './SlideMapper';
+
 export class MapperFactory {
 
-    /**
-     *
-     * @param className
-     * @returns {UserMapper | AttendeeMapper | CategoryMapper}
-     */
     public getMapper(className: string) {
         switch (className) {
             case 'User': {
@@ -18,6 +16,12 @@ export class MapperFactory {
             }
             case 'Category': {
                 return new CategoryMapper();
+            }
+            case 'Lesson': {
+                return new LessonMapper();
+            }
+            case 'Slide': {
+                return new SlideMapper();
             }
             default: {
                 console.log('No mappers found for the provided entity');

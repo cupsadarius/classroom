@@ -50,6 +50,10 @@ export class AttendeeRepository extends BaseRepository {
             return e;
         }
     }
+
+    public getMapper() {
+        return this.mapper;
+    }
 }
 
 export const attendeeRepository = new AttendeeRepository();

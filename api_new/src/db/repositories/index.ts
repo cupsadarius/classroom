@@ -4,6 +4,7 @@ import {attendeeRepository} from './AttendeeRepository';
 import {blacklistRepository} from './BlacklistRepository';
 import {categoryRepository} from './CategoryRepository';
 import {classroomRepository} from './ClassroomRepository';
+import {lessonRepository} from './LessonRepository';
 
 export const repos: {[key: string]: BaseRepository} = {
     userRepository,
@@ -11,4 +12,5 @@ export const repos: {[key: string]: BaseRepository} = {
     blacklistRepository,
     categoryRepository,
     classroomRepository,
+    lessonRepository,
 };

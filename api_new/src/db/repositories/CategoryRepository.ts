@@ -30,6 +30,10 @@ export class CategoryRepository extends BaseRepository {
             return e;
         }
     }
+
+    public getMapper() {
+        return this.mapper;
+    }
 }
 
 export const categoryRepository = new CategoryRepository();

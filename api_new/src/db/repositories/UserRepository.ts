@@ -21,7 +21,7 @@ export class UserRepository extends BaseRepository {
         }
     }
 
-    public async getByEmail(email: string, stripSensitive = false) {
+    public async getByEmail(email: string, stripSensitive: boolean = false) {
         try {
             const data = (await this.filter({email}) as UserMapping[]).pop();
             if (stripSensitive) {

@@ -140,7 +140,7 @@ export default class BaseRepository {
     /**
      * Method used to search a record in the table.
      * @param filter
-     * @returns {Promise<T>}
+     * @returns {Promise<T[]>}
      */
     public filter(filter: {[key: string]: any}) {
         return new Promise((resolve, reject) => {

@@ -1,11 +1,12 @@
 import BaseModel from './BaseModel';
 import Slide from './Slide';
+import Category from './Category';
 
 export default class Lesson extends BaseModel {
     private title: string;
     private description: string;
     private slides: Slide[];
-    private categoryId: string;
+    private category: Category;
 
     constructor() {
         super();
@@ -40,12 +41,12 @@ export default class Lesson extends BaseModel {
         this.slides.push(slide);
     }
 
-    public setCategoryId(categoryId: string) {
-        this.categoryId = categoryId;
+    public setCategory(category: Category) {
+        this.category = category;
     }
 
-    public getCategoryId(): string {
-        return this.categoryId;
+    public getCategory(): Category {
+        return this.category;
     }
 
 }

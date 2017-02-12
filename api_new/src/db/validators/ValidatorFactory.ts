@@ -1,5 +1,8 @@
 import UserValidator from './UserValidator';
 import DefaultValidator from './DefaultValidator';
+import AttendeeValidator from './AttendeeValidator';
+import LessonValidator from './LessonValidator';
+import CategoryValidator from './CategoryValidator';
 export class ValidatorFactory {
 
     /**
@@ -11,6 +14,15 @@ export class ValidatorFactory {
         switch (className) {
             case 'User': {
                 return new UserValidator();
+            }
+            case 'Attendee': {
+                return new AttendeeValidator();
+            }
+            case 'Lesson': {
+                return new LessonValidator();
+            }
+            case 'Category': {
+                return new CategoryValidator();
             }
             default: {
                 console.log('No validators found for the provided entity');
