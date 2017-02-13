@@ -8,7 +8,7 @@ schema.addTable('blacklist', {});
 schema.addTable('lessons', {});
 schema.addTable('categories', {});
 schema.addTable('classrooms', {});
-
+schema.addTable('sessions', {});
 db.setSchema(schema);
 
 export default () => {
