@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
 import {Router} from 'express';
 import defaultController from '../controllers/defaultController';
 import userController from '../controllers/userController';

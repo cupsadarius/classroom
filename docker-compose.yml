@@ -48,20 +48,6 @@ services:
     environment:
       VIRTUAL_HOST: api.classroom.dkr
 
-  api_new:
-    build:
-      context: ./api_new
-    image: classroom:api_new
-    depends_on:
-      - proxy
-      - rethinkdb
-    expose:
-      - 80
-    networks:
-      - default
-    environment:
-      VIRTUAL_HOST: api_new.classroom.dkr
-
   web:
     build:
       context: ./web

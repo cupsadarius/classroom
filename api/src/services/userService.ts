@@ -1,137 +1,84 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-import * as Q from 'q';
-import User, {UserData} from '../models/User';
-import {authService} from './authService';
-import {db} from '../db/index';
+import UserMapping from '../db/mappers/mappings/UserMapping';
+import User from '../models/User';
+import {db} from '../db';
 import {UserRepository} from '../db/repositories/UserRepository';
-import hydratorFactory from '../db/hydrators';
+import validatorFactory from '../db/validators/ValidatorFactory';
+import UserValidator from '../db/validators/UserValidator';
+import {authService} from './authService';
 
 export class UserService {
-    public saveUser(data: UserData) {
-        const defer = Q.defer();
-        let user = new User();
-        const hydrator = hydratorFactory.getHydrator(User);
-        user = hydrator.hydrate(user, data);
-        if (!user.isValid()) {
-            defer.reject(user.getErrors());
-        } else {
-            user.setSalt(authService.createSalt());
-            user.setPassword(authService.hashPassword(user.getSalt(), data.password));
+    private validator: UserValidator;
+
+    constructor() {
+        this.validator = validatorFactory.getValidator('User') as UserValidator;
+    }
+    public async saveUser(data: UserMapping) {
+        try {
             const repo = this.getUserRepository();
-            repo.count({email: user.getEmail()}).then((count: number) => {
-                if (!count) {
-                    repo.insert(hydrator.dehydrate(user)).then(
-                        (userId: string) => {
-                            defer.resolve(userId);
-                        },
-                        () => {
-                            defer.reject('Error while inserting user.');
-                        }
-                    );
-                } else {
-                    defer.reject(`An user with the ${user.getEmail()} email address already exists in the database.`);
-                }
-            });
+            const user = repo.getMapper().hydrate(new User(), data);
+            if (!this.validator.isValid(user)) {
+                return this.validator.getErrors(user);
+            }
+            user.setSalt(authService.createSalt());
+            user.setPassword(authService.hashPassword(user.getPassword(), data.password));
+            const count = await repo.count({email: user.getEmail()});
+            if (count) {
+                return `An user with the ${user.getEmail()} already exists in the database.`;
+            }
+            return await repo.insert(repo.getMapper().dehydrate(user));
+        } catch (e) {
+            return e;
         }
-        return defer.promise;
     }
 
-    public getUsers() {
-        const defer = Q.defer();
-        const repo = this.getUserRepository();
-        repo.getAllUsers().then(
-            (users: User[]) => {
-                defer.resolve(users);
-            },
-            () => {
-                defer.reject('Error while retrieving users.');
-            }
-        );
-
-        return defer.promise;
+    public async getUsers() {
+        try {
+            return await this.getUserRepository().getAllUsers();
+        } catch (e) {
+            return e;
+        }
     }
 
-    public getById(id: string) {
-        const defer = Q.defer();
-        const repo = this.getUserRepository();
-
-        repo.getById(id).then(
-            (user: User) => {
-                defer.resolve(user);
-            },
-            () => {
-                defer.reject('Error while retrieving user.');
-            }
-        );
-
-        return defer.promise;
+    public async getById(id: string) {
+        try {
+            return await this.getUserRepository().getById(id);
+        } catch (e) {
+            return e;
+        }
     }
 
-    public getByEmail(email: string, allInfo = false) {
-        const defer = Q.defer();
-        const repo = this.getUserRepository();
-
-        repo.getByEmail(email, allInfo).then(
-            (user: User) => {
-                defer.resolve(user);
-            },
-            () => {
-                defer.reject('Error while retrieving user.');
-            }
-        );
-
-        return defer.promise;
+    public async getByEmail(email: string, stripSensitive = false) {
+        try {
+            return await this.getUserRepository().getByEmail(email, stripSensitive);
+        } catch (e) {
+            return e;
+        }
     }
 
-    public update(id: string, data: UserData) {
-        const defer = Q.defer();
-        const repo = this.getUserRepository();
-        const hydrator = hydratorFactory.getHydrator(User);
-        repo.get(id).then(
-            (userData: UserData) => {
-                let user = new User();
-                hydrator.hydrate(user, userData);
-                data.password = data.password ? authService.hashPassword(user.getSalt(), data.password) : user.getPassword();
-                user = hydrator.hydrate(user, data);
-                if (!user.isValid()) {
-                    defer.reject(user.getErrors());
-                } else {
-                    repo.update(id, hydrator.dehydrate(user)).then(
-                        (updated: number) => {
-                            if (updated) {
-                                user.setPassword('');
-                                user.setSalt('');
-                                defer.resolve(user);
-                            }
-                        },
-                        () => {
-                            defer.reject('Error while updating users');
-                        }
-                    );
-                }
-            },
-            () => {
-                defer.reject('Error while retrieving user.');
+    public async update(id: string, data: UserMapping) {
+        try {
+            const repo = this.getUserRepository();
+            let user = await repo.getById(id);
+            data.password = data.password ? authService.hashPassword(user.getSalt(), data.password) : data.password;
+            user = repo.getMapper().hydrate(user, data);
+            if (!this.validator.isValid(user)) {
+                return this.validator.getErrors(user);
             }
-        );
-
-        return defer.promise;
+            const updated = await repo.update({id}, user);
+            if (updated) {
+                return repo.getMapper().dehydrate(user).stripSensitiveInfo();
+            }
+        } catch (e) {
+            return e;
+        }
     }
 
-    public delete(id: string) {
-        const defer = Q.defer();
-        const repo = this.getUserRepository();
-
-        repo.delete([id]).then(
-            () => {
-                defer.resolve();
-            },
-            () => {
-                defer.reject('Error while deleting user.');
-            }
-        );
-
-        return defer.promise;
+    public async delete(id: string) {
+        try {
+            return await this.getUserRepository().delete([id]);
+        } catch (e) {
+            return e;
+        }
     }
 
     private getUserRepository(): UserRepository {

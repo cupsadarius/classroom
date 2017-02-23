@@ -1,18 +1,15 @@
-/// <reference path="../../typings/tsd.d.ts"/>
 import * as crypto from 'crypto';
-import User from '../models/User';
-import {userService} from './userService';
-import * as Q from 'q';
-import * as jwt from 'jsonwebtoken';
 import {db} from '../db';
 import {BlacklistRepository} from '../db/repositories/BlacklistRepository';
+import User from '../models/User';
+import params from '../configs/params';
+import * as jwt from 'jsonwebtoken';
+import {userService} from './userService';
 
 export type authData = {
     username: string,
     password: string,
 };
-
-const SECRET = process.env.SECRET;
 
 export class AuthService {
     public createSalt() {
@@ -24,62 +21,39 @@ export class AuthService {
         return hmac.update(password).digest('hex');
     }
 
-    public authenticate(data: authData) {
-        const defer = Q.defer();
-
-        userService.getByEmail(data.username, true).then(
-            (user: User) => {
-                if (this.passwordsMatch(user, data.password)) {
-                    defer.resolve(this.generateJwtToken(user));
-                } else {
-                    defer.reject('Invalid credentials');
-                }
-            },
-            (error: Object) => {
-                defer.reject(error);
+    public async authenticate(data: authData) {
+        try {
+            const user = await userService.getByEmail(data.username);
+            if (this.passwordsMatch(user, data.password)) {
+                return this.generateJwtToken(user);
+            } else {
+                return 'Invalid credentials.';
             }
-        );
-
-        return defer.promise;
+        } catch (e) {
+            return e;
+        }
     }
 
-    public validate(token: string) {
-        const defer = Q.defer();
-        const repo = this.getBlackistRepository();
-        repo.count({token}).then(
-            (count: number) => {
-                if (!count) {
-                    try {
-                        if (jwt.verify(token, SECRET)) {
-                             defer.resolve(jwt.decode(token, SECRET));
-                        }
-                    } catch (e) {
-                        defer.reject(null);
-                    }
-                } else {
-                    defer.reject(null);
-                }
-            },
-            (error: Object) => {
-                defer.reject(error);
-            }
-        );
+    public async validate(token: string) {
+        try {
+            const exists = await this.getBlackistRepository().count({token});
 
-        return defer.promise;
+            if (!exists && jwt.verify(token, params.SECRET)) {
+                return jwt.decode(token, params.SECRET);
+            }
+        } catch (e) {
+            return e;
+        }
+
+        return false;
     }
 
-    public blacklistToken(token: string) {
-        const defer = Q.defer();
-        const repo = this.getBlackistRepository();
-        repo.insert({token}).then(
-            () => {
-                defer.resolve(true);
-            },
-            (error: Object) => {
-                defer.reject(error);
-            }
-        );
-        return defer.promise;
+    public async blacklistToken(token: string) {
+        try {
+            return await this.getBlackistRepository().insert({token});
+        } catch (e) {
+            return e;
+        }
     }
 
     private passwordsMatch(user: User, password: string): boolean {
@@ -89,12 +63,13 @@ export class AuthService {
     private generateJwtToken(user: User): string {
         user.setPassword('');
         user.setSalt('');
-        return jwt.sign(user, SECRET, {expiresIn: 1440});
+        return jwt.sign(user, params.SECRET, {expiresIn: 1440});
     }
 
     private getBlackistRepository(): BlacklistRepository {
         return db.getRepo('blacklistRepository') as BlacklistRepository;
     }
+
 }
 
 export const authService = new AuthService();

@@ -1,60 +1,47 @@
 import BaseRepository from './BaseRepository';
-import * as Q from 'q';
+import mapperFactory from '../mappers/MapperFactory';
+import LessonMapper from '../mappers/LessonMapper';
+import LessonMapping from '../mappers/mappings/LessonMapping';
 import Lesson from '../../models/Lesson';
-import Slide from '../../models/Slide';
-
-export type SlideData = {
-    id: string,
-    name: string,
-    path: string,
-    type: string,
-    order: number,
-};
-
-export type LessonData = {
-    id: string,
-    title: string,
-    description: string,
-    categoryId: string,
-    slides: SlideData[],
-};
+import Category from '../../models/Category';
 
 export class LessonRepository extends BaseRepository {
+    private mapper: LessonMapper;
+
     constructor() {
         super('lessons');
+        this.mapper = mapperFactory.getMapper('Lesson') as LessonMapper;
     }
 
-    public getAll() {
-        const defer = Q.defer();
-        super.getAll().then(
-            (lessonsData: LessonData[]) => {
-                const mapped = lessonsData.map((lessonItem: LessonData) => {
-                    const lesson = new Lesson();
-                    lesson.setId(lessonItem.id);
-                    lesson.setTitle(lessonItem.title);
-                    lesson.setDescription(lessonItem.description);
-                    lesson.setCategoryId(lessonItem.categoryId);
-                    const slides = lessonItem.slides.map((slideItem: SlideData) => {
-                        const slide = new Slide();
-                        slide.setId(slideItem.id);
-                        slide.setName(slideItem.name);
-                        slide.setPath(slideItem.path);
-                        slide.setType(slideItem.type);
-                        slide.setOrder(slideItem.order);
-                        return slide;
-                    });
-                    lesson.setSlides(slides);
+    public async getAll() {
+        try {
+            const data: LessonMapping[] = await super.getAll() as LessonMapping[];
+            return data.map(async item => await this.mapper.hydrate(new Lesson(), item));
+        } catch (e) {
+            return e;
+        }
+    }
 
-                    return lesson;
-                });
+    public async getById(id: string) {
+        try {
+            const data = await super.get(id) as LessonMapping;
+            return this.mapper.hydrate(new Lesson(), data);
+        } catch (e) {
+            return e;
+        }
+    }
 
-                defer.resolve(mapped);
-            },
-            (error: Object) => {
-                defer.reject(error);
-            }
-        );
-        return defer.promise;
+    public async getByCategory(category: Category) {
+        try {
+            const data = (await this.filter({categoryId: category.getId()}) as LessonMapping[]).pop();
+            return await this.mapper.hydrate(new Lesson(), data);
+        } catch (e) {
+            return e;
+        }
+    }
+
+    public getMapper() {
+        return this.mapper;
     }
 }
 

@@ -1,13 +1,11 @@
-/// <reference path="../../typings/tsd.d.ts" />
-
 import {EventEmitter} from 'events';
-import * as rethink from 'rethinkdb';
+import * as r from 'rethinkdb';
 import {repos} from './repositories';
 import BaseRepository from './repositories/BaseRepository';
 import DatabaseSchema from './schema';
 
 export class Database extends EventEmitter {
-    public connection: Object;
+    public connection: r.Connection;
     public schema: DatabaseSchema;
     public options: {db?: string};
 
@@ -28,7 +26,7 @@ export class Database extends EventEmitter {
 
     public connect(options: {}) {
         this.options = options;
-        rethink.connect(options, (err: Object, conn: Object) => {
+        r.connect(options, (err: Object, conn: r.Connection) => {
             if (err) {
                 this.emit('error', err, 'connection');
             }
@@ -61,22 +59,32 @@ export class Database extends EventEmitter {
     }
 
     public ensureDbExists(name: string, callback: Function) {
-        rethink.dbList().contains(name)
-            .do((databaseExists: boolean) => {
-                return rethink.branch(databaseExists, {dbExists: 1}, rethink.dbCreate(name));
-            })
-            .run(this.connection, () => {
-                callback();
-            });
+        r.dbList().run(this.connection, (err: Object, dbList: string[]) => {
+            if (err) {
+                console.log('failed to get db list', err);
+            } else {
+                const dbExists = Boolean(dbList.filter(dbName => dbName === name).length);
+                if (!dbExists) {
+                    r.dbCreate(name).run(this.connection, (err: Object) => {
+                       if (err) {
+                           console.log('failed to create db', err);
+                       } else {
+                           callback();
+                       }
+                    });
+                } else {
+                    callback();
+                }
+            }
+        });
     }
 
     public ensureSchemaExists(callback: () => void) {
         if (!this.schema) {
             return callback();
         }
-
         this.schema.setConnection(this.connection);
-        this.schema.build().then(callback, (err: Object) => {
+        this.schema.build().then(callback).catch((err: Object) => {
             console.log(err);
         });
     }

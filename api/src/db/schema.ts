@@ -1,9 +1,6 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-
 import {EventEmitter} from 'events';
-import * as rethink from 'rethinkdb';
-import * as Q from 'q';
-
+import * as r from 'rethinkdb';
+import params from '../configs/params';
 export type Table = {
     name: string,
     options: Object,
@@ -11,15 +8,15 @@ export type Table = {
 
 export default class DatabaseSchema extends EventEmitter {
     private tables: Table[];
-    private connection: Object;
+    private connection: r.Connection;
 
     constructor() {
         super();
         this.tables = [];
     }
 
-    public setConnection(conn: Object) {
-        this.connection = conn;
+    public setConnection(connection: r.Connection) {
+        this.connection = connection;
     }
 
     public addTable(name: string, options: Object) {
@@ -27,27 +24,33 @@ export default class DatabaseSchema extends EventEmitter {
     }
 
     public build() {
-        const promises: Q.Promise<{}>[] = [];
+        const promises = [];
         for (let i = 0; i < this.tables.length; i++) {
             promises.push(this.buildTable(this.tables[i]));
         }
-        return Q.all(promises);
+        return Promise.all(promises);
     }
 
-    public buildTable(table: Table): Q.Promise<{}> {
-        const defer = Q.defer();
-        rethink.tableList().contains(table.name)
-            .do((tableExists: boolean) => {
-                return rethink.branch(tableExists, {tableExists: 1}, rethink.tableCreate(table.name, table.options));
-            })
-            .run(this.connection, (err: Object, result: Object) => {
-                    if (err) {
-                        return defer.reject(err);
-                    }
-                    defer.resolve(result);
-                }
-            );
-        return defer.promise;
+    public buildTable(table: Table) {
+        return new Promise((resolve, reject) => {
+           r.db(params.DB_NAME).tableList()
+               .run(this.connection, (err: Object, tableList: string[]) => {
+                  if (err) {
+                      return reject(err);
+                  }
+                  const tableExists = Boolean(tableList.filter(tableName => tableName === table.name).length);
+                  if (!tableExists) {
+                      r.db(params.DB_NAME).tableCreate(table.name, table.options)
+                          .run(this.connection, (err: Object, result: Object) => {
+                              if (err) {
+                                  return reject(err);
+                              }
+                              resolve(result);
+                          });
+                  } else {
+                      resolve(tableExists);
+                  }
+               });
+        });
     }
-
 }

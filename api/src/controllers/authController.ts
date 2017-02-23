@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
 import {Request, Response, Router} from 'express';
 import {authService} from '../services/authService';
 import ErrorResponse from '../helpers/ErrorResponse';
@@ -8,17 +7,16 @@ import {authorizedWithRole} from '../middlewares/authorizedWithRole';
 const router = Router();
 
 /* GET home page. */
-router.post('/authenticate', (req: Request, res: Response) => {
-    authService.authenticate(req.body).then(
-        (token: string) => {
-            res.status(200);
-            res.json(new SuccessResponse(token));
-        },
-        (error: Object) => {
-            res.status(401);
-            res.json(new ErrorResponse(error));
-        }
-    );
+router.post('/authenticate', async (req: Request, res: Response) => {
+    try {
+        const token = await authService.authenticate(req.body);
+        res.status(200);
+        res.json(new SuccessResponse(token));
+    } catch (e) {
+        res.status(401);
+        res.json(new ErrorResponse(e));
+
+    }
 });
 
 router.get('/current-user', authenticated, authorizedWithRole('ROLE_USER'), (req: Request, res: Response) => {
@@ -31,18 +29,14 @@ router.get('/current-user', authenticated, authorizedWithRole('ROLE_USER'), (req
     }
 });
 
-router.get('/logout', (req: Request, res: Response) => {
-    const token = req.body.token || req.query.token || req.headers['x-access-token'];
-    authService.blacklistToken(token).then(
-        () => {
-            res.status(200);
-            res.json(new SuccessResponse('Successfully logged out.'));
-        },
-        (error: Object) => {
-            res.status(400);
-            res.json(new ErrorResponse(error));
-        }
-    );
+router.get('/logout', async (req: Request, res: Response) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
+        await authService.blacklistToken(token);
+    } catch (e) {
+        res.status(400);
+        res.json(new ErrorResponse(e));
+    }
 });
 
 export default router;

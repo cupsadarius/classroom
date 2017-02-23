@@ -1,4 +1,3 @@
-/// <reference path="../../typings/tsd.d.ts"/>
 import {Request, Response} from 'express';
 
 export const cors = (req: Request, res: Response, next: Function) => {

@@ -1,58 +1,43 @@
 var gulp = require('gulp');
-var ts = require('gulp-typescript');
-var clean = require('gulp-clean');
-var server = require('gulp-develop-server');
-var mocha = require('gulp-mocha');
-var tslint = require("gulp-tslint");
-var serverTS = ["src/**/*.ts", "tests/*.ts", "tests/**/*.ts", "!node_modules/**", '!bin/**', '!typings/**'];
-var tsProject = ts.createProject('tsconfig.json');
+var tslint = require('gulp-tslint');
+var del = require('del');
+var exec = require('child_process').exec;
+var nodemon = require('gulp-nodemon');
+var runSequence = require('run-sequence');
 
-gulp.task('ts', ['clean'], function() {
-    return tsProject.src().pipe(ts(tsProject)).pipe(gulp.dest('_compiled'));
+gulp.task('vet', function () {
+  return gulp.src('./src/**/*.ts')
+    .pipe(tslint())
+    .pipe(tslint.report());
 });
-
-gulp.task("lint", () =>
-    gulp.src(['tests/*.ts', 'src/*.ts', 'src/**/*.ts'])
-        .pipe(tslint({
-            formatter: "prose",
-            configuration: "tslint.json"
-        }))
-        .pipe(tslint.report())
-);
-
-gulp.task('build', ['ts']);
 
 gulp.task('clean', function () {
-    return gulp
-        .src([
-            '_compiled/**/*.js',
-            '_compiled/**/*.js.map',
-            '!node_modules/**',
-            '!gulpfile.js',
-            '!bin/**'
-        ], {read: false})
-        .pipe(clean())
+  return del(['./dist/**/*', '!dist']);
 });
 
-gulp.task('server:start', ['lint', 'ts'], function() {
-    server.listen({path: 'bin/server.js'}, function(error) {
-        console.log(error);
-    });
+gulp.task('compile', function (done) {
+  exec('tsc -p src/', function (err, stdout, stderr) {
+    console.log(stdout);
+    done();
+  });
 });
 
-gulp.task('server:restart', ['lint', 'ts'], function() {
-    server.restart();
+gulp.task('build', function (done) {
+  runSequence('vet', 'clean', ['compile'], done);
 });
 
-gulp.task('default', ['server:start'], function() {
-    gulp.watch(serverTS, ['server:restart']);
+gulp.task('build-no-clean', function (done) {
+  runSequence('vet', ['compile'], done);
 });
 
-gulp.task('test', ['ts'], function() {
-    return gulp.src(['_compiled/tests/*Test.js'], { read: false })
-    .pipe(mocha({
-      reporter: 'tap',
-    })).once('end', () => {
-            process.exit();
-    });
-})
+gulp.task('watch', ['build-no-clean'], function () {
+  return gulp.watch(['src/**/*.ts'], ['build-no-clean']);
+});
+
+gulp.task('start', ['watch'], function () {
+  return nodemon({
+    script: 'dist/server.js',
+    watch: 'dist',
+    delay: 1000, // Delay in milliseconds
+  });
+});

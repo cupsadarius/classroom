@@ -1,143 +1,90 @@
-/// <reference path="../../typings/tsd.d.ts"/>
-import * as Q from 'q';
-import Attendee from '../models/Attendee';
-import {authService} from './authService';
-import {db} from '../db/index';
-import {UserData} from '../models/User';
+import {db} from '../db';
 import {AttendeeRepository} from '../db/repositories/AttendeeRepository';
-import hydratorFactory from '../db/hydrators';
+import AttendeeValidator from '../db/validators/AttendeeValidator';
+import validatorFactory from '../db/validators/ValidatorFactory';
+import Attendee from '../models/Attendee';
+import UserMapping from '../db/mappers/mappings/UserMapping';
+import {authService} from './authService';
+import UserData from '../db/mappers/mappings/UserMapping';
 
-export class AttendeeService {
-    public saveAttendee(data: UserData, isTeacher = false) {
-        const defer = Q.defer();
-        const hydrator = hydratorFactory.getHydrator(Attendee);
-        const attendee = hydrator.hydrate(new Attendee(), data) as Attendee;
-        if (!attendee.isValid()) {
-            defer.reject(attendee.getErrors());
-        } else {
-            attendee.setSalt(authService.createSalt());
-            attendee.setPassword(authService.hashPassword(attendee.getSalt(), data.password));
-            if (isTeacher) {
-                attendee.setAsTeacher();
-            } else {
-                attendee.setAsTeacher();
-            }
+export default class AttendeeService {
+    private validator: AttendeeValidator;
+
+    constructor() {
+        this.validator = validatorFactory.getValidator('Attendee') as AttendeeValidator;
+    }
+
+    public async saveAttendee(data: UserMapping, isTeacher = false) {
+        try {
             const repo = this.getAttendeesRepository();
-            repo.count({email: attendee.getEmail()}).then((count: number) => {
-                if (!count) {
-                    repo.insert(hydrator.dehydrate(attendee)).then(
-                        (userId: string) => {
-                            defer.resolve(userId);
-                        },
-                        () => {
-                            defer.reject('Error while inserting attendee.');
-                        }
-                    );
-                } else {
-                    defer.reject(`An attendee with the ${attendee.getEmail()} email address already exists in the datbase.`);
-                }
-            });
+            const attendee = repo.getMapper().hydrate(new Attendee(), data);
+            if (!this.validator.isValid(attendee)) {
+                return this.validator.getErrors(attendee);
+            }
+            attendee.setSalt(authService.createSalt());
+            attendee.setPassword(authService.hashPassword(attendee.getPassword(), data.password));
+            if (isTeacher) {
+                attendee.setAsStudent();
+            }
+            const count = await repo.count({email: attendee.getEmail()});
+            if (count) {
+                return `An attendee with the ${attendee.getEmail()} already exists in the database.`;
+            }
+            return await repo.insert(repo.getMapper().dehydrate(attendee));
+        } catch (e) {
+            return e;
         }
-        return defer.promise;
     }
 
-    public getAttendees(teachers = false) {
-        const defer = Q.defer();
-        const repo = this.getAttendeesRepository();
-
-        repo.getAttendeesByRole(teachers ? 'ROLE_TEACHER' : 'ROLE_STUDENT').then(
-            (attendees: Attendee[]) => {
-                defer.resolve(attendees);
-            },
-            () => {
-                defer.reject('Error while retrieving attendees.');
-            }
-        );
-
-        return defer.promise;
+    public async getAttendees(teachers = false) {
+        try {
+            const repo = this.getAttendeesRepository();
+            return await repo.getAttendeesByRole(teachers ? 'ROLE_TEACHER' : 'ROLE_STUDENT');
+        } catch (e) {
+            return e;
+        }
     }
 
-    public getById(id: string) {
-        const defer = Q.defer();
-        const repo = this.getAttendeesRepository();
-
-        repo.getById(id).then(
-            (attendee: Attendee) => {
-                defer.resolve(attendee);
-            },
-            () => {
-                defer.reject('Error while retrieving attendee.');
-            }
-        );
-
-        return defer.promise;
+    public async getById(id: string) {
+        try {
+            return await this.getAttendeesRepository().getById(id);
+        } catch (e) {
+            return e;
+        }
     }
 
-    public getByEmail(email: string, allInfo = false) {
-        const defer = Q.defer();
-        const repo = this.getAttendeesRepository();
-
-        repo.getByEmail(email, allInfo).then(
-            (attendee: Attendee) => {
-                defer.resolve(attendee);
-            },
-            () => {
-                defer.reject('Error while retrieving attendee.');
-            }
-        );
-
-        return defer.promise;
+    public async getByEmail(email: string, stripSensitive = false) {
+        try {
+            return await this.getAttendeesRepository().getByEmail(email, stripSensitive);
+        } catch (e) {
+            return e;
+        }
     }
 
-    public update(id: string, data: UserData) {
-        const defer = Q.defer();
-        const repo = this.getAttendeesRepository();
-
-        repo.get(id).then(
-            (userData: UserData) => {
-                const hydrator = hydratorFactory.getHydrator(Attendee);
-                let attendee = hydrator.hydrate(new Attendee(), userData);
-                data.password = data.password ? authService.hashPassword(attendee.getSalt(), data.password) : attendee.getPassword();
-                attendee = hydrator.hydrate(attendee, data);
-                if (!attendee.isValid()) {
-                    defer.reject(attendee.getErrors());
-                } else {
-                    repo.update(id, hydrator.dehydrate(attendee)).then(
-                        (updated: number) => {
-                            if (updated) {
-                                attendee.setPassword('');
-                                attendee.setSalt('');
-                                defer.resolve(attendee);
-                            }
-                        },
-                        () => {
-                            defer.reject('Error while updating attendee.');
-                        }
-                    );
-                }
-            },
-            () => {
-                defer.reject('Error while retrieving attendee.');
+    public async update(id: string, data: UserData) {
+        try {
+            const repo = this.getAttendeesRepository();
+            let attendee = await repo.getById(id);
+            data.password = data.password ? authService.hashPassword(attendee.getSalt(), data.password) : data.password;
+            attendee = repo.getMapper().hydrate(attendee, data);
+            if (!this.validator.isValid(attendee)) {
+                return this.validator.getErrors(attendee);
             }
-        );
-
-        return defer.promise;
+            const updated = await repo.update({id}, attendee);
+            if (updated) {
+                return repo.getMapper().dehydrate(attendee).stripSensitiveInfo();
+            }
+        } catch (e) {
+            return e;
+        }
     }
 
-    public delete(id: string) {
-        const defer = Q.defer();
-        const repo = this.getAttendeesRepository();
-
-        repo.delete([id]).then(
-            () => {
-                defer.resolve();
-            },
-            () => {
-                defer.reject('Error while deleting user.');
-            }
-        );
-
-        return defer.promise;
+    public async delete(id: string) {
+        try {
+            return await this.getAttendeesRepository().delete([id]);
+        } catch (e) {
+            return e;
+        }
     }
 
     private getAttendeesRepository(): AttendeeRepository {

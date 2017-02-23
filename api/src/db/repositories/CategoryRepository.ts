@@ -1,56 +1,38 @@
 import BaseRepository from './BaseRepository';
-import * as Q from 'q';
 import Category from '../../models/Category';
-
-export type DbItem = {
-    id: string,
-    name: string,
-    description: string,
-};
+import CategoryMapping from '../mappers/mappings/CategoryMapping';
+import mapperFactory from '../mappers/MapperFactory';
+import CategoryMapper from '../mappers/CategoryMapper';
 
 export class CategoryRepository extends BaseRepository {
+    private mapper: CategoryMapper;
+
     constructor() {
         super('categories');
+        this.mapper = mapperFactory.getMapper('Category') as CategoryMapper;
+
     }
 
-    public getAll() {
-        const defer = Q.defer();
-        super.getAll().then(
-            (categories: DbItem[]) => {
-                const mapped = categories.map((category: DbItem) => {
-                    const categoryObj = new Category();
-                    categoryObj.setId(category.id);
-                    categoryObj.setName(category.name);
-                    categoryObj.setDescription(category.description);
-                    return categoryObj;
-                });
-                defer.resolve(mapped);
-            },
-            (error: Object) => {
-                console.log(error);
-                defer.reject(error);
-            }
-        );
-
-        return defer.promise;
+    public async getAll() {
+        try {
+            const data = await super.getAll() as CategoryMapping[];
+            return data.map(item => this.mapper.hydrate(new Category(), item));
+        } catch (e) {
+            return e;
+        }
     }
 
-    public getById(id: string) {
-        const defer = Q.defer();
-        this.get(id).then(
-            (categoryData: DbItem) => {
-                const category = new Category();
-                category.setId(categoryData.id);
-                category.setName(categoryData.name);
-                category.setDescription(categoryData.description);
-                defer.resolve(category);
-            },
-            (error: Object) => {
-                defer.reject(error);
-            }
-        );
+    public async getById(id: string) {
+        try {
+            const data = await super.get(id) as CategoryMapping;
+            return this.mapper.hydrate(new Category(), data);
+        } catch (e) {
+            return e;
+        }
+    }
 
-        return defer.promise;
+    public getMapper() {
+        return this.mapper;
     }
 }
 

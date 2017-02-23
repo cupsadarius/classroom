@@ -1,9 +1,6 @@
-import User, {UserData} from './User';
+import User from './User';
 
 export default class Attendee extends User {
-    constructor(data?: UserData) {
-        super(data);
-    }
 
     public setAsTeacher() {
         this.addRole('ROLE_STUDENT');

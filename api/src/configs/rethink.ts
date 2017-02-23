@@ -1,9 +1,5 @@
-const DB_HOST = process.env.DB_HOST || 'db.classroom.dkr';
-const DB_PORT = process.env.DB_PORT || '28015';
-const DB_NAME = process.env.DB_NAME || 'classroom';
-
-import * as Q from 'q';
-import {db} from '../db/index';
+import params from './params';
+import {db} from '../db';
 import DatabaseSchema from '../db/schema';
 
 const schema = new DatabaseSchema();
@@ -12,19 +8,17 @@ schema.addTable('blacklist', {});
 schema.addTable('lessons', {});
 schema.addTable('categories', {});
 schema.addTable('classrooms', {});
-
+schema.addTable('sessions', {});
 db.setSchema(schema);
 
-// init database connection
-export default function () {
-  const defer = Q.defer();
-    // wait for db to start
-  db.on('ready', defer.resolve);
-  db.on('error', defer.reject);
-  db.connect({
-    host: DB_HOST,
-    port: DB_PORT,
-    db: DB_NAME,
-  });
-  return defer.promise;
+export default async () => {
+    return new Promise((resolve, reject) => {
+        db.on('ready', resolve);
+        db.on('error', reject);
+        db.connect({
+            host: params.DB_HOST,
+            port: params.DB_PORT,
+            db: params.DB_NAME,
+        });
+    });
 };

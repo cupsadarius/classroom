@@ -1,65 +1,49 @@
 import BaseRepository from './BaseRepository';
-import * as Q from 'q';
-import User, {UserData} from '../../models/User';
-import hydratorFactory from '../hydrators';
+import User from '../../models/User';
+import UserMapping from '../mappers/mappings/UserMapping';
+import UserMapper from '../mappers/UserMapper';
+import mapperFactory from '../mappers/MapperFactory';
 
 export class UserRepository extends BaseRepository {
+    private mapper: UserMapper;
+
     constructor() {
         super('users');
-
+        this.mapper = mapperFactory.getMapper('User') as UserMapper;
     }
 
-    public getAllUsers() {
-        const defer = Q.defer();
-        const hydrator = hydratorFactory.getHydrator(User);
-        this.getAll().then(
-            (users: UserData[]) => {
-                const mapped = users.map((user: UserData) => {
-                    return hydrator.hydrate(new User(), user);
-                });
-                defer.resolve(mapped);
-            },
-            (error: Object) => {
-                defer.reject(error);
-            }
-        );
-
-        return defer.promise;
+    public async getAllUsers() {
+        try {
+            const data = await this.getAll() as UserMapping[];
+            return data.map(userData => this.mapper.hydrate(new User(), userData));
+        } catch (e) {
+            return e;
+        }
     }
 
-    public getByEmail(email: string, allInfo = false) {
-        const defer = Q.defer();
-        const hydrator = hydratorFactory.getHydrator(User);
-        this.filter({email}).then(
-            (users: UserData[]) => {
-                const user = users.pop();
-                if (!allInfo) {
-                    user.password = '';
-                    user.salt = '';
-                }
-                defer.resolve(hydrator.hydrate(new User(), user));
-            },
-            (error: Object) => {
-                defer.reject(error);
+    public async getByEmail(email: string, stripSensitive: boolean = false) {
+        try {
+            const data = (await this.filter({email}) as UserMapping[]).pop();
+            if (stripSensitive) {
+                data.stripSensitiveInfo();
             }
-        );
-
-        return defer.promise;
+            return this.mapper.hydrate(new User(), data);
+        } catch (e) {
+            return e;
+        }
     }
 
-    public getById(id: string) {
-        const defer = Q.defer();
-        const hydrator = hydratorFactory.getHydrator(User);
-        this.get(id).then(
-            (user: UserData) => {
-                defer.resolve(hydrator.hydrate(new User(), user));
-            },
-            (error: Object) => {
-                defer.reject(error);
-            }
-        );
+    public async getById(id: string) {
+        try {
+            const data = await this.get(id) as UserMapping;
+            return this.mapper.hydrate(new User(), data);
+        } catch (e) {
+            return e;
+        }
+    }
 
-        return defer.promise;
+    public getMapper(): UserMapper {
+        return this.mapper;
     }
 }
 

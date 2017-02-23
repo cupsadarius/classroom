@@ -2,7 +2,6 @@ FROM node:7.3-slim
 # Create app directory
 RUN mkdir -p /usr/classroom/api
 WORKDIR /usr/classroom/api
-EXPOSE 3000
 
 # Set environment vars
 ENV APP_ENV development
@@ -18,7 +17,5 @@ ENV SECRET "snasdnadnfiaufnwiqnfyq394bfqiyefbiqw3bfqiw"
 COPY . /usr/classroom/api
 
 RUN npm install
-
-RUN ./node_modules/.bin/gulp build
 
 CMD [ "npm", "run", "-s", "start"]

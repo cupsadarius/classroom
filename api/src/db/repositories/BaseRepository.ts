@@ -1,7 +1,5 @@
-/// <reference path="../../../typings/tsd.d.ts"/>
-
 import * as r from 'rethinkdb';
-import * as Q from 'q';
+import deleteProperty = Reflect.deleteProperty;
 
 type DbResult = {
     deleted: number,
@@ -13,141 +11,166 @@ type DbResult = {
     unchanged: number,
 };
 
-type Cursor = {
-    toArray: () => {};
-};
-
 export default class BaseRepository {
     private table: string;
-    private connection: Object;
+    private connection: r.Connection;
 
     constructor(table: string) {
         this.table = table;
         this.connection = null;
     }
 
-    public setConnection(conn: Object) {
+    public setConnection(conn: r.Connection) {
         this.connection = conn;
     }
 
+    /**
+     * Method used for inserting data into the table.
+     * @param data
+     * @returns {Promise<T>}
+     */
     public insert(data: Object) {
-        const defer = Q.defer();
-        r.table(this.table).insert(data)
-            .run(this.connection, (err: Object, result: DbResult) => {
-                if (err) {
-                    defer.reject(err);
-                } else {
-                    defer.resolve(result.generated_keys[0]);
-                }
-            });
-        return defer.promise;
+       return new Promise((resolve, reject) => {
+          r.table(this.table).insert(data)
+              .run(this.connection, (err: Object, result: DbResult) => {
+                  if (err) {
+                      return reject(err);
+                  }
+                  resolve(result.generated_keys[0]);
+              });
+       });
     }
 
-    public update(filter: Object | string, data: Object) {
-        const defer = Q.defer();
-        if (typeof filter === 'string') {
-            filter = {id: filter};
-        }
-        r.table(this.table).filter(filter).update(data)
-            .run(this.connection, (err: Object, result: DbResult) => {
-                if (err) {
-                    return defer.reject(err);
-                }
-                defer.resolve(result.replaced || result.unchanged);
-            });
-        return defer.promise;
+    /**
+     * Methid used for updating the data inside the table.
+     * @param filter
+     * @param data
+     * @returns {Promise<T>}
+     */
+    public update(filter: {[key: string]: any}, data: Object) {
+        return new Promise((resolve, reject) => {
+            r.table(this.table).filter(filter).update(data)
+                .run(this.connection, (err: Object, result: DbResult) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(result.replaced || result.unchanged);
+                });
+        });
     }
 
+    /**
+     * Method used for deleting data from the table
+     * @param ids
+     * @returns {Promise<T>}
+     */
     public delete(ids: string[]) {
-        const defer = Q.defer();
-        const query = r.table(this.table);
-        query.getAll.apply(query, ids).delete().run(this.connection, (err: Object, result: DbResult) => {
-            if (err) {
-                return defer.reject(err);
-            }
-            defer.resolve(result.deleted);
+        return new Promise((resolve, reject) => {
+            const query = r.table(this.table);
+            query.getAll.apply(query, ids).delete()
+                .run(this.connection, (err: Object, result: DbResult) => {
+                   if (err) {
+                       return reject(err);
+                   }
+                   resolve(result.deleted);
+                });
         });
-        return defer.promise;
     }
 
+    /**
+     * Method used for getting one record from the table.
+     * @param id
+     * @returns {Promise<T>}
+     */
     public get(id: string) {
-        const defer = Q.defer();
-        r.table(this.table).get(id).run(this.connection, (err: Object, result: Cursor) => {
-            if (err) {
-                return defer.reject(err);
-            }
-            if (result) {
-                defer.resolve(result);
-            } else {
-                defer.reject(null);
-            }
-        });
-        return defer.promise;
-    }
-
-    public getAllByIds(ids: string[]) {
-        const defer = Q.defer();
-        const query = r.table(this.table);
-        query.getAll.apply(query, ids).run(this.connection, (err: Object, result: Cursor) => {
-            if (err) {
-                return defer.reject(err);
-            }
-            if (result) {
-                defer.resolve(result.toArray());
-            } else {
-                defer.reject(null);
-            }
-        });
-        return defer.promise;
-    }
-
-    public getAll() {
-        const defer = Q.defer();
-        r.table(this.table).run(this.connection, (err: Object, result: Cursor) => {
-            if (err) {
-                return defer.reject(err);
-            }
-            if (result) {
-                defer.resolve(result.toArray());
-            } else {
-                defer.reject(null);
-            }
-        });
-        return defer.promise;
-    }
-
-    public filter(filter: Object) {
-        const defer = Q.defer();
-        if (typeof filter === 'string') {
-            filter = {id: filter};
-        }
-        r.table(this.table).filter(filter)
-            .run(this.connection, (err: Object, result: Cursor) => {
+        return new Promise((resolve, reject) => {
+            r.table(this.table).get(id).run(this.connection, (err: Object, result: r.Cursor) => {
                 if (err) {
-                    return defer.reject(err);
+                   return reject(err);
                 }
-
                 if (result) {
-                    defer.resolve(result.toArray());
+                    resolve(result);
                 } else {
-                    defer.reject(null);
+                    resolve(null);
                 }
             });
-        return defer.promise;
+        });
     }
 
-    public count(filter: Object) {
-        const defer = Q.defer();
-        if (typeof filter === 'string') {
-            filter = {id: filter};
-        }
-        r.table(this.table).filter(filter).count()
-            .run(this.connection, (err: Object, result: number) => {
-                if (err) {
-                    return defer.reject(err);
-                }
-                defer.resolve(result);
+    /**
+     * Method used to take an array of records based on ids from the table.
+     * @param ids
+     * @returns {Promise<T>}
+     */
+    public getAllByIds(ids: string[]) {
+        return new Promise((resolve, reject) => {
+            const query = r.table(this.table);
+            query.getAll.apply(query, ids).run(this.connection, (err: Object, result: r.Cursor) => {
+               if (err) {
+                   return reject(err);
+               }
+               if (result) {
+                   resolve(result.toArray());
+               } else {
+                   resolve(null);
+               }
             });
-        return defer.promise;
+        });
+    }
+
+    /**
+     * Method used to get all records from the table.
+     * @returns {Promise<T[]>}
+     */
+    public getAll() {
+        return new Promise((resolve, reject) => {
+           r.table(this.table).run(this.connection, (err: Object, result: r.Cursor) => {
+              if (err) {
+                  return reject(err);
+              }
+              if (result) {
+                  resolve(result.toArray());
+              } else {
+                  resolve(null);
+              }
+           });
+        });
+    }
+
+    /**
+     * Method used to search a record in the table.
+     * @param filter
+     * @returns {Promise<T[]>}
+     */
+    public filter(filter: {[key: string]: any}) {
+        return new Promise((resolve, reject) => {
+            r.table(this.table).filter(filter).run(this.connection, (err: Object, result: r.Cursor) => {
+                if (err) {
+                    return reject(err);
+                }
+                if (result) {
+                    resolve(result.toArray());
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+    }
+
+    /**
+     * Method used to count how many records exists in the table based on a filter.
+     * @param filter
+     * @returns {Promise<T>}
+     */
+    public count(filter: {[key: string]: any}) {
+        return new Promise((resolve, reject) => {
+           r.table(this.table).filter(filter).count().
+           run(this.connection, (err: Object, result: number) => {
+               if (err) {
+                   return reject(err);
+               }
+               resolve(result);
+           });
+        });
     }
 }
