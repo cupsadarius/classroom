@@ -38,8 +38,7 @@ export default class AttendeeService {
 
     public async getAttendees(teachers = false) {
         try {
-            const repo = this.getAttendeesRepository();
-            return await repo.getAttendeesByRole(teachers ? 'ROLE_TEACHER' : 'ROLE_STUDENT');
+            return await this.getAttendeesRepository().getAttendeesByRole(teachers ? 'ROLE_TEACHER' : 'ROLE_STUDENT');
         } catch (e) {
             return e;
         }
