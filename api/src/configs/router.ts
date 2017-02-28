@@ -7,6 +7,7 @@ import authController from '../controllers/authController';
 import lessonController from '../controllers/lessonController';
 import categoryController from '../controllers/categoryController';
 import classroomController from '../controllers/classroomController';
+
 const router = Router();
 
 // load modules
