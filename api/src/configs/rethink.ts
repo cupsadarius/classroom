@@ -11,6 +11,9 @@ schema.addTable('classrooms', {});
 schema.addTable('sessions', {});
 db.setSchema(schema);
 
+/**
+ * Creates the database conection, initalizes the tables.
+ */
 export default async () => {
     return new Promise((resolve, reject) => {
         db.on('ready', resolve);

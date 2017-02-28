@@ -6,7 +6,10 @@ import SlideMapper from './SlideMapper';
 
 export class MapperFactory {
 
-    public getMapper(className: string) {
+    /**
+     * Returns an instance of mapper for the given class.
+     */
+    public getMapper(className: string): AttendeeMapper | UserMapper | CategoryMapper | LessonMapper | SlideMapper {
         switch (className) {
             case 'User': {
                 return new UserMapper();

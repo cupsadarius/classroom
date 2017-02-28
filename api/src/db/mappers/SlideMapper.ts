@@ -6,6 +6,9 @@ import * as uuid from 'uuid';
 
 export default class SlideMapper implements MapperInterface<Slide, SlideMapping> {
 
+    /**
+     * Populates a slide object based on it's mapping.
+     */
     public hydrate(slide: Slide, data: SlideMapping) {
         if (data.id || slide.getId()) {
             slide.setId(data.id || slide.getId());
@@ -17,6 +20,9 @@ export default class SlideMapper implements MapperInterface<Slide, SlideMapping>
         return slide;
     }
 
+    /**
+     * Extract the data from a slide object.
+     */
     public dehydrate(slide: Slide) {
         const mapping = new SlideMapping();
         mapping.id = slide.getId();
@@ -28,6 +34,9 @@ export default class SlideMapper implements MapperInterface<Slide, SlideMapping>
         return mapping;
     }
 
+    /**
+     * Populates a slide object from a FileUpload mapping
+     */
     public convertFromUploadData(data: FileMapping, index?: number) {
         const slide = new Slide();
         slide.setId(uuid.v4());

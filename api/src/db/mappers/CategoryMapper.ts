@@ -3,6 +3,9 @@ import Category from '../../models/Category';
 import CategoryMapping from './mappings/CategoryMapping';
 
 export default class CategoryMapper implements MapperInterface<Category, CategoryMapping> {
+    /**
+     * Populates a category object based on it's mapping.
+     */
     public hydrate(category: Category, data: CategoryMapping): Category {
         if (data.id || category.getId()) {
             category.setId(data.id || category.getId());
@@ -13,6 +16,9 @@ export default class CategoryMapper implements MapperInterface<Category, Categor
         return category;
     }
 
+    /**
+     * Extracts the data from a category object.
+     */
     public dehydrate(category: Category): CategoryMapping {
         const mapping = new CategoryMapping();
         mapping.id = category.getId();

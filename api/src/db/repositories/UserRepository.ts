@@ -12,7 +12,10 @@ export class UserRepository extends BaseRepository {
         this.mapper = mapperFactory.getMapper('User') as UserMapper;
     }
 
-    public async getAllUsers() {
+    /**
+     * Returns an array with all users.
+     */
+    public async getAllUsers(): Promise<User[]> {
         try {
             const data = await this.getAll() as UserMapping[];
             return data.map(userData => this.mapper.hydrate(new User(), userData));
@@ -21,7 +24,10 @@ export class UserRepository extends BaseRepository {
         }
     }
 
-    public async getByEmail(email: string, stripSensitive: boolean = false) {
+    /**
+     * Returns a user based on it's email address.
+     */
+    public async getByEmail(email: string, stripSensitive: boolean = false): Promise<User> {
         try {
             const data = (await this.filter({email}) as UserMapping[]).pop();
             if (stripSensitive) {
@@ -33,7 +39,10 @@ export class UserRepository extends BaseRepository {
         }
     }
 
-    public async getById(id: string) {
+    /**
+     * Returns a user based on it's id.
+     */
+    public async getById(id: string): Promise<User> {
         try {
             const data = await this.get(id) as UserMapping;
             return this.mapper.hydrate(new User(), data);
@@ -42,6 +51,9 @@ export class UserRepository extends BaseRepository {
         }
     }
 
+    /**
+     * Returns an instance of the UserMapper.
+     */
     public getMapper(): UserMapper {
         return this.mapper;
     }

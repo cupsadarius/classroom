@@ -3,6 +3,9 @@ import Attendee from '../../models/Attendee';
 import UserMapping from './mappings/UserMapping';
 
 export default class UserMapper implements MapperInterface<Attendee, UserMapping> {
+    /**
+     * Populates an attendee object based on it's mapping.
+     */
     public hydrate(attendee: Attendee, data: UserMapping): Attendee {
         if (data.id || attendee.getId()) {
             attendee.setId(data.id || attendee.getId());
@@ -18,6 +21,9 @@ export default class UserMapper implements MapperInterface<Attendee, UserMapping
         return attendee;
     }
 
+    /**
+     * Extracts the data from an Attendee object.
+     */
     public dehydrate(attendee: Attendee): UserMapping {
         const mapping = new UserMapping();
         mapping.id = attendee.getId();

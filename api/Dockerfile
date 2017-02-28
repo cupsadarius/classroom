@@ -18,6 +18,8 @@ COPY . /usr/classroom/api
 
 RUN rm -rf node_modules
 
+RUN rm -rf docs
+
 RUN npm install
 
 RUN npm run generate:docs

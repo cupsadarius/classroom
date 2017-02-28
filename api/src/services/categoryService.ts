@@ -22,7 +22,7 @@ export default class CategoryService {
 
     public async getAllCategories() {
         try {
-            return (await this.getCategoryRepository().getAll() as CategoryMapping[]).map(item => this.getCategoryRepository().getMapper().hydrate(new Category(), item));
+            return await this.getCategoryRepository().getAll();
         } catch (e) {
             return e;
         }

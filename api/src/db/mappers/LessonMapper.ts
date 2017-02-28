@@ -6,7 +6,10 @@ import SlideMapper from './SlideMapper';
 
 export default class LessonMapper {
 
-    public async hydrate(lesson: Lesson, data: LessonMapping) {
+    /**
+     * Populates a lesson object based on it's data mapping.
+     */
+    public async hydrate(lesson: Lesson, data: LessonMapping): Promise<Lesson> {
         try {
             const slideMapper = new SlideMapper();
             if (data.id || lesson.getId()) {
@@ -34,6 +37,9 @@ export default class LessonMapper {
         return lesson;
     }
 
+    /**
+     * Extracts the data from a lesson object.
+     */
     dehydrate(lesson: Lesson) {
         const mapping = new LessonMapping();
         const slideMapper = new SlideMapper();

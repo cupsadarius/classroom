@@ -5,7 +5,7 @@ export class EmailValidator {
         this.valid = false;
     }
 
-    public isValid(data: string) {
+    public isValid(data: string): boolean {
         if (data.match(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i)) {
             this.valid = true;
         }

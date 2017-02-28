@@ -7,6 +7,10 @@ import ErrorResponse from '../helpers/ErrorResponse';
 import SuccessResponse from '../helpers/SuccessResponse';
 const router = Router();
 
+/**
+ * Lesson controller
+ */
+
 router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
     try {
         const lessons = await lessonService.getAllLessons();

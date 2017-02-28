@@ -23,7 +23,7 @@ export class UserService {
             user.setPassword(authService.hashPassword(user.getPassword(), data.password));
             const count = await repo.count({email: user.getEmail()});
             if (count) {
-                return `An user with the ${user.getEmail()} already exists in the database.`;
+                throw new Error(`An user with the ${user.getEmail()} already exists in the database.`);
             }
             return await repo.insert(repo.getMapper().dehydrate(user));
         } catch (e) {

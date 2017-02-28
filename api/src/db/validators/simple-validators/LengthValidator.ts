@@ -5,7 +5,8 @@ export class LengthValidator {
         this.valid = false;
     }
 
-    public isValid(data: string | any[], length: number) {
+    public isValid(data: string | any[], length: number): boolean {
+        this.valid = false;
         if (data.length < length) {
             this.valid = true;
         }

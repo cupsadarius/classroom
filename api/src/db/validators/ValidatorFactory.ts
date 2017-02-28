@@ -10,7 +10,7 @@ export class ValidatorFactory {
      * @param className
      * @returns {UserValidator | DefaultValidator }
      */
-    public getValidator(className: string) {
+    public getValidator(className: string): UserValidator | AttendeeValidator | LessonValidator | CategoryValidator {
         switch (className) {
             case 'User': {
                 return new UserValidator();

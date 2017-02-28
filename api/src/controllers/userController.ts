@@ -7,7 +7,10 @@ import {authorizedWithRole} from '../middlewares/authorizedWithRole';
 import User from '../models/User';
 const router = Router();
 
-/* GET home page. */
+/**
+ * User controller
+ */
+
 router.get('/', authenticated, authorizedWithRole('ROLE_ADMIN'), async (req: Request, res: Response) => {
     try {
         const users = await userService.getUsers();

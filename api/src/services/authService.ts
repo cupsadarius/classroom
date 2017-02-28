@@ -27,7 +27,7 @@ export class AuthService {
             if (this.passwordsMatch(user, data.password)) {
                 return this.generateJwtToken(user);
             } else {
-                return 'Invalid credentials.';
+                throw new  Error('Invalid credentials.');
             }
         } catch (e) {
             return e;

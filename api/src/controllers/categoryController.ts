@@ -7,6 +7,9 @@ import SuccessResponse from '../helpers/SuccessResponse';
 import Category from '../models/Category';
 
 const router = Router();
+/**
+ * Category controller
+ */
 
 router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
     try {

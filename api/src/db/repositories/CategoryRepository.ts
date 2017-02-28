@@ -13,7 +13,10 @@ export class CategoryRepository extends BaseRepository {
 
     }
 
-    public async getAll() {
+    /**
+     * Returns all categories.
+     */
+    public async getAll(): Promise<Category[]> {
         try {
             const data = await super.getAll() as CategoryMapping[];
             return data.map(item => this.mapper.hydrate(new Category(), item));
@@ -22,7 +25,10 @@ export class CategoryRepository extends BaseRepository {
         }
     }
 
-    public async getById(id: string) {
+    /**
+     * Returns a Category based on it's id.
+     */
+    public async getById(id: string): Promise<Category> {
         try {
             const data = await super.get(id) as CategoryMapping;
             return this.mapper.hydrate(new Category(), data);
@@ -31,7 +37,10 @@ export class CategoryRepository extends BaseRepository {
         }
     }
 
-    public getMapper() {
+    /**
+     * Returns an instance of the mapper.
+     */
+    public getMapper(): CategoryMapper {
         return this.mapper;
     }
 }

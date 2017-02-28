@@ -3,6 +3,10 @@ import {authenticated} from '../middlewares/authenticated';
 import {authorizedWithRole} from '../middlewares/authorizedWithRole';
 const router = Router();
 
+/**
+ * Classroom controller
+ */
+
 router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
     res.json('');
 });

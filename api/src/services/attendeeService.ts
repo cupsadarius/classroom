@@ -28,7 +28,7 @@ export default class AttendeeService {
             }
             const count = await repo.count({email: attendee.getEmail()});
             if (count) {
-                return `An attendee with the ${attendee.getEmail()} already exists in the database.`;
+                throw new Error(`An attendee with the ${attendee.getEmail()} already exists in the database.`);
             }
             return await repo.insert(repo.getMapper().dehydrate(attendee));
         } catch (e) {

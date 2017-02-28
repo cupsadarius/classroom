@@ -6,7 +6,10 @@ import {authenticated} from '../middlewares/authenticated';
 import {authorizedWithRole} from '../middlewares/authorizedWithRole';
 const router = Router();
 
-/* GET home page. */
+/**
+ * Auth Controller.
+ */
+
 router.post('/authenticate', async (req: Request, res: Response) => {
     try {
         const token = await authService.authenticate(req.body);

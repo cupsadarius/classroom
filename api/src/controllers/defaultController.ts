@@ -1,7 +1,10 @@
 import {Request, Response, Router} from 'express';
 const router = Router();
 
-/* GET home page. */
+/**
+ * Index controller
+ */
+
 router.get('/', (req: Request, res: Response, next: Function) => {
   res.json({message: 'Api entrypoint'});
 });

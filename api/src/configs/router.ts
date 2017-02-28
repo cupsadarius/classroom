@@ -10,7 +10,9 @@ import classroomController from '../controllers/classroomController';
 
 const router = Router();
 
-// load modules
+/**
+ * Agregates all the controllers.
+ */
 router.use('/user', userController);
 router.use('/attendee/teacher', teacherController);
 router.use('/attendee/student', studentController);

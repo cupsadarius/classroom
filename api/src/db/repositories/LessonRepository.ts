@@ -13,6 +13,11 @@ export class LessonRepository extends BaseRepository {
         this.mapper = mapperFactory.getMapper('Lesson') as LessonMapper;
     }
 
+    /**
+     * Returns an array with all promises.
+     * 
+     * @return Promise<Lesson[]>
+     */
     public async getAll() {
         try {
             const data: LessonMapping[] = await super.getAll() as LessonMapping[];
@@ -22,7 +27,10 @@ export class LessonRepository extends BaseRepository {
         }
     }
 
-    public async getById(id: string) {
+    /**
+     * Returns a lesson based on it's id.
+     */
+    public async getById(id: string): Promise<Lesson> {
         try {
             const data = await super.get(id) as LessonMapping;
             return this.mapper.hydrate(new Lesson(), data);
@@ -31,16 +39,22 @@ export class LessonRepository extends BaseRepository {
         }
     }
 
+    /**
+     * Returns an array of leesons based on category.
+     */
     public async getByCategory(category: Category) {
         try {
-            const data = (await this.filter({categoryId: category.getId()}) as LessonMapping[]).pop();
-            return await this.mapper.hydrate(new Lesson(), data);
+            const data = (await this.filter({categoryId: category.getId()}) as LessonMapping[]);
+            return data.map(async item => await this.mapper.hydrate(new Lesson(), item));
         } catch (e) {
             return e;
         }
     }
 
-    public getMapper() {
+    /**
+     * Returns an instance of the LessonMapper.
+     */
+    public getMapper(): LessonMapper {
         return this.mapper;
     }
 }
