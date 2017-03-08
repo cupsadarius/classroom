@@ -19,7 +19,7 @@ export default class LessonService {
         try {
             return await this.getLessonRepository().getAll();
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -32,11 +32,11 @@ export default class LessonService {
                 return slideMapper.convertFromUploadData(file, index);
             }));
             if (!this.validator.isValid(lesson)) {
-                return this.validator.getErrors(lesson);
+                throw this.validator.getErrors(lesson);
             }
             return await repo.insert(repo.getMapper().dehydrate(lesson));
         } catch (e) {
-
+            throw e;
         }
     }
 
@@ -44,7 +44,7 @@ export default class LessonService {
         try {
             return await this.getLessonRepository().getById(id);
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 

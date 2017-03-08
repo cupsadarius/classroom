@@ -19,7 +19,7 @@ export default class AttendeeService {
             const repo = this.getAttendeesRepository();
             const attendee = repo.getMapper().hydrate(new Attendee(), data);
             if (!this.validator.isValid(attendee)) {
-                return this.validator.getErrors(attendee);
+                throw this.validator.getErrors(attendee);
             }
             attendee.setSalt(authService.createSalt());
             attendee.setPassword(authService.hashPassword(attendee.getPassword(), data.password));
@@ -32,7 +32,7 @@ export default class AttendeeService {
             }
             return await repo.insert(repo.getMapper().dehydrate(attendee));
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -40,7 +40,7 @@ export default class AttendeeService {
         try {
             return await this.getAttendeesRepository().getAttendeesByRole(teachers ? 'ROLE_TEACHER' : 'ROLE_STUDENT');
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -48,7 +48,7 @@ export default class AttendeeService {
         try {
             return await this.getAttendeesRepository().getById(id);
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -56,7 +56,15 @@ export default class AttendeeService {
         try {
             return await this.getAttendeesRepository().getByEmail(email, stripSensitive);
         } catch (e) {
-            return e;
+            throw e;
+        }
+    }
+
+    public async getByIds(ids: string[]) {
+        try {
+            return await this.getAttendeesRepository().getAllByIds(ids);
+        } catch (e) {
+            throw e;
         }
     }
 
@@ -67,14 +75,14 @@ export default class AttendeeService {
             data.password = data.password ? authService.hashPassword(attendee.getSalt(), data.password) : data.password;
             attendee = repo.getMapper().hydrate(attendee, data);
             if (!this.validator.isValid(attendee)) {
-                return this.validator.getErrors(attendee);
+                throw this.validator.getErrors(attendee);
             }
             const updated = await repo.update({id}, attendee);
             if (updated) {
                 return repo.getMapper().dehydrate(attendee).stripSensitiveInfo();
             }
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -82,7 +90,7 @@ export default class AttendeeService {
         try {
             return await this.getAttendeesRepository().delete([id]);
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 

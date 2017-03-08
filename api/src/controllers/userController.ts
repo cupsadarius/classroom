@@ -24,12 +24,12 @@ router.get('/', authenticated, authorizedWithRole('ROLE_ADMIN'), async (req: Req
 
 router.post('/', authenticated, authorizedWithRole('ROLE_ADMIN'), async (req: Request, res: Response) => {
     try {
-        const id = userService.saveUser(req.body);
+        const id = await userService.saveUser(req.body);
         res.status(200);
         res.json(new SuccessResponse(id));
     } catch (e) {
         res.status(400);
-        res.json(new ErrorResponse(2));
+        res.json(new ErrorResponse(e));
     }
 });
 

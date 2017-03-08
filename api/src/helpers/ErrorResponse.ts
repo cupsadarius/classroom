@@ -1,9 +1,9 @@
-export default class ErrorResponse<T> {
+export default class ErrorResponse {
     private status: boolean;
-    private data: T;
+    private data: {message?: string | string[]};
 
-    constructor(data: T) {
+    constructor(data: {message?: string | string[]}) {
         this.status = false;
-        this.data = data;
+        this.data = data.message ? data.message : data;
     }
 }

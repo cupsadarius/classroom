@@ -16,7 +16,7 @@ export default class CategoryService {
         try {
             return await this.getCategoryRepository().getById(id);
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -24,7 +24,7 @@ export default class CategoryService {
         try {
             return await this.getCategoryRepository().getAll();
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -33,11 +33,11 @@ export default class CategoryService {
             const repo = this.getCategoryRepository();
             const category = repo.getMapper().hydrate(new Category(), data);
             if (!this.validator.isValid(category)) {
-                return this.validator.getErrors(category);
+                throw this.validator.getErrors(category);
             }
             return await repo.insert(repo.getMapper().dehydrate(category));
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -47,11 +47,11 @@ export default class CategoryService {
             let category = await repo.getById(id);
             category = repo.getMapper().hydrate(category, data);
             if (!this.validator.isValid(category)) {
-                return this.validator.getErrors(category);
+                throw this.validator.getErrors(category);
             }
             return await repo.update({id}, repo.getMapper().dehydrate(category));
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -59,7 +59,7 @@ export default class CategoryService {
         try {
             return await this.getCategoryRepository().delete([id]);
         } catch (e) {
-            return e;
+            throw e;
         }
     }
     private getCategoryRepository(): CategoryRepository {

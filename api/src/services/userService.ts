@@ -20,14 +20,14 @@ export class UserService {
                 return this.validator.getErrors(user);
             }
             user.setSalt(authService.createSalt());
-            user.setPassword(authService.hashPassword(user.getPassword(), data.password));
+            user.setPassword(authService.hashPassword(user.getSalt(), data.password));
             const count = await repo.count({email: user.getEmail()});
             if (count) {
                 throw new Error(`An user with the ${user.getEmail()} already exists in the database.`);
             }
             return await repo.insert(repo.getMapper().dehydrate(user));
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -35,7 +35,7 @@ export class UserService {
         try {
             return await this.getUserRepository().getAllUsers();
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -43,7 +43,7 @@ export class UserService {
         try {
             return await this.getUserRepository().getById(id);
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -51,7 +51,7 @@ export class UserService {
         try {
             return await this.getUserRepository().getByEmail(email, stripSensitive);
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -69,7 +69,7 @@ export class UserService {
                 return repo.getMapper().dehydrate(user).stripSensitiveInfo();
             }
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -77,7 +77,7 @@ export class UserService {
         try {
             return await this.getUserRepository().delete([id]);
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 

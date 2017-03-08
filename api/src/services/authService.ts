@@ -24,13 +24,15 @@ export class AuthService {
     public async authenticate(data: authData) {
         try {
             const user = await userService.getByEmail(data.username);
+            console.log(user);
+            console.log(data);
             if (this.passwordsMatch(user, data.password)) {
                 return this.generateJwtToken(user);
             } else {
                 throw new  Error('Invalid credentials.');
             }
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
@@ -42,7 +44,7 @@ export class AuthService {
                 return jwt.decode(token, params.SECRET);
             }
         } catch (e) {
-            return e;
+            throw e;
         }
 
         return false;
@@ -52,7 +54,7 @@ export class AuthService {
         try {
             return await this.getBlackistRepository().insert({token});
         } catch (e) {
-            return e;
+            throw e;
         }
     }
 
