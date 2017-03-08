@@ -3,6 +3,9 @@ import initDb from './configs/rethink';
 import * as io from 'socket.io';
 import * as http from 'http';
 
+import sessionManager from './sessionManager';
+import {authService} from './services/authService';
+
 const server = http.createServer();
 const room = io(server);
 
@@ -13,6 +16,19 @@ initDb().then(() => {
     console.log('DB failed to initialize', err);
 });
 
-io.listen(params.APP_PORT);
+room.on('connection', async (socket) => {
+    const sessionId = socket.handshake.query.sessionId;
+    const participantId = socket.handshake.query.participantId;
+    const token = socket.handshake.query.token;
+    const isAuthenticated = await authService.validate(token);
+    if (!isAuthenticated) {
+        socket.disconnect(true);
+    }
+    sessionManager.createSession(sessionId);
+    sessionManager.addParticipant(sessionId, participantId, socket);
+
+});
+
+room.listen(params.APP_PORT);
 console.log(`Socket listening on ${params.APP_PORT}`);
 

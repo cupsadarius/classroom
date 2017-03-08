@@ -12,29 +12,6 @@ export type authData = {
 };
 
 export class AuthService {
-    public createSalt() {
-        return crypto.randomBytes(128).toString('base64');
-    }
-
-    public hashPassword(salt: string, password: string) {
-        const hmac = crypto.createHmac('sha1', salt);
-        return hmac.update(password).digest('hex');
-    }
-
-    public async authenticate(data: authData) {
-        try {
-            const user = await userService.getByEmail(data.username);
-            console.log(user);
-            console.log(data);
-            if (this.passwordsMatch(user, data.password)) {
-                return this.generateJwtToken(user);
-            } else {
-                throw new  Error('Invalid credentials.');
-            }
-        } catch (e) {
-            throw e;
-        }
-    }
 
     public async validate(token: string) {
         try {
@@ -48,24 +25,6 @@ export class AuthService {
         }
 
         return false;
-    }
-
-    public async blacklistToken(token: string) {
-        try {
-            return await this.getBlackistRepository().insert({token});
-        } catch (e) {
-            throw e;
-        }
-    }
-
-    private passwordsMatch(user: User, password: string): boolean {
-        return user.getPassword() === this.hashPassword(user.getSalt(), password);
-    }
-
-    private generateJwtToken(user: User): string {
-        user.setPassword('');
-        user.setSalt('');
-        return jwt.sign(user, params.SECRET, {expiresIn: 1440});
     }
 
     private getBlackistRepository(): BlacklistRepository {

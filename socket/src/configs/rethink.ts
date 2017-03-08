@@ -5,6 +5,8 @@ import DatabaseSchema from '../db/schema';
 const schema = new DatabaseSchema();
 schema.addTable('users', {});
 schema.addTable('blacklist', {});
+schema.addTable('events', {});
+
 db.setSchema(schema);
 
 /**
