@@ -48,6 +48,20 @@ services:
     environment:
       VIRTUAL_HOST: api.classroom.dkr
 
+  socket:
+    build:
+      context: ./socket
+    image: classroom:socket
+    depends_on:
+      - proxy
+      - rethinkdb
+    expose:
+      - 80
+    networks:
+      - default
+    environment:
+      VIRTUAL_HOST: socket.classroom.dkr
+
   web:
     build:
       context: ./web

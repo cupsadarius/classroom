@@ -1,6 +1,7 @@
 import Classroom from '../../models/Classroom';
 import ClassroomMapping from './mappings/ClassroomMapping';
 import {attendeeService} from '../../services/attendeeService';
+import {sessionService} from '../../services/sessionService';
 
 export default class ClassroomMapper {
   public async hydrate(classroom: Classroom, data: ClassroomMapping) {
@@ -12,7 +13,7 @@ export default class ClassroomMapper {
       classroom.setLastSessionId(data.lastSessionId);
       classroom.setStudents(await attendeeService.getByIds(data.students));
       classroom.setTeachers(await attendeeService.getByIds(data.teachers));
-      // classroom.setSessions(await sessionServie.getByIds(data.sessions));
+      classroom.setSessions(await sessionService.getByIds(data.sessions));
     } catch (e) {
       return e;
     }

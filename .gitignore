@@ -1,6 +1,10 @@
 /.project
 .idea
+.vscode
 api/_compiled
+api/dist
 api/node_modules
+socket/node_modules
+socket/dist
 web/public
 web/node_modules

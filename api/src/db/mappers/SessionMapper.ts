@@ -4,7 +4,7 @@ import {lessonService} from '../../services/lessonService';
 
 export default class SessionMapper {
 
-  public async hydrate(session: Session, data: SessionMapping) {
+  public async hydrate(session: Session, data: SessionMapping): Promise<Session> {
     try {
       if (data.id || session.getId()) {
         session.setId(data.id || session.getId());
