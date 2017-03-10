@@ -13,10 +13,13 @@ class Participant {
 export default class Session extends BaseModel {
     protected participants: Participant[];
     protected revision: number;
-    constructor() {
+    protected closeSession: Function;
+
+    constructor(closeSession: Function) {
         super();
         this.revision = 0;
         this.participants = [];
+        this.closeSession = closeSession;
     }
 
     public async addParticipant(participant: Participant) {
@@ -53,6 +56,10 @@ export default class Session extends BaseModel {
         for (const key in events) {
             participant.socket.emit('receive', events[key]);
         }
+
+        // if reopened old session update current revision id.
+        const lastEvent = sorted.pop();
+        this.revision = lastEvent.getRevision() > this.revision ? lastEvent.getRevision() : this.revision;
     }
 
     private async registerListeners(participant: Participant) {
@@ -62,6 +69,9 @@ export default class Session extends BaseModel {
 
     private removeParticipant(participant: Participant) {
         this.participants = this.participants.filter(item => item.id !== participant.id);
+        if (!this.participants.length) {
+            this.closeSession(this.getId());
+        }
     }
 
     private convertEvent(data: {}): Event {

@@ -9,7 +9,7 @@ export class SessionManager {
 
     public createSession(id: string) {
         if (!this.sessionExists(id)) {
-            const session = new Session();
+            const session = new Session(this.closeSession.bind(this));
             session.setId(id);
             this.sessions.push(session);
         }
@@ -27,6 +27,9 @@ export class SessionManager {
         return Boolean(this.sessions.filter(item => item.getId() === sessionId).length);
     }
 
+    protected closeSession(sessionId: string) {
+        this.sessions = this.sessions.filter(session => session.getId() !== sessionId);
+    }
 }
 
 export default new SessionManager();
