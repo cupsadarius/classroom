@@ -25,7 +25,7 @@ room.on('connection', async (socket) => {
         socket.disconnect(true);
     }
     sessionManager.createSession(sessionId);
-    sessionManager.addParticipant(sessionId, participantId, socket);
+    await sessionManager.addParticipant(sessionId, participantId, socket);
 
 });
 

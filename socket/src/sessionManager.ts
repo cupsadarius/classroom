@@ -19,8 +19,8 @@ export class SessionManager {
         return this.sessions.filter(session => session.getId() === sessionId).pop();
     }
 
-    public addParticipant(sessionId: string, participantId: string, socket: SocketIO.Socket) {
-        this.getSession(sessionId).addParticipant({id: participantId, socket: participant});
+    public async addParticipant(sessionId: string, participantId: string, socket: SocketIO.Socket) {
+        await this.getSession(sessionId).addParticipant({id: participantId, socket: socket});
     }
 
     public sessionExists(sessionId: string): boolean {
