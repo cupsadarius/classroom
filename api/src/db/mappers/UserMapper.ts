@@ -1,7 +1,7 @@
 import {MapperInterface} from './MapperInterface';
 import User from '../../models/User';
 import UserMapping from './mappings/UserMapping';
-
+import * as uuid from 'uuid';
 export default class UserMapper implements MapperInterface<User, UserMapping> {
     /**
      * Populates an user object from it's data mapping.
@@ -25,7 +25,7 @@ export default class UserMapper implements MapperInterface<User, UserMapping> {
      */
     public dehydrate(user: User): UserMapping {
         const mapping = new UserMapping();
-        mapping.id = user.getId();
+        mapping.id = user.getId() ? user.getId() : uuid.v4();
         mapping.firstName = user.getFirstName();
         mapping.lastName = user.getLastName();
         mapping.email = user.getEmail();

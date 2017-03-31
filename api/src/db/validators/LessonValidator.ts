@@ -24,7 +24,7 @@ export default class LessonValidator {
 
         if (!notEmptyValidator.isValid(lesson.getCategory().getId())) {
             error = error ? error : !error;
-            errors.push(lengthValidator.getError('category'));
+            errors.push(notEmptyValidator.getError('category'));
         }
 
         return errorMessages ? errors : error;

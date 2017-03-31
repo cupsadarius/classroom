@@ -16,7 +16,7 @@ export default class SlideMapper implements MapperInterface<Slide, SlideMapping>
         slide.setName(data.name || slide.getName());
         slide.setType(data.type || slide.getType());
         slide.setPath(data.path || slide.getPath());
-        slide.setOrder(data.order || slide.getOrder());
+        slide.setOrder(!isNaN(data.order) ? data.order : slide.getOrder());
         return slide;
     }
 
@@ -25,7 +25,7 @@ export default class SlideMapper implements MapperInterface<Slide, SlideMapping>
      */
     public dehydrate(slide: Slide) {
         const mapping = new SlideMapping();
-        mapping.id = slide.getId();
+        mapping.id = slide.getId() ? slide.getId() : uuid.v4();
         mapping.name = slide.getName();
         mapping.path = slide.getPath();
         mapping.order = slide.getOrder();

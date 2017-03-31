@@ -26,7 +26,6 @@ room.on('connection', async (socket) => {
     }
     sessionManager.createSession(sessionId);
     sessionManager.addParticipant(sessionId, participantId, socket);
-
 });
 
 room.listen(params.APP_PORT);

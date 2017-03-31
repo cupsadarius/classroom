@@ -1,6 +1,7 @@
 import {MapperInterface} from './MapperInterface';
 import Attendee from '../../models/Attendee';
 import UserMapping from './mappings/UserMapping';
+import * as uuid from 'uuid';
 
 export default class UserMapper implements MapperInterface<Attendee, UserMapping> {
     /**
@@ -26,7 +27,7 @@ export default class UserMapper implements MapperInterface<Attendee, UserMapping
      */
     public dehydrate(attendee: Attendee): UserMapping {
         const mapping = new UserMapping();
-        mapping.id = attendee.getId();
+        mapping.id = attendee.getId() ? attendee.getId() : uuid.v4();
         mapping.firstName = attendee.getFirstName();
         mapping.lastName = attendee.getLastName();
         mapping.email = attendee.getEmail();

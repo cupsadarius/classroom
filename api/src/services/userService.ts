@@ -25,6 +25,7 @@ export class UserService {
             if (count) {
                 throw new Error(`An user with the ${user.getEmail()} already exists in the database.`);
             }
+            console.log('here');
             return await repo.insert(repo.getMapper().dehydrate(user));
         } catch (e) {
             throw e;
@@ -66,7 +67,7 @@ export class UserService {
             }
             const updated = await repo.update({id}, user);
             if (updated) {
-                return repo.getMapper().dehydrate(user).stripSensitiveInfo();
+                return repo.stripSensitiveInfo(repo.getMapper().dehydrate(user));
             }
         } catch (e) {
             throw e;

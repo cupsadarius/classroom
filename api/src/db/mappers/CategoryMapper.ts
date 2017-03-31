@@ -1,6 +1,7 @@
 import {MapperInterface} from './MapperInterface';
 import Category from '../../models/Category';
 import CategoryMapping from './mappings/CategoryMapping';
+import * as uuid from 'uuid';
 
 export default class CategoryMapper implements MapperInterface<Category, CategoryMapping> {
     /**
@@ -21,7 +22,7 @@ export default class CategoryMapper implements MapperInterface<Category, Categor
      */
     public dehydrate(category: Category): CategoryMapping {
         const mapping = new CategoryMapping();
-        mapping.id = category.getId();
+        mapping.id = category.getId() ? category.getId() : uuid.v4();
         mapping.name = category.getName();
         mapping.description = category.getDescription();
 

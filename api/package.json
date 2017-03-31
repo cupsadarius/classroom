@@ -1,7 +1,7 @@
 {
   "name": "classroom-api",
   "scripts": {
-    "start": "./loadHosts.sh && /usr/classroom/api/node_modules/.bin/gulp start",
+    "start": "/usr/classroom/api/node_modules/.bin/gulp start",
     "generate:docs": " /usr/classroom/api/node_modules/.bin/typedoc --tsconfig src/tsconfig.json --out docs/ src/"
   },
   "version": "1.0.0",

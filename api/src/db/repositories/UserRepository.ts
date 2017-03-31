@@ -29,9 +29,9 @@ export class UserRepository extends BaseRepository {
      */
     public async getByEmail(email: string, stripSensitive: boolean = false): Promise<User> {
         try {
-            const data = (await this.filter({email}) as UserMapping[]).pop();
+            let data = (await this.filter({email}) as UserMapping[]).pop();
             if (stripSensitive) {
-                data.stripSensitiveInfo();
+                data = this.stripSensitiveInfo(data);
             }
             return this.mapper.hydrate(new User(), data);
         } catch (e) {
@@ -51,6 +51,11 @@ export class UserRepository extends BaseRepository {
         }
     }
 
+    public stripSensitiveInfo(data: UserMapping) {
+        data.password = '';
+        data.salt = '';
+        return data;
+    }
     /**
      * Returns an instance of the UserMapper.
      */

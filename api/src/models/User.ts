@@ -80,8 +80,12 @@ export default class User extends BaseModel {
         if (!this.roles) {
             this.roles = [];
         }
-        if (!this.roles.filter((r) => r === role)) {
+        if (!this.hasRole(role)) {
             this.roles.push(role);
         }
+    }
+
+    public hasRole(roleSearched: string): boolean {
+        return !!this.roles.filter(role => role === roleSearched).length;
     }
 }

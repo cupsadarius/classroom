@@ -23,7 +23,8 @@ export default class SessionRepository extends BaseRepository {
     public async getByIds(ids: string[]) {
         try {
             const data: SessionMapping[] = await super.getAllByIds(ids) as SessionMapping[];
-            return await data.map(async item => await this.mapper.hydrate(new Session(), item));
+            const sessions = data.map(async item => await this.mapper.hydrate(new Session(), item));
+            return Promise.all(sessions);
         } catch (e) {
             throw e;
         }

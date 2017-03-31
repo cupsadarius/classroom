@@ -24,8 +24,6 @@ export class AuthService {
     public async authenticate(data: authData) {
         try {
             const user = await userService.getByEmail(data.username);
-            console.log(user);
-            console.log(data);
             if (this.passwordsMatch(user, data.password)) {
                 return this.generateJwtToken(user);
             } else {
@@ -65,7 +63,7 @@ export class AuthService {
     private generateJwtToken(user: User): string {
         user.setPassword('');
         user.setSalt('');
-        return jwt.sign(user, params.SECRET, {expiresIn: 1440});
+        return jwt.sign(user, params.SECRET, {expiresIn: 60 * 60 * 24 * 7});
     }
 
     private getBlackistRepository(): BlacklistRepository {

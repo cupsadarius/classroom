@@ -2,6 +2,7 @@ import Classroom from '../../models/Classroom';
 import ClassroomMapping from './mappings/ClassroomMapping';
 import {attendeeService} from '../../services/attendeeService';
 import {sessionService} from '../../services/sessionService';
+import * as uuid from 'uuid';
 
 export default class ClassroomMapper {
   public async hydrate(classroom: Classroom, data: ClassroomMapping) {
@@ -23,7 +24,7 @@ export default class ClassroomMapper {
 
   public dehydrate(classroom: Classroom): ClassroomMapping {
     const mapping = new ClassroomMapping();
-    mapping.id = classroom.getId();
+    mapping.id = classroom.getId() ? classroom.getId() : uuid.v4();
     mapping.name = classroom.getName();
     mapping.students = classroom.getStudents().map(student => student.getId());
     mapping.teachers = classroom.getTeachers().map(teacher => teacher.getId());

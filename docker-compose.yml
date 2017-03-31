@@ -32,7 +32,9 @@ services:
     environment:
       VIRTUAL_HOST: db.classroom.dkr
     networks:
-      - default
+      default:
+        aliases:
+          - db.classroom
 
   api:
     build:

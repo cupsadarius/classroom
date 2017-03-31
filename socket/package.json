@@ -1,7 +1,7 @@
 {
   "name": "classroom-socket",
   "scripts": {
-    "start": "./loadHosts.sh && /usr/classroom/socket/node_modules/.bin/gulp start"
+    "start": "/usr/classroom/socket/node_modules/.bin/gulp start"
   },
   "version": "1.0.0",
   "description": "Socket for classroom",

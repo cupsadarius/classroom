@@ -3,6 +3,9 @@ import DefaultValidator from './DefaultValidator';
 import AttendeeValidator from './AttendeeValidator';
 import LessonValidator from './LessonValidator';
 import CategoryValidator from './CategoryValidator';
+import SessionValidator from './SessionValidator';
+import ClassroomValidator from './ClassroomValidator';
+
 export class ValidatorFactory {
 
     /**
@@ -10,7 +13,7 @@ export class ValidatorFactory {
      * @param className
      * @returns {UserValidator | DefaultValidator }
      */
-    public getValidator(className: string): UserValidator | AttendeeValidator | LessonValidator | CategoryValidator {
+    public getValidator(className: string): UserValidator | AttendeeValidator | LessonValidator | CategoryValidator | SessionValidator | ClassroomValidator {
         switch (className) {
             case 'User': {
                 return new UserValidator();
@@ -23,6 +26,12 @@ export class ValidatorFactory {
             }
             case 'Category': {
                 return new CategoryValidator();
+            }
+            case 'Session': {
+                return new SessionValidator();
+            }
+            case 'Classroom': {
+                return new ClassroomValidator();
             }
             default: {
                 console.log('No validators found for the provided entity');

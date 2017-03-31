@@ -23,8 +23,10 @@ export default class AttendeeService {
             }
             attendee.setSalt(authService.createSalt());
             attendee.setPassword(authService.hashPassword(attendee.getPassword(), data.password));
-            if (isTeacher) {
+            if (!isTeacher) {
                 attendee.setAsStudent();
+            } else {
+                attendee.setAsTeacher();
             }
             const count = await repo.count({email: attendee.getEmail()});
             if (count) {
@@ -38,7 +40,14 @@ export default class AttendeeService {
 
     public async getAttendees(teachers = false) {
         try {
-            return await this.getAttendeesRepository().getAttendeesByRole(teachers ? 'ROLE_TEACHER' : 'ROLE_STUDENT');
+            const attendees = await this.getAttendeesRepository().getAttendeesByRole(teachers ? 'ROLE_TEACHER' : 'ROLE_STUDENT');
+            return attendees.filter((attendee: Attendee) => {
+                if (teachers) {
+                    return !attendee.hasRole('ROLE_ADMIN');
+                } else {
+                    return !attendee.hasRole('ROLE_TEACHER');
+                }
+            });
         } catch (e) {
             throw e;
         }
@@ -79,7 +88,7 @@ export default class AttendeeService {
             }
             const updated = await repo.update({id}, attendee);
             if (updated) {
-                return repo.getMapper().dehydrate(attendee).stripSensitiveInfo();
+                return repo.stripSensitiveInfo(repo.getMapper().dehydrate(attendee));
             }
         } catch (e) {
             throw e;

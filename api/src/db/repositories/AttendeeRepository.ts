@@ -35,9 +35,9 @@ export class AttendeeRepository extends BaseRepository {
      */
     public async getByEmail(email: string, stripSensitive = false): Promise<Attendee> {
         try {
-            const data = (await this.filter({email}) as UserMapping[]).pop();
+            let data = (await this.filter({email}) as UserMapping[]).pop();
             if (stripSensitive) {
-                data.stripSensitiveInfo();
+                data = this.stripSensitiveInfo(data);
             }
             return this.mapper.hydrate(new Attendee(), data);
         } catch (e) {
@@ -54,7 +54,7 @@ export class AttendeeRepository extends BaseRepository {
     public async getById(id: string): Promise<Attendee> {
         try {
             const data = await this.get(id) as UserMapping;
-            return this.mapper.hydrate(new Attendee(), data);
+            return this.mapper.hydrate(new Attendee(), this.stripSensitiveInfo(data));
         } catch (e) {
             return e;
         }
@@ -69,7 +69,7 @@ export class AttendeeRepository extends BaseRepository {
     public async getAttendeesByRole(role: string): Promise<Attendee[]> {
         try {
             const data = await this.filter(r.row('roles').contains(role)) as UserMapping[];
-            return data.map(item => this.mapper.hydrate(new Attendee(), item));
+            return data.map(item => this.mapper.hydrate(new Attendee(), this.stripSensitiveInfo(item)));
         } catch (e) {
             return e;
         }
@@ -90,6 +90,11 @@ export class AttendeeRepository extends BaseRepository {
         }
     }
 
+    public stripSensitiveInfo(data: UserMapping) {
+        data.password = '';
+        data.salt = '';
+        return data;
+    }
     /**
      * Returns a mapper
      * @return AttendeeMapper

@@ -3,6 +3,7 @@ import Lesson from '../../models/Lesson';
 import Slide from '../../models/Slide';
 import {categoryService} from '../../services/categoryService';
 import SlideMapper from './SlideMapper';
+import * as uuid from 'uuid';
 
 export default class LessonMapper {
 
@@ -27,8 +28,7 @@ export default class LessonMapper {
                 const category = await categoryService.getById(data.categoryId);
                 lesson.setCategory(category);
             }
-
-            if (data.slides && !lesson.getSlides() || data.slides.length !== lesson.getSlides().length) {
+            if (data.slides && !lesson.getSlides() || data.slides && data.slides.length !== lesson.getSlides().length) {
                 lesson.setSlides(data.slides.map((slide) => slideMapper.hydrate(new Slide(), slide)));
             }
         } catch (e) {
@@ -43,11 +43,11 @@ export default class LessonMapper {
     dehydrate(lesson: Lesson) {
         const mapping = new LessonMapping();
         const slideMapper = new SlideMapper();
-        mapping.id = lesson.getId();
+        mapping.id = lesson.getId() ? lesson.getId() : uuid.v4();
         mapping.description = lesson.getDescription();
         mapping.title = lesson.getTitle();
         mapping.categoryId = lesson.getCategory().getId();
-        mapping.slides = lesson.getSlides().map(slideMapper.dehydrate);
+        mapping.slides = lesson.getSlides().map(slide => slideMapper.dehydrate(slide));
 
         return mapping;
     }

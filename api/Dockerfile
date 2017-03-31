@@ -7,7 +7,7 @@ WORKDIR /usr/classroom/api
 ENV APP_ENV development
 ENV TZ Europe/Bucharest
 
-ENV DB_HOST db.classroom.dkr
+ENV DB_HOST db.classroom
 ENV DB_PORT 28015
 ENV DB_NAME classroom
 ENV PORT 80

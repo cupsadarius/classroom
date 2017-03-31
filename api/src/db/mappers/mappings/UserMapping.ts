@@ -7,9 +7,4 @@ export default class UserData {
     public password: string;
     public phoneNumber: string;
     public roles: string[];
-
-    public stripSensitiveInfo() {
-        this.password = '';
-        this.salt = '';
-    }
 }

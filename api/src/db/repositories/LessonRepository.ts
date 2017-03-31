@@ -21,7 +21,10 @@ export class LessonRepository extends BaseRepository {
     public async getAll() {
         try {
             const data: LessonMapping[] = await super.getAll() as LessonMapping[];
-            return await data.map(async item => await this.mapper.hydrate(new Lesson(), item));
+            const lessons = data.map(async (item) => {
+                return await this.mapper.hydrate(new Lesson(), item);
+            });
+            return Promise.all(lessons);
         } catch (e) {
             return e;
         }
@@ -45,7 +48,8 @@ export class LessonRepository extends BaseRepository {
     public async getByCategory(category: Category) {
         try {
             const data = (await this.filter({categoryId: category.getId()}) as LessonMapping[]);
-            return await data.map(async item => await this.mapper.hydrate(new Lesson(), item));
+            const lessons = data.map(async item => await this.mapper.hydrate(new Lesson(), item));
+            return Promise.all(lessons);
         } catch (e) {
             return e;
         }

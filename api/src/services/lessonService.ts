@@ -28,6 +28,25 @@ export default class LessonService {
             const repo = this.getLessonRepository();
             const slideMapper = mapperFactory.getMapper('Slide') as SlideMapper;
             let lesson = await repo.getMapper().hydrate(new Lesson(), data);
+
+            lesson.setSlides(slides.map((file, index) => {
+                return slideMapper.convertFromUploadData(file, index);
+            }));
+            if (!this.validator.isValid(lesson)) {
+                throw this.validator.getErrors(lesson);
+            }
+            return await repo.insert(repo.getMapper().dehydrate(lesson));
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async update(id: string, data: LessonMapping, slides: FileMapping[]) {
+        try {
+            const repo = this.getLessonRepository();
+            let lesson = await this.getById(id);
+            const slideMapper = mapperFactory.getMapper('Slide') as SlideMapper;
+            lesson = await repo.getMapper().hydrate(lesson, data);
             lesson.setSlides(slides.map((file, index) => {
                 return slideMapper.convertFromUploadData(file, index);
             }));
@@ -43,6 +62,14 @@ export default class LessonService {
     public async getById(id: string) {
         try {
             return await this.getLessonRepository().getById(id);
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async delete(id: string) {
+        try {
+            return await this.getLessonRepository().delete([id]);
         } catch (e) {
             throw e;
         }

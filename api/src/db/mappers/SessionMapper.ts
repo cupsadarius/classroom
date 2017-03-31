@@ -1,6 +1,7 @@
 import Session from '../../models/Session';
 import SessionMapping from './mappings/SessionMapping';
 import {lessonService} from '../../services/lessonService';
+import * as uuid from 'uuid';
 
 export default class SessionMapper {
 
@@ -20,7 +21,7 @@ export default class SessionMapper {
 
   public dehydrate(session: Session): SessionMapping {
     const mapping = new SessionMapping();
-    mapping.id = session.getId();
+    mapping.id = session.getId() ? session.getId() : uuid.v4();
     mapping.startDate = session.getStartDate();
     mapping.endDate = session.getEndDate();
     mapping.lessonId = session.getLesson().getId();

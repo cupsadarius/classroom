@@ -23,7 +23,7 @@ router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER') , async (req: 
 
 router.post('/', async (req: Request, res: Response) => {
     try {
-        const id = await attendeeService.saveAttendee(req.body);
+        const id = await attendeeService.saveAttendee(req.body, false);
         res.status(201);
         res.json(new SuccessResponse(id));
     } catch (e) {
