@@ -7,7 +7,7 @@ import authController from '../controllers/authController';
 import lessonController from '../controllers/lessonController';
 import categoryController from '../controllers/categoryController';
 import classroomController from '../controllers/classroomController';
-
+import sessionController from '../controllers/sessionController';
 const router = Router();
 
 /**
@@ -19,6 +19,7 @@ router.use('/attendee/student', studentController);
 router.use('/lesson', lessonController);
 router.use('/category', categoryController);
 router.use('/classroom', classroomController);
+router.use('/classroom/:classroomId/session', sessionController);
 router.use('/', authController);
 router.use('/', defaultController);
 

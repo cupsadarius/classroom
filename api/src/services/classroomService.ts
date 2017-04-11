@@ -5,10 +5,20 @@ import {ClassroomRepository} from '../db/repositories/ClassroomRepository';
 import ClassroomMapping from '../db/mappers/mappings/ClassroomMapping';
 import Classroom from '../models/Classroom';
 
-export default class SessionService {
+export default class ClassroomService {
     private validator: ClassroomValidator;
     constructor() {
         this.validator = validatorFactory.getValidator('Classroom') as ClassroomValidator;
+    }
+
+    public async getAllByAttendee(attendeeId: string) {
+        try {
+            return await this.getClassroomRepository().filter((classroom: any) => {
+                return classroom('teachers').contains(attendeeId).or(classroom('students').contains(attendeeId));
+            });
+        } catch (e) {
+            throw e;
+        }
     }
 
     public async createClassroom(data: ClassroomMapping) {
@@ -59,4 +69,4 @@ export default class SessionService {
     }
 }
 
-export const sessionService = new SessionService();
+export const classroomService = new ClassroomService();

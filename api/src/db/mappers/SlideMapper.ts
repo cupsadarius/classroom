@@ -41,7 +41,7 @@ export default class SlideMapper implements MapperInterface<Slide, SlideMapping>
         const slide = new Slide();
         slide.setId(uuid.v4());
         slide.setName(data.filename);
-        slide.setPath(data.path);
+        slide.setPath(data.path.replace('/usr/classroom/api', ''));
         slide.setType(data.mimetype);
         slide.setOrder(index);
 

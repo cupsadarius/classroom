@@ -37,7 +37,13 @@ export default class BaseRepository {
                       return reject(err);
                   }
 
-                  resolve(result.generated_keys ? result.generated_keys[0] : result.inserted ? data.id : result.inserted);
+                  resolve(
+                      result.generated_keys ?
+                          result.generated_keys[0] :
+                          result.inserted ?
+                              (data as {id: string}).id :
+                              result.inserted
+                  );
               });
        });
     }

@@ -7,6 +7,7 @@ export type UserFormProps = {
   user: User,
   save: (user) => void,
   errors: ?String,
+  allowedRoles: String[],
 };
 
 export default class UserForm extends BaseComponent {
@@ -51,47 +52,68 @@ export default class UserForm extends BaseComponent {
     this.setState({user});
   }
 
+  getRolesOptions() {
+    return this.props.allowedRoles ? this.props.allowedRoles.map((allowedRole, index) => {
+      let role = '';
+      switch (allowedRole) {
+        case 'ROLE_STUDENT':
+          role = 'Student';
+          break;
+        case 'ROLE_TEACHER':
+          role = 'Teacher';
+          break;
+        case 'ROLE_ADMIN':
+          role = 'Administrator';
+          break;
+        default:
+          role = 'Student';
+      }
+      return <option value="{allowedRole}" key={index}>{role}</option>;
+    }) : '';
+  }
+
   render(): React.Component {
+    const roles = this.getRolesOptions();
     return (
       <div className="userForm">
         <form>
           <div className="form-group">
             <label htmlFor="firstName">First Name</label>
             <input type="text" className="form-control" id="firstName" placeholder="First Name"
-                   value={this.state.user.firstName} onChange={this.handleChange.bind(this, 'firstName')} />
+                   value={this.state.user.firstName} onChange={this.handleChange.bind(this, 'firstName')}/>
           </div>
           <div className="form-group">
             <label htmlFor="lastName">Last Name</label>
             <input type="text" className="form-control" id="lastName" placeholder="Last Name"
-                   value={this.state.user.lastName} onChange={this.handleChange.bind(this, 'lastName')} />
+                   value={this.state.user.lastName} onChange={this.handleChange.bind(this, 'lastName')}/>
           </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input type="email" className="form-control" id="email" placeholder="Email"
-                   value={this.state.user.email} onChange={this.handleChange.bind(this, 'email')} />
+                   value={this.state.user.email} onChange={this.handleChange.bind(this, 'email')}/>
           </div>
           <div className="form-group">
             <label htmlFor="phoneNumber">Phone Number</label>
             <input type="text" className="form-control" id="phoneNumber" placeholder="Phone Number"
-                   value={this.state.user.phoneNumber} onChange={this.handleChange.bind(this, 'phoneNumber')} />
+                   value={this.state.user.phoneNumber} onChange={this.handleChange.bind(this, 'phoneNumber')}/>
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input type="password" className="form-control" id="password" placeholder="Password"
-                   value={this.state.user.password} onChange={this.handleChange.bind(this, 'password')} />
+                   value={this.state.user.password} onChange={this.handleChange.bind(this, 'password')}/>
           </div>
           <div className="form-group">
             <label htmlFor="roles">Roles</label>
             <select className="form-control" multiple name="roles" id="roles" value={this.state.user.roles}
-                    onChange={this.handleRoleChange.bind(this)} >
-                <option value="ROLE_STUDENT">Student</option>
-                <option value="ROLE_TEACHER">Teacher</option>
-                <option value="ROLE_ADMIN">Administrator</option>
-            </select>
+                    onChange={this.handleRoleChange.bind(this)}>
+              {roles}
+          </select>
           </div>
           <div className="form-group">
             <button type="button" className="col-xs-5 btn btn-primary" onClick={this.saveUser.bind(this)}>Save</button>
-            <button type="button" className="col-xs-5 col-xs-offset-2 btn btn-default" onClick={this.clearForm.bind(this)}>Clear</button>
+            <button type="button" className="col-xs-5 col-xs-offset-2 btn btn-default"
+                    onClick={this.clearForm.bind(this)}>Clear
+            </button>
           </div>
         </form>
         <div className="clearfix"></div>

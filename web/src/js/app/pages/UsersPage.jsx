@@ -48,7 +48,7 @@ export default class UsersPage extends BasePage {
             </div>
             <div className="col-xs-4">
               <h3>{`${this.state.selectedUser.getId() ? 'Edit' : 'Add new'} user`}</h3>
-              <UserForm user={this.state.selectedUser} save={this.saveUser.bind(this)} errors={this.state.errors} />
+              <UserForm user={this.state.selectedUser} save={this.saveUser.bind(this)} errors={this.state.errors} allowedRoles={['ROLE_STUDENT', 'ROLE_TEACHER', 'ROLE_ADMIN']}/>
             </div>
           </div>
         </div>

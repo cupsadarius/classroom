@@ -1,81 +1,98 @@
 version: '2'
 services:
-  proxy:
-    image: jwilder/nginx-proxy
+  traefik:
+    image: traefik
+    command: --web --docker --docker.domain="classroom.dkr" --logLevel=DEBUG
     ports:
       - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
     networks:
       - default
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
 
   portainer:
     image: portainer/portainer
-    ports:
-      - 9000:9000
+    expose:
+      - 9000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - proxy
-    environment:
-      VIRTUAL_HOST: monitoring.classroom.dkr
+      - traefik
+    networks:
+      - default
+    labels:
+      - "traefik.port=9000"
+      - "traefik.backend=monitoring"
+      - "traefik.frontend.rule=Host:monitoring.classroom.dkr"
 
   rethinkdb:
     image: rethinkdb
-    ports:
-      - 8080:8080
-      - 28015:28015
+    expose:
+      - 8080
+      - 28015
     volumes:
       - storage:/data
     depends_on:
-      - proxy
-    environment:
-      VIRTUAL_HOST: db.classroom.dkr
+      - traefik
     networks:
       default:
         aliases:
           - db.classroom
+    labels:
+      - "traefik.port=8080"
+      - "traefik.backend=rethinkdb"
+      - "traefik.frontend.rule=Host:db.classroom.dkr"
 
   api:
     build:
       context: ./api
     image: classroom:api
     depends_on:
-      - proxy
+      - traefik
       - rethinkdb
     expose:
       - 80
     networks:
       - default
-    environment:
-      VIRTUAL_HOST: api.classroom.dkr
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=api"
+      - "traefik.frontend.rule=Host:api.classroom.dkr"
 
   socket:
     build:
       context: ./socket
     image: classroom:socket
     depends_on:
-      - proxy
+      - traefik
       - rethinkdb
     expose:
       - 80
     networks:
       - default
-    environment:
-      VIRTUAL_HOST: socket.classroom.dkr
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=socket"
+      - "traefik.frontend.rule=Host:socket.classroom.dkr"
 
   web:
     build:
       context: ./web
     image: classroom:web
     depends_on:
-      - proxy
+      - traefik
+      - api
+      - socket
     expose:
       - 80
     networks:
       - default
-    environment:
-      VIRTUAL_HOST: web.classroom.dkr
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=web"
+      - "traefik.frontend.rule=Host:classroom.dkr"
 
 volumes:
   storage:
