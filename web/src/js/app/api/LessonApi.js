@@ -35,8 +35,10 @@ export class LessonApi extends BaseApi {
       method: event.lesson.id ? 'PUT' : 'POST',
       headers: {'x-access-token': LocalStorage.get('token')},
       data: {
-        name: event.lesson.name,
+        title: event.lesson.title,
         description: event.lesson.description,
+        categoryId: event.lesson.category.id,
+        slides: event.lesson.slides,
       },
       success: (response) => {
         if (response.status) {
