@@ -39,7 +39,7 @@ export default class CategoryForm extends BaseComponent {
 
   render(): React.Component {
     return (
-      <div className="userForm">
+      <div className="categoryForm">
         <form>
           <div className="form-group">
             <label htmlFor="name">Name</label>

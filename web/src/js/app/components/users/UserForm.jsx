@@ -107,7 +107,7 @@ export default class UserForm extends BaseComponent {
             <select className="form-control" multiple name="roles" id="roles" value={this.state.user.roles}
                     onChange={this.handleRoleChange.bind(this)}>
               {roles}
-          </select>
+            </select>
           </div>
           <div className="form-group">
             <button type="button" className="col-xs-5 btn btn-primary" onClick={this.saveUser.bind(this)}>Save</button>

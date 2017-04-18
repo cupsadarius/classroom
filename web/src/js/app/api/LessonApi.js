@@ -29,15 +29,26 @@ export class LessonApi extends BaseApi {
     });
   }
 
+  createFormDataObject(lesson: Lesson) {
+    const formData = new FormData();
+    formData.append('title', lesson.title);
+    formData.append('description', lesson.description);
+    formData.append('categoryId', lesson.category.id);
+    lesson.slides.forEach(slide => {
+      formData.append('slides', slide);
+    });
+
+    return formData;
+  }
+
   onSaveLessonEvent(event: SaveLessonEvent) {
     $.ajax({
       url: `${VERSIONED_BASE_API_URL}/lesson${event.lesson.id ? `/${event.lesson.id}` : ''}`,
       method: event.lesson.id ? 'PUT' : 'POST',
       headers: {'x-access-token': LocalStorage.get('token')},
-      data: {
-        name: event.lesson.name,
-        description: event.lesson.description,
-      },
+      data: this.createFormDataObject(event.lesson),
+      processData: false,
+      contentType: false,
       success: (response) => {
         if (response.status) {
           setTimeout(() => {
@@ -67,14 +78,10 @@ export class LessonApi extends BaseApi {
       url: `${VERSIONED_BASE_API_URL}/lesson/${event.lessonId}`,
       method: 'DELETE',
       headers: {'x-access-token': LocalStorage.get('token')},
-      success: (response) => {
-        if (response.status) {
-          setTimeout(() => {
-            Dispatcher.dispatch(new LoadLessonsEvent());
-          }, 1);
-        } else {
-          console.warn(response);
-        }
+      success: () => {
+        setTimeout(() => {
+          Dispatcher.dispatch(new LoadLessonsEvent());
+        }, 1);
       },
       error: (err) => {
         switch (err.status) {
