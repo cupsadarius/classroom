@@ -56,7 +56,7 @@ export default class LessonsPage extends BasePage {
                 lesson={this.state.lessons.selectedLesson}
                 categories={this.state.categories.categories}
                 save={this.saveLesson.bind(this)}
-                errors={this.state.errors}
+                errors={this.state.lessons.errors}
               />
             </div>
           </div>

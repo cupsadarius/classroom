@@ -32,9 +32,9 @@ export default class SessionService {
         }
     }
 
-    public async getByIds(ids: string[]): Promise<Session[]> {
+    public async getByIds(ids: string[]) {
         try {
-            return await this.getSessionRepository().getAllByIds(ids) as Promise<Session[]>;
+            return await this.getSessionRepository().getByIds(ids);
         } catch (e) {
             throw e;
         }

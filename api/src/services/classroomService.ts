@@ -64,8 +64,16 @@ export default class ClassroomService {
         }
     }
 
+    public async delete(id: string) {
+        try {
+            return await this.getClassroomRepository().delete([id]);
+        } catch (e) {
+            throw e;
+        }
+    }
+
     private getClassroomRepository(): ClassroomRepository {
-        return db.getRepo('sessionRepository') as ClassroomRepository;
+        return db.getRepo('classroomRepository') as ClassroomRepository;
     }
 }
 

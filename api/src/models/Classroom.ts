@@ -7,7 +7,7 @@ export default class Classroom extends BaseModel {
     protected teachers: Attendee[] = [];
     protected students: Attendee[] = [];
     protected sessions: Session[] = [];
-    protected lastSessionId: string;
+    protected lastSessionId: string = '';
 
     public getName() {
         return this.name;

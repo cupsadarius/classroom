@@ -52,7 +52,7 @@ router.delete('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), async (
     try {
         await lessonService.delete(req.params.id);
         res.status(200);
-        res.end();
+        res.json(new SuccessResponse(''));
     } catch (e) {
         res.status(400);
         res.json(new ErrorResponse(e));

@@ -10,11 +10,11 @@ export default class ClassroomMapper {
       if (data.id || classroom.getId()) {
         classroom.setId(data.id || classroom.getId());
       }
-      classroom.setName(data.name);
-      classroom.setLastSessionId(data.lastSessionId);
-      classroom.setStudents(await attendeeService.getByIds(data.students));
-      classroom.setTeachers(await attendeeService.getByIds(data.teachers));
-      classroom.setSessions(await sessionService.getByIds(data.sessions));
+      classroom.setName(data.name || classroom.getName());
+      classroom.setLastSessionId(data.lastSessionId || classroom.getLastSessionId());
+      await classroom.setStudents(data.students && data.students.length ? await attendeeService.getByIds(data.students) : classroom.getStudents());
+      await classroom.setTeachers(data.teachers && data.teachers.length ? await attendeeService.getByIds(data.teachers) : classroom.getTeachers());
+      await classroom.setSessions(data.sessions && data.sessions.length ? await sessionService.getByIds(data.sessions) : classroom.getSessions());
     } catch (e) {
       return e;
     }

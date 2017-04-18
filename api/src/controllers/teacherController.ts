@@ -11,7 +11,7 @@ const router = Router();
  * Teacher controller
  */
 
-router.get('/', authenticated, authorizedWithRole('ROLE_ADMIN') , async (req: Request, res: Response) => {
+router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER') , async (req: Request, res: Response) => {
     try {
         const teachers = await attendeeService.getAttendees(true);
         res.status(200);

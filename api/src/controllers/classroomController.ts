@@ -21,20 +21,48 @@ router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: R
     }
 });
 
-router.post('/', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
-    res.json('');
+router.post('/', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+    try {
+        const classroomId = await classroomService.createClassroom(req.body);
+        res.status(201);
+        res.json(new SuccessResponse(classroomId));
+    } catch (e) {
+        res.status(400);
+        res.json(new ErrorResponse(e));
+    }
 });
 
-router.get('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
-    res.json('');
+router.get('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+    try {
+        const classroom = await classroomService.getById((req.params.id));
+        res.status(200);
+        res.json(new SuccessResponse(classroom));
+    } catch (e) {
+        res.status(400);
+        res.json(new ErrorResponse(e));
+    }
 });
 
-router.put('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
-    res.json('');
+router.put('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+    try {
+        const classroom = await classroomService.update(req.params.id, req.body);
+        res.status(200);
+        res.json(new SuccessResponse(classroom));
+    } catch (e) {
+        res.status(400);
+        res.json(new ErrorResponse(e));
+    }
 });
 
-router.delete('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), (req: Request, res: Response) => {
-    res.json('');
+router.delete('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+    try {
+        await classroomService.delete(req.params.id);
+        res.status(200);
+        res.json(new SuccessResponse(''));
+    } catch (e) {
+        res.status(400);
+        res.json(new ErrorResponse(e));
+    }
 });
 
 export default router;
