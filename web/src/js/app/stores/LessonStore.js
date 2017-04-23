@@ -35,6 +35,10 @@ export class LessonStore extends BaseStore {
     this.update(state);
     this.emitChange();
   }
+
+  getLessonById(lessonId) {
+    return this.state.lessons.filter(lesson => lesson.getId() === lessonId).pop();
+  }
 }
 
 export let createStore = generateCreateStore(LessonStore);

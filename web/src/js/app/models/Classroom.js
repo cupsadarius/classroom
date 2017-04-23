@@ -71,6 +71,22 @@ export default class Classroom {
     this.id = value;
   }
 
+  getLastSession() {
+    return this.sessions.filter(session => session.getId() === this.lastSessionId).pop();
+  }
+
+  getPreviousSessions() {
+    return this.sessions.filter((session) => {
+      return session.getEndDate() < new Date();
+    });
+  }
+
+  getFutureSessions() {
+    return this.sessions.filter((session) => {
+      return session.getStartDate() > new Date() || (session.getStartDate() < new Date() && session.getEndDate() > new Date());
+    })
+  }
+
   populate(data) {
     this.setId(data.id || this.getId());
     this.setName(data.name || this.getName());

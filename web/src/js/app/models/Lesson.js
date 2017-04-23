@@ -61,6 +61,14 @@ export default class Lesson {
     this.category = value;
   }
 
+  getPastSessions() {
+
+  }
+
+  getFutureSessions() {
+
+  }
+
   populate(data) {
     this.setId(data.id || this.getId());
     this.setTitle(data.title || this.getTitle());

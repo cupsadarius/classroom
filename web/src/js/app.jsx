@@ -11,6 +11,7 @@ import SessionsPage from './app/pages/SessionsPage.jsx';
 import ContainerPage from './app/pages/ContainerPage.jsx';
 import CategoriesPage from './app/pages/CategoriesPage.jsx';
 import ClassroomsPage from './app/pages/ClassroomsPage.jsx';
+import Classroom from './app/pages/Classroom.jsx';
 import ReactDOM from 'react-dom';
 
 // init api
@@ -47,6 +48,7 @@ export default class App extends BaseComponent {
           <IndexRoute component={LoginPage}/>
           <Route path='login' component={LoginPage}/>
           <Route path='home' component={HomePage}/>
+          <Route path={'session/:id'} component={Classroom}/>
           <Route path='management/'>
             <Route path='users' component={UsersPage}/>
             <Route path='teachers' component={TeachersPage}/>
