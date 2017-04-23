@@ -18,8 +18,8 @@ router.use('/attendee/teacher', teacherController);
 router.use('/attendee/student', studentController);
 router.use('/lesson', lessonController);
 router.use('/category', categoryController);
+router.use('/session', sessionController);
 router.use('/classroom', classroomController);
-router.use('/classroom/:classroomId/session', sessionController);
 router.use('/', authController);
 router.use('/', defaultController);
 

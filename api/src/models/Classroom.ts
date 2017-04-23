@@ -72,4 +72,8 @@ export default class Classroom extends BaseModel {
     public removeSession(session: Session) {
         this.sessions = this.sessions.filter(existingSession => existingSession.getId() !== session.getId());
     }
+
+    public removeSessionById(sessionId: string) {
+        this.sessions = this.sessions.filter(existingSession => existingSession.getId() !== sessionId);
+    }
 }

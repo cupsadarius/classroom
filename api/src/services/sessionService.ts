@@ -4,6 +4,7 @@ import Session from '../models/Session';
 import SessionMapping from '../db/mappers/mappings/SessionMapping';
 import SessionValidator from '../db/validators/SessionValidator';
 import validatorFactory from '../db/validators/ValidatorFactory';
+import {classroomService} from './classroomService';
 
 export default class SessionService {
     private validator: SessionValidator;
@@ -11,14 +12,30 @@ export default class SessionService {
         this.validator = validatorFactory.getValidator('Session') as SessionValidator;
     }
 
-    public async createSession(data: SessionMapping) {
+    public async createSession(classroomId: string, data: SessionMapping) {
         try {
             const repo = this.getSessionRepository();
             const session = await repo.getMapper().hydrate(new Session(), data);
             if (!this.validator.isValid(session)) {
                 throw this.validator.getErrors(session);
             }
-            return await repo.insert(repo.getMapper().dehydrate(session));
+            const inserted = await repo.insert(repo.getMapper().dehydrate(session));
+            if (inserted) {
+                const classroom = await classroomService.getById(classroomId);
+                classroom.addSession(session);
+                await classroomService.saveClassroom(classroom);
+            }
+
+            return inserted;
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async getAllForClassroom(classroomId: string) {
+        try {
+            const classroom = await classroomService.getById(classroomId);
+            return classroom.getSessions();
         } catch (e) {
             throw e;
         }
@@ -49,6 +66,19 @@ export default class SessionService {
                 throw this.validator.getErrors(session);
             }
             return await repo.update({id}, repo.getMapper().dehydrate(session));
+        } catch (e) {
+            throw e;
+        }
+    }
+
+    public async delete(classroomId: string, id: string) {
+        try {
+            const deleted = await this.getSessionRepository().delete([id]);
+            const classroom = await classroomService.getById(classroomId);
+            classroom.removeSessionById(classroom.getId());
+            await classroomService.saveClassroom(classroom);
+
+            return deleted;
         } catch (e) {
             throw e;
         }

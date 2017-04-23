@@ -10,9 +10,9 @@ export default class SessionMapper {
       if (data.id || session.getId()) {
         session.setId(data.id || session.getId());
       }
-      session.setStartDate(new Date(data.startDate));
-      session.setEndDate(new Date(data.endDate));
-      session.setLesson(await lessonService.getById(data.lessonId));
+      session.setStartDate(new Date(data.startDate ? data.startDate : session.getStartDate()));
+      session.setEndDate(new Date(data.endDate ? data.endDate : session.getEndDate()));
+      session.setLesson(data.lessonId ? await lessonService.getById(data.lessonId) : session.getLesson());
     } catch (e) {
       return e;
     }

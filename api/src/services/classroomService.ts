@@ -72,6 +72,18 @@ export default class ClassroomService {
         }
     }
 
+    public async saveClassroom(classroom: Classroom) {
+        try {
+            const repo = this.getClassroomRepository();
+            if (!this.validator.isValid(classroom)) {
+                throw this.validator.getErrors(classroom);
+            }
+            return await repo.update({id: classroom.getId()}, repo.getMapper().dehydrate(classroom));
+        } catch (e) {
+            throw e;
+        }
+    }
+
     private getClassroomRepository(): ClassroomRepository {
         return db.getRepo('classroomRepository') as ClassroomRepository;
     }

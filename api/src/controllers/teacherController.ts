@@ -4,7 +4,6 @@ import SuccessResponse from '../helpers/SuccessResponse';
 import ErrorResponse from '../helpers/ErrorResponse';
 import {authenticated} from '../middlewares/authenticated';
 import {authorizedWithRole} from '../middlewares/authorizedWithRole';
-import Attendee from '../models/Attendee';
 const router = Router();
 
 /** 
