@@ -57,6 +57,8 @@ services:
       - 80
     networks:
       - default
+    volumes:
+      - uploads:/usr/classroom/api/uploads
     labels:
       - "traefik.port=80"
       - "traefik.backend=api"
@@ -97,6 +99,8 @@ services:
 
 volumes:
   storage:
+    driver: local
+  uploads:
     driver: local
 networks:
   default:
