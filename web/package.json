@@ -69,7 +69,7 @@
     "eslint": "^1.10.3",
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-react": "^3.10.0",
-    "flow-bin": "^0.22.0",
+    "flow-bin": "^0.44.2",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "2.1.0",
     "gulp-changed": "^1.0.0",

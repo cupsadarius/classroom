@@ -59,7 +59,7 @@ export class AttendeeApi extends BaseApi {
 
   onSaveAttendeeEvent(event: SaveAttendeeEvent) {
     $.ajax({
-      url: `${VERSIONED_BASE_API_URL}/user${event.user.id ? `/${event.user.id}` : ''}`,
+      url: `${VERSIONED_BASE_API_URL}/attendee${event.user.hasRole('ROLE_TEACHER') ? '/teacher' : '/student'}${event.user.id ? `/${event.user.id}` : ''}`,
       method: event.user.id ? 'PUT' : 'POST',
       headers: {'x-access-token': LocalStorage.get('token')},
       data: {
@@ -95,7 +95,7 @@ export class AttendeeApi extends BaseApi {
 
   onDeleteAttendeeEvent(event: DeleteAttendeeEvent) {
     $.ajax({
-      url: `${VERSIONED_BASE_API_URL}/user/${event.userId}`,
+      url: `${VERSIONED_BASE_API_URL}/attendee${event.user.hasRole('ROLE_TEACHER') ? '/teacher' : '/student'}/${event.userId}`,
       method: 'DELETE',
       headers: {'x-access-token': LocalStorage.get('token')},
       success: (response) => {
