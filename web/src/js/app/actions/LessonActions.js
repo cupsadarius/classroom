@@ -11,7 +11,7 @@ export class LessonActions extends BaseAction {
   selectLesson(lesson: Lesson) {
     this.trigger(new lessonEvents.SelectLessonEvent(lesson));
   }
-  deleteLesson(lessonId: String) {
+  deleteLesson(lessonId: string) {
     this.trigger(new lessonEvents.DeleteLessonEvent(lessonId));
   }
   saveLesson(lesson: Lesson) {

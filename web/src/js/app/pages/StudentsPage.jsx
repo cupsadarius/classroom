@@ -26,7 +26,7 @@ export default class StudentsPage extends BasePage {
     AttendeeActions.saveAttendee(user);
   }
 
-  deleteUser(userId: String) {
+  deleteUser(userId: string) {
     AttendeeActions.deleteAttendee(userId);
   }
 

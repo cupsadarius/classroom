@@ -2,7 +2,7 @@
 import Category from '../models/Category.js';
 
 export class LoadCategoriesEvent {
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'LoadCategoriesEvent';
@@ -10,7 +10,7 @@ export class LoadCategoriesEvent {
 }
 
 export class CategoriesLoadedSuccessfullyEvent {
-  className: String;
+  className: string;
   categories: Category[];
 
   constructor(categories: Category[]) {
@@ -20,7 +20,7 @@ export class CategoriesLoadedSuccessfullyEvent {
 }
 
 export class SaveCategoryEvent {
-  className: String;
+  className: string;
   category: Category;
 
   constructor(category: Category) {
@@ -30,7 +30,7 @@ export class SaveCategoryEvent {
 }
 
 export class SelectCategoryEvent {
-  className: String;
+  className: string;
   category: Category;
 
   constructor(category: Category) {
@@ -40,20 +40,20 @@ export class SelectCategoryEvent {
 }
 
 export class DeleteCategoryEvent {
-  className: String;
-  categoryId: String;
+  className: string;
+  categoryId: string;
 
-  constructor(categoryId: String) {
+  constructor(categoryId: string) {
     this.className = 'DeleteCategoryEvent';
     this.categoryId = categoryId;
   }
 }
 
 export class CategoryFormErrorsEvent {
-  className: String;
-  errors: String;
+  className: string;
+  errors: string;
 
-  constructor(errors: String) {
+  constructor(errors: string) {
     this.className = 'CategoryFormErrorsEvent';
     this.errors = errors;
   }

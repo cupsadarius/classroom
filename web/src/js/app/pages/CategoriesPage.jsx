@@ -21,7 +21,7 @@ export default class CategoriesPage extends BasePage {
     CategoriesActions.selectCategory(category);
   }
 
-  deleteCategory(categoryId: String) {
+  deleteCategory(categoryId: string) {
     CategoriesActions.deleteCategory(categoryId);
   }
 

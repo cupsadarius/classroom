@@ -44,19 +44,19 @@ export default class App extends BaseComponent {
   render(): React.Element {
     return (
       <Router history={browserHistory}>
-        <Route path='/' component={ContainerPage} >
+        <Route path="/" component={ContainerPage} >
           <IndexRoute component={LoginPage}/>
-          <Route path='login' component={LoginPage}/>
-          <Route path='home' component={HomePage}/>
-          <Route path={'session/:id'} component={Classroom}/>
-          <Route path='management/'>
-            <Route path='users' component={UsersPage}/>
-            <Route path='teachers' component={TeachersPage}/>
-            <Route path='students' component={StudentsPage}/>
-            <Route path='lessons' component={LessonsPage}/>
-            <Route path='sessions' component={SessionsPage}/>
-            <Route path='categories' component={CategoriesPage}/>
-            <Route path='classrooms' component={ClassroomsPage}/>
+          <Route path="login" component={LoginPage}/>
+          <Route path="home" component={HomePage}/>
+          <Route path="session/:id" component={Classroom}/>
+          <Route path="management/">
+            <Route path="users" component={UsersPage}/>
+            <Route path="teachers" component={TeachersPage}/>
+            <Route path="students" component={StudentsPage}/>
+            <Route path="lessons" component={LessonsPage}/>
+            <Route path="sessions" component={SessionsPage}/>
+            <Route path="categories" component={CategoriesPage}/>
+            <Route path="classrooms" component={ClassroomsPage}/>
           </Route>
         </Route>
       </Router>

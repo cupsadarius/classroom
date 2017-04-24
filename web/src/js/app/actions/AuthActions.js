@@ -4,7 +4,7 @@ import BaseAction from './BaseAction.js';
 import * as authEvents from '../events/AuthEvents.js';
 
 export class AuthActions extends BaseAction {
-  login(email: String, password: String) {
+  login(email: string, password: string) {
     this.trigger(new authEvents.LoginEvent(email, password));
   }
 

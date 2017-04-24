@@ -8,6 +8,7 @@ import AttendeeActions from '../actions/AttendeeActions.js';
 import ClassroomActions from '../actions/ClassroomActions.js';
 import ClassroomsTable from '../components/classrooms/ClassroomsTable.jsx';
 import ClassroomForm from '../components/classrooms/ClassroomForm.jsx';
+import Classroom from '../models/Classroom.js';
 export default class ClassroomsPage extends BasePage {
   createStore() {
     return createStore({
@@ -26,14 +27,14 @@ export default class ClassroomsPage extends BasePage {
     ClassroomActions.selectClassroom(classroom);
   }
 
-  deleteClassroom(classroomId: String) {
+  deleteClassroom(classroomId: string) {
     ClassroomActions.deleteClassroom(classroomId);
   }
 
   saveClassroom(classroom: Classroom) {
     ClassroomActions.saveClassroom(classroom);
   }
-  
+
   render(): React.Element {
     return (
       <div className="row">

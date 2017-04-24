@@ -1,12 +1,12 @@
 /* @flow */
 
 export default class Category {
-  id: ?String;
-  name: String;
-  description: String;
+  id: string;
+  name: string;
+  description: string;
 
-  constructor(data) {
-    this.id = null;
+  constructor(data?: Object) {
+    this.id = '';
     this.name = '';
     this.description = '';
     if (data) {
@@ -14,31 +14,31 @@ export default class Category {
     }
   }
 
-  getId(): String {
+  getId(): string {
     return this.id;
   }
 
-  setId(id: String) {
+  setId(id: string) {
     this.id = id;
   }
 
-  getName(): String {
+  getName(): string {
     return this.name;
   }
 
-  setName(name: String) {
+  setName(name: string) {
     this.name = name;
   }
 
-  getDescription(): String {
+  getDescription(): string {
     return this.description;
   }
 
-  setDescription(description: String) {
+  setDescription(description: string) {
     this.description = description;
   }
 
-  populate(data) {
+  populate(data: Object) {
     this.setId(data.id);
     this.setDescription(data.description);
     this.setName(data.name);

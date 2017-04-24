@@ -11,7 +11,7 @@ export class CategoriesActions extends BaseAction {
   selectCategory(category: Category) {
     this.trigger(new categoriesEvents.SelectCategoryEvent(category));
   }
-  deleteCategory(categoryId: String) {
+  deleteCategory(categoryId: string) {
     this.trigger(new categoriesEvents.DeleteCategoryEvent(categoryId));
   }
   saveCategory(category: Category) {

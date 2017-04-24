@@ -16,7 +16,7 @@ export class AttendeeActions extends BaseAction {
   saveAttendee(user: User) {
     this.trigger(new attendeeEvents.SaveAttendeeEvent(user));
   }
-  deleteAttendee(userId: String) {
+  deleteAttendee(userId: string) {
     this.trigger(new attendeeEvents.DeleteAttendeeEvent(userId));
   }
 }

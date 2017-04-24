@@ -6,21 +6,21 @@ import {API_BASE_URL} from '../../api/BaseApi.js';
 type LessonFormProps = {
   lesson: Lesson,
   categories: Category[],
-  save: (lesson) => void,
-  errors: ?String,
+  save: (lesson: Lesson) => void,
+  errors: ?string,
 };
 export default class LessonForm extends BaseComponent {
 
   props: LessonFormProps;
 
-  constructor(props) {
+  constructor(props: LessonFormProps) {
     super(props);
     this.state = {
       lesson: new Lesson(),
     };
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps(newProps: LessonFormProps) {
     this.setState({lesson: newProps.lesson});
   }
 
@@ -32,20 +32,20 @@ export default class LessonForm extends BaseComponent {
     this.setState({lesson: new Lesson()});
   }
 
-  handleChange(field, event) {
+  handleChange(field: string, event: Object) {
     const lesson = this.state.lesson;
     lesson[`${field}`] = event.target.value;
     this.setState({lesson});
   }
 
-  handleCategoryChange(event) {
+  handleCategoryChange(event: Object) {
     const newCategoryId = event.target.value;
     const lesson = this.state.lesson;
     lesson.category = this.props.categories.filter(category => category.id === newCategoryId).pop();
     this.setState({lesson});
   }
 
-  handleSlideChange(index, event) {
+  handleSlideChange(index: number, event: Object) {
     const lesson = this.state.lesson;
     lesson.slides[index] = event.target.files[0];
     this.setState({lesson});
@@ -87,7 +87,7 @@ export default class LessonForm extends BaseComponent {
     this.setState({lesson});
   }
 
-  removeSlideInput(index) {
+  removeSlideInput(index: number) {
     const lesson = this.state.lesson;
     lesson.slides.splice(index, 1);
     this.setState({lesson});

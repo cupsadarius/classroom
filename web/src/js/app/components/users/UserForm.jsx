@@ -5,22 +5,22 @@ import User from '../../models/User.js';
 
 export type UserFormProps = {
   user: User,
-  save: (user) => void,
-  errors: ?String,
-  allowedRoles: String[],
+  save: (user: User) => void,
+  errors: ?string,
+  allowedRoles: string[],
 };
 
 export default class UserForm extends BaseComponent {
   props: UserFormProps;
 
-  constructor(props) {
+  constructor(props: UserFormProps) {
     super(props);
     this.state = {
       user: new User(),
     };
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps(newProps: UserFormProps) {
     this.setState({user: newProps.user});
   }
 
@@ -32,13 +32,13 @@ export default class UserForm extends BaseComponent {
     this.setState({user: new User()});
   }
 
-  handleChange(field, event) {
+  handleChange(field: string, event: Object) {
     const user = this.state.user;
     user[`${field}`] = event.target.value;
     this.setState({user});
   }
 
-  handleRoleChange(event) {
+  handleRoleChange(event: Object) {
     const user = this.state.user;
     const newRole = event.target.value;
     const roleLength = user.roles.length;

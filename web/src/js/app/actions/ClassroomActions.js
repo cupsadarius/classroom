@@ -11,7 +11,7 @@ export class ClassroomActions extends BaseAction {
   selectClassroom(classroom: Classroom) {
     this.trigger(new classroomEvents.SelectClassroomEvent(classroom));
   }
-  deleteClassroom(classroomId: String) {
+  deleteClassroom(classroomId: string) {
     this.trigger(new classroomEvents.DeleteClassroomEvent(classroomId));
   }
   saveClassroom(classroom: Classroom) {

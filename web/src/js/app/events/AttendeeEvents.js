@@ -2,7 +2,7 @@
 import User from '../models/User.js';
 
 export class LoadTeachersEvent {
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'LoadTeachersEvent';
@@ -10,7 +10,7 @@ export class LoadTeachersEvent {
 }
 
 export class LoadStudentsEvent {
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'LoadStudentsEvent';
@@ -18,27 +18,27 @@ export class LoadStudentsEvent {
 }
 
 export class TeachersLoadedSuccessfullyEvent {
-  className: String;
+  className: string;
   users: User[];
 
-  constructor(users) {
+  constructor(users: User[]) {
     this.className = 'TeachersLoadedSuccessfullyEvent';
     this.users = users;
   }
 }
 
 export class StudentsLoadedSuccessfullyEvent {
-  className: String;
+  className: string;
   users: User[];
 
-  constructor(users) {
+  constructor(users: User[]) {
     this.className = 'StudentsLoadedSuccessfullyEvent';
     this.users = users;
   }
 }
 
 export class SelectAttendeeEvent {
-  className: String;
+  className: string;
   user: User;
 
   constructor(user: User) {
@@ -48,7 +48,7 @@ export class SelectAttendeeEvent {
 }
 
 export class SaveAttendeeEvent {
-  className: String;
+  className: string;
   user: User;
 
   constructor(user: User) {
@@ -58,20 +58,20 @@ export class SaveAttendeeEvent {
 }
 
 export class DeleteAttendeeEvent {
-  className: String;
-  userId: String;
+  className: string;
+  userId: string;
 
-  constructor(userId: String) {
+  constructor(userId: string) {
     this.className = 'DeleteAttendeeEvent';
     this.userId = userId;
   }
 }
 
 export class AttendeeFormErrorsEvent {
-  className: String;
-  errors: String;
+  className: string;
+  errors: string;
 
-  constructor(errors: String) {
+  constructor(errors: string) {
     this.className = 'AttendeeFormErrorsEvent';
     this.errors = errors;
   }

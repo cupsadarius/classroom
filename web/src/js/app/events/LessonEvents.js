@@ -2,7 +2,7 @@
 import Lesson from '../models/Lesson.js';
 
 export class LoadLessonsEvent {
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'LoadLessonsEvent';
@@ -10,7 +10,7 @@ export class LoadLessonsEvent {
 }
 
 export class LessonsLoadedSuccessfullyEvent {
-  className: String;
+  className: string;
   lessons: Lesson[];
 
   constructor(lessons: Lesson[]) {
@@ -20,7 +20,7 @@ export class LessonsLoadedSuccessfullyEvent {
 }
 
 export class SaveLessonEvent {
-  className: String;
+  className: string;
   lesson: Lesson;
 
   constructor(lesson: Lesson) {
@@ -30,7 +30,7 @@ export class SaveLessonEvent {
 }
 
 export class SelectLessonEvent {
-  className: String;
+  className: string;
   lesson: Lesson;
 
   constructor(lesson: Lesson) {
@@ -40,20 +40,20 @@ export class SelectLessonEvent {
 }
 
 export class DeleteLessonEvent {
-  className: String;
-  lessonId: String;
+  className: string;
+  lessonId: string;
 
-  constructor(lessonId: String) {
+  constructor(lessonId: string) {
     this.className = 'DeleteLessonEvent';
     this.lessonId = lessonId;
   }
 }
 
 export class LessonFormErrorsEvent {
-  className: String;
-  errors: String;
+  className: string;
+  errors: string;
 
-  constructor(errors: String) {
+  constructor(errors: string) {
     this.className = 'LessonFormErrorsEvent';
     this.errors = errors;
   }

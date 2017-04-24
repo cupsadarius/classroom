@@ -36,7 +36,7 @@ export class LessonStore extends BaseStore {
     this.emitChange();
   }
 
-  getLessonById(lessonId) {
+  getLessonById(lessonId: string) {
     return this.state.lessons.filter(lesson => lesson.getId() === lessonId).pop();
   }
 }

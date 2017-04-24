@@ -2,7 +2,7 @@
 import Classroom from '../models/Classroom.js';
 
 export class LoadClassroomsEvent {
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'LoadClassroomsEvent';
@@ -10,7 +10,7 @@ export class LoadClassroomsEvent {
 }
 
 export class ClassroomsLoadedSuccessfullyEvent {
-  className: String;
+  className: string;
   classrooms: Classroom[];
 
   constructor(classrooms: Classroom[]) {
@@ -20,7 +20,7 @@ export class ClassroomsLoadedSuccessfullyEvent {
 }
 
 export class SaveClassroomEvent {
-  className: String;
+  className: string;
   classroom: Classroom;
 
   constructor(classroom: Classroom) {
@@ -30,7 +30,7 @@ export class SaveClassroomEvent {
 }
 
 export class SelectClassroomEvent {
-  className: String;
+  className: string;
   classroom: Classroom;
 
   constructor(classroom: Classroom) {
@@ -40,20 +40,20 @@ export class SelectClassroomEvent {
 }
 
 export class DeleteClassroomEvent {
-  className: String;
-  classroomId: String;
+  className: string;
+  classroomId: string;
 
-  constructor(classroomId: String) {
+  constructor(classroomId: string) {
     this.className = 'DeleteClassroomEvent';
     this.classroomId = classroomId;
   }
 }
 
 export class ClassroomFormErrorsEvent {
-  className: String;
-  errors: String;
+  className: string;
+  errors: string;
 
-  constructor(errors: String) {
+  constructor(errors: string) {
     this.className = 'ClassroomFormErrorsEvent';
     this.errors = errors;
   }

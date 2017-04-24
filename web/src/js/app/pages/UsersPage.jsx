@@ -25,7 +25,7 @@ export default class UsersPage extends BasePage {
     UserActions.saveUser(user);
   }
 
-  deleteUser(userId: String) {
+  deleteUser(userId: string) {
     UserActions.deleteUser(userId);
   }
 

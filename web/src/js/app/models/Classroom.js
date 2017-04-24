@@ -4,20 +4,20 @@ import Teacher from './Teacher.js';
 import Session from './Session.js';
 
 export default class Classroom {
-  id: String;
+  id: string;
   students: Student[];
   teachers: Teacher[];
   sessions: Session[];
-  name: String;
-  lastSessionId: String;
+  name: string;
+  lastSessionId: string;
 
-  constructor(data) {
+  constructor(data?: Object) {
     this.students = [];
     this.teachers = [];
     this.sessions = [];
     this.name = '';
     this.lastSessionId = '';
-    this.id = null;
+    this.id = '';
     if (data) {
       this.populate(data);
     }
@@ -27,7 +27,7 @@ export default class Classroom {
     return this.students;
   }
 
-  setStudents(value) {
+  setStudents(value: Student[]) {
     this.students = value;
   }
 
@@ -35,7 +35,7 @@ export default class Classroom {
     return this.teachers;
   }
 
-  setTeachers(value) {
+  setTeachers(value: Teacher[]) {
     this.teachers = value;
   }
 
@@ -43,7 +43,7 @@ export default class Classroom {
     return this.sessions;
   }
 
-  setSessions(value) {
+  setSessions(value: Session[]) {
     this.sessions = value;
   }
 
@@ -51,7 +51,7 @@ export default class Classroom {
     return this.name;
   }
 
-  setName(value) {
+  setName(value: string) {
     this.name = value;
   }
 
@@ -59,7 +59,7 @@ export default class Classroom {
     return this.lastSessionId;
   }
 
-  setLastSessionId(value) {
+  setLastSessionId(value: string) {
     this.lastSessionId = value;
   }
 
@@ -67,7 +67,7 @@ export default class Classroom {
     return this.id;
   }
 
-  setId(value) {
+  setId(value: string) {
     this.id = value;
   }
 
@@ -87,7 +87,7 @@ export default class Classroom {
     })
   }
 
-  populate(data) {
+  populate(data: Object) {
     this.setId(data.id || this.getId());
     this.setName(data.name || this.getName());
     this.setLastSessionId(data.lastSessionId || this.getLastSessionId());

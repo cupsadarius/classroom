@@ -1,7 +1,7 @@
 import Lesson from './Lesson.js';
 
 export default class Session {
-  id: String;
+  id: string;
   startDate: Date;
   endDate: Date;
   lesson: Lesson;

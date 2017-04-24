@@ -5,7 +5,7 @@ import Lesson from '../../models/Lesson.js';
 type LessonsTableProps = {
   lessons: Lesson[],
   selectLesson: (lesson: Lesson) => void,
-  deleteLesson: (lessonId: String) => void,
+  deleteLesson: (lessonId: string) => void,
 };
 export default class LessonsTable extends BaseComponent {
   props: LessonsTableProps;
@@ -18,7 +18,7 @@ export default class LessonsTable extends BaseComponent {
             <td>{lesson.getTitle()}</td>
             <td>{lesson.getDescription()}</td>
             <td>{lesson.getSlides().length}</td>
-            <td>{lesson.getCategory().getName()}</td>
+            <td>{lesson.category ? lesson.category.getName() : ''}</td>
             <td onClick={() => this.props.selectLesson(lesson)}><i className="fa fa-edit"></i></td>
             <td onClick={() => this.props.deleteLesson(lesson.getId())}><i className="fa fa-remove"></i></td>
           </tr>

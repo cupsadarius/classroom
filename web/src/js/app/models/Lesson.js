@@ -3,14 +3,14 @@
 import Category from './Category.js';
 
 export default class Lesson {
-  id: String;
-  title: String;
-  description: String;
-  slides: Array<Object>;
-  category: Category;
+  id: string;
+  title: string;
+  description: string;
+  slides: Object[];
+  category: ?Category;
 
-  constructor(data) {
-    this.id = null;
+  constructor(data?: Object) {
+    this.id = '';
     this.title = '';
     this.description = '';
     this.slides = [];
@@ -25,7 +25,7 @@ export default class Lesson {
     return this.id;
   }
 
-  setId(value) {
+  setId(value: string) {
     this.id = value;
   }
 
@@ -33,7 +33,7 @@ export default class Lesson {
     return this.title;
   }
 
-  setTitle(value) {
+  setTitle(value: string) {
     this.title = value;
   }
 
@@ -41,7 +41,7 @@ export default class Lesson {
     return this.description;
   }
 
-  setDescription(value) {
+  setDescription(value: string) {
     this.description = value;
   }
 
@@ -49,7 +49,7 @@ export default class Lesson {
     return this.slides;
   }
 
-  setSlides(value) {
+  setSlides(value: Object[]) {
     this.slides = value;
   }
 
@@ -57,7 +57,7 @@ export default class Lesson {
     return this.category;
   }
 
-  setCategory(value) {
+  setCategory(value: Category) {
     this.category = value;
   }
 
@@ -69,7 +69,7 @@ export default class Lesson {
 
   }
 
-  populate(data) {
+  populate(data: Object) {
     this.setId(data.id || this.getId());
     this.setTitle(data.title || this.getTitle());
     this.setDescription(data.description || this.getDescription());

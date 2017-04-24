@@ -1,16 +1,16 @@
 /* @flow */
 
 export default class User {
-  id: ?String;
-  firstName: String;
-  lastName: String;
-  email: String;
-  salt: ?String;
-  password: String;
-  phoneNumber: String;
-  roles: String[];
+  id: ?string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  salt: ?string;
+  password: string;
+  phoneNumber: string;
+  roles: string[];
 
-  constructor(data) {
+  constructor(data?: Object) {
     this.id = null;
     this.roles = ['ROLE_USER'];
     this.firstName = '';
@@ -26,7 +26,7 @@ export default class User {
     return this.id;
   }
 
-  setId(id) {
+  setId(id: string) {
     this.id = id;
   }
 
@@ -34,7 +34,7 @@ export default class User {
     return this.firstName;
   }
 
-  setFirstName(firstName) {
+  setFirstName(firstName: string) {
     this.firstName = firstName;
   }
 
@@ -42,7 +42,7 @@ export default class User {
     return this.lastName;
   }
 
-  setLastName(lastName) {
+  setLastName(lastName: string) {
     this.lastName = lastName;
   }
 
@@ -50,7 +50,7 @@ export default class User {
     return this.email;
   }
 
-  setEmail(email) {
+  setEmail(email: string) {
     this.email = email;
   }
 
@@ -58,7 +58,7 @@ export default class User {
     return this.salt;
   }
 
-  setSalt(salt) {
+  setSalt(salt: string) {
     this.salt = salt;
   }
 
@@ -66,7 +66,7 @@ export default class User {
     return this.password;
   }
 
-  setPassword(password) {
+  setPassword(password: string) {
     this.password = password;
   }
 
@@ -74,7 +74,7 @@ export default class User {
     return this.phoneNumber;
   }
 
-  setPhoneNumber(phoneNumber) {
+  setPhoneNumber(phoneNumber: string) {
     this.phoneNumber = phoneNumber;
   }
 
@@ -82,21 +82,21 @@ export default class User {
     return this.roles;
   }
 
-  setRoles(roles) {
+  setRoles(roles: string[]) {
     this.roles = roles;
   }
 
-  addRole(role) {
+  addRole(role: string) {
     if (!this.roles.filter((r) => r === role)) {
       this.roles.push(role);
     }
   }
 
-  hasRole(role) {
+  hasRole(role: string) {
     return this.roles && this.roles.filter((r) => r === role).length;
   }
 
-  populate(data) {
+  populate(data: Object) {
     this.setId(data.id);
     this.setFirstName(data.firstName);
     this.setLastName(data.lastName);

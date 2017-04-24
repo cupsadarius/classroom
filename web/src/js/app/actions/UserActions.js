@@ -13,7 +13,7 @@ export class UserActions extends BaseAction {
   saveUser(user: User) {
     this.trigger(new userEvents.SaveUserEvent(user));
   }
-  deleteUser(userId: String) {
+  deleteUser(userId: string) {
     this.trigger(new userEvents.DeleteUserEvent(userId));
   }
 }

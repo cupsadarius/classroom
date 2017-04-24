@@ -33,7 +33,7 @@ export class LessonApi extends BaseApi {
     const formData = new FormData();
     formData.append('title', lesson.title);
     formData.append('description', lesson.description);
-    formData.append('categoryId', lesson.category.id);
+    formData.append('categoryId', lesson.category ? lesson.category.id : '');
     lesson.slides.forEach(slide => {
       formData.append('slides', slide);
     });

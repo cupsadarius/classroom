@@ -2,7 +2,7 @@
 import User from '../models/User.js';
 
 export class LogoutEvent {
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'LogoutEvent';
@@ -10,11 +10,11 @@ export class LogoutEvent {
 }
 
 export class LoginEvent {
-  className: String;
-  email: String;
-  password: String;
+  className: string;
+  email: string;
+  password: string;
 
-  constructor(email: String, password: String) {
+  constructor(email: string, password: string) {
     this.className = 'LoginEvent';
     this.email = email;
     this.password = password;
@@ -22,27 +22,27 @@ export class LoginEvent {
 }
 
 export class LoginSuccessfulEvent {
-  className: String;
-  token: String;
+  className: string;
+  token: string;
 
-  constructor(token: String) {
+  constructor(token: string) {
     this.className = 'LoginSuccessfulEvent';
     this.token = token;
   }
 }
 
 export class LoginUnsuccessfulEvent {
-  className: String;
-  error: String;
+  className: string;
+  error: string;
 
-  constructor(error: String) {
+  constructor(error: string) {
     this.className = 'LoginUnsuccessfulEvent';
     this.error = error;
   }
 }
 
 export class GetCurrentUserEvent{
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'GetCurrentUserEvent';
@@ -50,17 +50,17 @@ export class GetCurrentUserEvent{
 }
 
 export class GetCurrentUserSuccessfullyEvent {
-  className: String;
+  className: string;
   currentUser: User;
 
-  constructor(currentUser) {
+  constructor(currentUser: User) {
     this.className = 'GetCurrentUserSuccessfullyEvent';
     this.currentUser = currentUser instanceof User ? currentUser : new User(currentUser);
   }
 }
 
 export class GetCurrentUserUnSuccessfullyEvent {
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'GetCurrentUserUnSuccessfullyEvent';

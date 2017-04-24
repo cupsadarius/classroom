@@ -6,7 +6,7 @@ import Classroom from '../../models/Classroom.js';
 type ClassroomsTableProps = {
   classrooms: Classroom[],
   selectClassroom: (classroom: Classroom) => void,
-  deleteClassroom: (classroomId: String) => void,
+  deleteClassroom: (classroomId: string) => void,
 };
 
 export default class ClassroomsTable extends BaseComponent {

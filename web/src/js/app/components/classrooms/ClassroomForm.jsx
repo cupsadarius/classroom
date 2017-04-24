@@ -7,23 +7,23 @@ import Classroom from '../../models/Classroom.js';
 
 export type ClassroomFormProps = {
   classroom: Classroom,
-  save: (classroom) => void,
+  save: (classroom: Classroom) => void,
   teachers: Teacher[],
   students: Student[],
-  errors: ?String,
+  errors: ?string,
 };
 
 export default class ClassroomForm extends BaseComponent {
   props: ClassroomFormProps;
 
-  constructor(props) {
+  constructor(props: ClassroomFormProps) {
     super(props);
     this.state = {
       classroom: new Classroom(),
     };
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps(newProps: ClassroomFormProps) {
     this.setState({classroom: newProps.classroom});
   }
 
@@ -35,13 +35,13 @@ export default class ClassroomForm extends BaseComponent {
     this.setState({classroom: new Classroom()});
   }
 
-  handleChange(field, event) {
+  handleChange(field: string, event: Object) {
     const classroom = this.state.classroom;
     classroom[`${field}`] = event.target.value;
     this.setState({classroom});
   }
 
-  handleTeacherChange(event) {
+  handleTeacherChange(event: Object) {
     const classroom = this.state.classroom;
     const newAttendeeId = event.target.value;
     const attendeeLength = classroom.teachers.length;
@@ -55,7 +55,7 @@ export default class ClassroomForm extends BaseComponent {
     this.setState({classroom});
   }
 
-  handleStudentChange(event) {
+  handleStudentChange(event: Object) {
     const classroom = this.state.classroom;
     const newAttendeeId = event.target.value;
     const attendeeLength = classroom.students.length;
@@ -69,7 +69,7 @@ export default class ClassroomForm extends BaseComponent {
     this.setState({classroom});
   }
 
-  getAttendeeRowsByType(type) {
+  getAttendeeRowsByType(type: string) {
     return this.props[type] ? this.props[type].map((attendee, index) => <option key={index}
                                                                                 value={attendee.id}>{attendee.firstName} {attendee.lastName}</option>) : null;
   }

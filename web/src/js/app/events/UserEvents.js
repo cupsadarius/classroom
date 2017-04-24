@@ -2,7 +2,7 @@
 import User from '../models/User.js';
 
 export class LoadUsersEvent {
-  className: String;
+  className: string;
 
   constructor() {
     this.className = 'LoadUsersEvent';
@@ -10,17 +10,17 @@ export class LoadUsersEvent {
 }
 
 export class UsersLoadedSuccessfullyEvent {
-  className: String;
+  className: string;
   users: User[];
 
-  constructor(users) {
+  constructor(users: User[]) {
     this.className = 'UsersLoadedSuccessfullyEvent';
     this.users = users;
   }
 }
 
 export class SelectUserEvent {
-  className: String;
+  className: string;
   user: User;
 
   constructor(user: User) {
@@ -30,7 +30,7 @@ export class SelectUserEvent {
 }
 
 export class SaveUserEvent {
-  className: String;
+  className: string;
   user: User;
 
   constructor(user: User) {
@@ -40,20 +40,20 @@ export class SaveUserEvent {
 }
 
 export class DeleteUserEvent {
-  className: String;
-  userId: String;
+  className: string;
+  userId: string;
 
-  constructor(userId: String) {
+  constructor(userId: string) {
     this.className = 'DeleteUserEvent';
     this.userId = userId;
   }
 }
 
 export class UserFormErrorsEvent {
-  className: String;
-  errors: String;
+  className: string;
+  errors: string;
 
-  constructor(errors: String) {
+  constructor(errors: string) {
     this.className = 'UserFormErrorsEvent';
     this.errors = errors;
   }

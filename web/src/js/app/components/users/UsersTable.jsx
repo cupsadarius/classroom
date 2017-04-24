@@ -7,7 +7,7 @@ import User from '../../models/User.js';
 type UserTableProps = {
   users: User[],
   selectUser: (user: User) => void,
-  deleteUser: (userId: String) => void,
+  deleteUser: (userId: string) => void,
 };
 
 export default class UsersTable extends BaseComponent {
@@ -23,7 +23,7 @@ export default class UsersTable extends BaseComponent {
           <td>{`${user.getFirstName()} ${user.getLastName()}`}</td>
           <td>{user.getEmail()}</td>
           <td onClick={() => this.props.selectUser(user)}><i className="fa fa-edit"></i></td>
-          <td onClick={() => this.props.deleteUser(user.getId())}><i className="fa fa-remove"></i></td>
+          <td onClick={() => this.props.deleteUser(user.id ? user.id : '')}><i className="fa fa-remove"></i></td>
         </tr>
       )
       }) : null;

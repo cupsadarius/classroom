@@ -6,7 +6,7 @@ import Category from '../../models/Category.js';
 type CategoriesTableProps = {
   categories: Category[],
   selectCategory: (category: Category) => void,
-  deleteCategory: (categoryId: String) => void,
+  deleteCategory: (categoryId: string) => void,
 };
 
 export default class CategoriesTable extends BaseComponent {

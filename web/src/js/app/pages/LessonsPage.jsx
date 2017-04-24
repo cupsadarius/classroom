@@ -28,7 +28,7 @@ export default class LessonsPage extends BasePage {
     LessonActions.selectLesson(lesson);
   }
 
-  deleteLesson(lessonId: String) {
+  deleteLesson(lessonId: string) {
     LessonActions.deleteLesson(lessonId);
   }
 

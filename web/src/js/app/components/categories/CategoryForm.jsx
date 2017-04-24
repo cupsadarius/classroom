@@ -5,21 +5,21 @@ import Category from '../../models/Category.js';
 
 export type CategoryFormProps = {
   category: Category,
-  save: (category) => void,
-  errors: ?String,
+  save: (category: Category) => void,
+  errors: ?string,
 };
 
 export default class CategoryForm extends BaseComponent {
   props: CategoryFormProps;
 
-  constructor(props) {
+  constructor(props: CategoryFormProps) {
     super(props);
     this.state = {
       category: new Category(),
     };
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps(newProps: CategoryFormProps) {
     this.setState({category: newProps.category});
   }
 
@@ -31,7 +31,7 @@ export default class CategoryForm extends BaseComponent {
     this.setState({category: new Category()});
   }
 
-  handleChange(field, event) {
+  handleChange(field: string, event: Object) {
     const category = this.state.category;
     category[`${field}`] = event.target.value;
     this.setState({category});

@@ -95,7 +95,7 @@ export class AttendeeApi extends BaseApi {
 
   onDeleteAttendeeEvent(event: DeleteAttendeeEvent) {
     $.ajax({
-      url: `${VERSIONED_BASE_API_URL}/attendee${event.user.hasRole('ROLE_TEACHER') ? '/teacher' : '/student'}/${event.userId}`,
+      url: `${VERSIONED_BASE_API_URL}/user/${event.userId}`,
       method: 'DELETE',
       headers: {'x-access-token': LocalStorage.get('token')},
       success: (response) => {
@@ -121,4 +121,3 @@ export class AttendeeApi extends BaseApi {
 }
 
 export let instantiateAttendeeApi = generateApi(AttendeeApi);
-

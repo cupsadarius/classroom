@@ -6,18 +6,18 @@ export class LocalStorage {
     window.LocalStorage = this;
   }
 
-  set(key, value) {
+  set(key: string, value: string) {
     window.localStorage.setItem(Base64.encode(key), Base64.encode(value));
   }
 
-  get(key) {
+  get(key: string) {
     if (window.localStorage.getItem(Base64.encode(key))) {
       return Base64.decode(window.localStorage.getItem(Base64.encode(key)));
     }
-    return false;
+    return '';
   }
 
-  exists(key) {
+  exists(key: string) {
     return !!this.get(key);
   }
 }
