@@ -1,3 +1,4 @@
+/* @flow */
 import Dispatcher from '../dispatchers/FluxDispatcher.js';
 
 /**
@@ -5,7 +6,7 @@ import Dispatcher from '../dispatchers/FluxDispatcher.js';
  */
 export default class BaseAction {
 
-  triggerOnceAfter(name, callback) {
+  triggerOnceAfter(name: string, callback: Function) {
     let dispatcher = this.getDispatcher();
     let token = dispatcher.register((event) => {
       if (event.className !== name) {
@@ -17,13 +18,13 @@ export default class BaseAction {
     return token;
   }
 
-  getDispatcher() {
+  getDispatcher(): Dispatcher {
     return Dispatcher;
   }
   /**
    * Send a new action to the dispatcher
    */
-  trigger(action) {
+  trigger(action: Object) {
     setTimeout(() => {
       this.getDispatcher().dispatch(action);
     }, 1);

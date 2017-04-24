@@ -1,7 +1,7 @@
 import {Dispatcher} from 'flux';
 
 class FluxDispatcher extends Dispatcher {
-  dispatch(payload) {
+  dispatch(payload: Object) {
     if (payload == null) {
       throw new Error('FluxDispatcher.dispatch: no payload was given');
     }
