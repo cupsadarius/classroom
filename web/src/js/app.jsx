@@ -21,6 +21,7 @@ import {instantiateAttendeeApi} from './app/api/AttendeeApi.js';
 import {instantiateCategoryApi} from './app/api/CategoryApi.js';
 import {instantiateLessonApi} from './app/api/LessonApi.js';
 import {instantiateClassroomApi} from './app/api/ClassroomApi.js';
+import {instantiateSessionApi} from './app/api/SessionApi.js';
 
 instantiateAuthApi();
 instantiateUserApi();
@@ -28,17 +29,21 @@ instantiateAttendeeApi();
 instantiateCategoryApi();
 instantiateLessonApi();
 instantiateClassroomApi();
+instantiateSessionApi();
 // init stores
 import {createStore as createAuthStore} from './app/stores/AuthStore.js';
 import {createStore as createUserStore} from './app/stores/UserStore.js';
 import {createStore as createCategoryStore} from './app/stores/CategoryStore.js';
 import {createStore as createLessonStore} from './app/stores/LessonStore.js';
 import {createStore as createClassroomStore} from './app/stores/ClassroomStore.js';
+import {createStore as createSessionStore} from './app/stores/SessionStore.js';
+
 createAuthStore('auth');
 createUserStore('users');
 createCategoryStore('categories');
 createLessonStore('lessons');
 createClassroomStore('classrooms');
+createSessionStore('sessions');
 
 export default class App extends BaseComponent {
   render(): React.Element {
