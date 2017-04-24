@@ -24,6 +24,8 @@ export default class BaseAction {
    * Send a new action to the dispatcher
    */
   trigger(action) {
-    this.getDispatcher().dispatch(action);
+    setTimeout(() => {
+      this.getDispatcher().dispatch(action);
+    }, 1);
   }
 }

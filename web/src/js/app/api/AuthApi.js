@@ -17,8 +17,12 @@ export class AuthApi extends BaseApi {
       },
       success: (response) => {
         if (response.status) {
-          Dispatcher.dispatch(new LoginSuccessfulEvent(response.data));
-          Dispatcher.dispatch(new GetCurrentUserEvent());
+          setTimeout(() => {
+            Dispatcher.dispatch(new LoginSuccessfulEvent(response.data));
+          }, 1);
+          setTimeout(() => {
+            Dispatcher.dispatch(new GetCurrentUserEvent());
+          }, 1);
         } else {
           Dispatcher.dispatch(new LoginUnsuccessfulEvent(response.data));
         }
