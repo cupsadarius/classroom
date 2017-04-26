@@ -41,7 +41,7 @@ export class LoginUnsuccessfulEvent {
   }
 }
 
-export class GetCurrentUserEvent{
+export class GetCurrentUserEvent {
   className: string;
 
   constructor() {

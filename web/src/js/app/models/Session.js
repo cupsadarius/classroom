@@ -16,7 +16,6 @@ export default class Session {
     }
   }
 
-
   getId() {
     return this.id;
   }

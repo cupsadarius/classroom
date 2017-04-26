@@ -1,3 +1,4 @@
+/* eslint-disable */
 export class MD5 {
   hash(s) {
     if (!s) {

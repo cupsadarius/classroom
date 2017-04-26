@@ -2,7 +2,6 @@
 
 import BaseComponent, {React} from '../BaseComponent.jsx';
 import Session from '../../models/Session.js';
-import {Link} from 'react-router';
 import dateFormatter from '../../helpers/DateFormatter.js';
 
 type SessionsTableProps = {
@@ -16,17 +15,17 @@ export default class SessionsTable extends BaseComponent {
 
   getSessionsRows() {
     return this.props.sessions ? this.props.sessions.map((session, index) => {
-        return (
-          <tr key={session.getId()} className="text-center">
-            <td>{index + 1}</td>
-            <td>{dateFormatter.formatDate(session.getStartDate())}</td>
-            <td>{dateFormatter.formatDate(session.getEndDate())}</td>
-            <td>{session.getLesson().getTitle()}</td>
-            <td onClick={() => this.props.selectSession(session)}><i className="fa fa-edit"></i></td>
-            <td onClick={() => this.props.deleteSession(session.getId())}><i className="fa fa-remove"></i></td>
-          </tr>
-        );
-      }) : null;
+      return (
+        <tr key={session.getId()} className="text-center">
+          <td>{index + 1}</td>
+          <td>{dateFormatter.formatDate(session.getStartDate())}</td>
+          <td>{dateFormatter.formatDate(session.getEndDate())}</td>
+          <td>{session.getLesson().getTitle()}</td>
+          <td onClick={() => this.props.selectSession(session)}><i className="fa fa-edit"></i></td>
+          <td onClick={() => this.props.deleteSession(session.getId())}><i className="fa fa-remove"></i></td>
+        </tr>
+      );
+    }) : null;
   }
 
   render(): React.Element {
@@ -46,6 +45,6 @@ export default class SessionsTable extends BaseComponent {
         {rows}
         </tbody>
       </table>
-    )
+    );
   }
 }

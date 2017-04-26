@@ -53,8 +53,8 @@ export default class LessonForm extends BaseComponent {
 
   getCategoryRows() {
     return this.props.categories ? this.props.categories.map(category => {
-        return <option value={category.getId()} key={category.getId()}>{category.getName()}</option>;
-      }) : '';
+      return <option value={category.getId()} key={category.getId()}>{category.getName()}</option>;
+    }) : '';
   }
 
   getSlidesInputs() {

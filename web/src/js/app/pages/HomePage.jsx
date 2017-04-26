@@ -3,14 +3,16 @@ import BasePage, {React} from './BasePage.jsx';
 import Sidebar from '../components/Sidebar.jsx';
 import {createStore} from '../stores/MultiStore.js';
 import {createStore as createClassroomStore} from '../stores/ClassroomStore.js';
+import {createStore as createAuthStore} from '../stores/AuthStore.js';
 import ClassroomActions from '../actions/ClassroomActions.js';
 import ClassroomsTable from '../components/home/ClassroomsTable.jsx';
 import SessionsTable from '../components/home/SessionsTable.jsx';
-
+import cx from 'classnames';
 export default class HomePage extends BasePage {
   createStore() {
     return createStore({
       classrooms: createClassroomStore('classrooms'),
+      auth: createAuthStore('auth'),
     });
   }
 
@@ -18,37 +20,66 @@ export default class HomePage extends BasePage {
     ClassroomActions.loadClassrooms();
   }
 
+  getCurrentUser() {
+    return this.state.auth.currentUser;
+  }
+
   aggregatePastSessions() {
     const pastSessions = [];
-    this.state.classrooms.classrooms ? this.state.classrooms.classrooms.forEach(classroom => {
-      const pastClassroomSessions = classroom.getPreviousSessions();
-      pastClassroomSessions.forEach(session => {
-        pastSessions.push({classroom, session});
+    if (this.state.classrooms.classrooms) {
+      this.state.classrooms.classrooms.forEach(classroom => {
+        const pastClassroomSessions = classroom.getPreviousSessions();
+        pastClassroomSessions.forEach(session => {
+          pastSessions.push({classroom, session});
+        });
       });
-    }) : null;
+    }
 
-    return pastSessions;
+    return pastSessions.sort((a, b) => {
+      if (a.session.startDate === b.session.startDate) {
+        return 1;
+      }
+      return a.session.startDate < b.session.startDate ? -1 : 1;
+    }).sort((a, b) => {
+      if (a.session.endDate === b.session.endDate) {
+        return 1;
+      }
+      return a.session.endDate < b.session.endDate ? -1 : 1;
+    });
   }
 
   aggregateFutureSessions() {
     const futureSessions = [];
-    this.state.classrooms.classrooms ? this.state.classrooms.classrooms.forEach(classroom => {
-      const futureClassroomSessions = classroom.getFutureSessions();
-      futureClassroomSessions.forEach(session => {
-        futureSessions.push({classroom, session});
+    if (this.state.classrooms.classrooms) {
+      this.state.classrooms.classrooms.forEach(classroom => {
+        const futureClassroomSessions = classroom.getFutureSessions();
+        futureClassroomSessions.forEach(session => {
+          futureSessions.push({classroom, session});
+        });
       });
-    }) : null;
-    return futureSessions;
+    }
+    return futureSessions.sort((a, b) => {
+      if (a.session.startDate === b.session.startDate) {
+        return 1;
+      }
+      return a.session.startDate < b.session.startDate ? -1 : 1;
+    }).sort((a, b) => {
+      if (a.session.endDate === b.session.endDate) {
+        return 1;
+      }
+      return a.session.endDate < b.session.endDate ? -1 : 1;
+    });
   }
 
   render(): React.Element {
+    const isTeacher = this.getCurrentUser() ? this.getCurrentUser().hasRole('ROLE_TEACHER') : false;
     return (
       <div className="row">
-        <div className="col-xs-2 sidebar"><Sidebar/></div>
-        <div className="col-xs-10 main">
+        {isTeacher ? <div className="col-md-2 sidebar"><Sidebar/></div> : null}
+        <div className={cx({'col-md-10 main': isTeacher, 'col-md-12': !isTeacher})}>
           <div className="row">
             <div className="col-md-12">
-              <h3>Classrooms you teach</h3>
+              <h3>Classrooms you {isTeacher ? 'teach' : 'are part of'}</h3>
               <ClassroomsTable classrooms={this.state.classrooms.classrooms} />
             </div>
           </div>

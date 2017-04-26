@@ -1,5 +1,4 @@
 /* @flow */
-
 import BaseComponent, {React} from '../BaseComponent.jsx';
 import User from '../../models/User.js';
 

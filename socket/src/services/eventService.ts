@@ -23,7 +23,7 @@ export class EventService {
     }
 
     private getEventRepository(): EventRepository {
-        return db.getRepo('EventRepository') as EventRepository;
+        return db.getRepo('eventRepository') as EventRepository;
     }
 }
 

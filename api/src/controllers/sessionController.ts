@@ -7,7 +7,7 @@ import {sessionService} from '../services/sessionService';
 
 const router = Router();
 
-router.get('/:classroomId', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+router.get('/:classroomId', authenticated, authorizedWithRole('ROLE_STUDENT'), async (req: Request, res: Response) => {
     try {
         const sessions = await sessionService.getAllForClassroom(req.params.classroomId);
         res.status(200);
@@ -29,7 +29,7 @@ router.post('/:classroomId', authenticated, authorizedWithRole('ROLE_TEACHER'), 
     }
 });
 
-router.get('/:classroomId/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+router.get('/:classroomId/:id', authenticated, authorizedWithRole('ROLE_STUDENT'), async (req: Request, res: Response) => {
     try {
         const session = await sessionService.getById(req.params.id);
         res.status(200);

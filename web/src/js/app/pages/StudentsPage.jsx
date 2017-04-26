@@ -30,7 +30,6 @@ export default class StudentsPage extends BasePage {
     AttendeeActions.deleteAttendee(userId);
   }
 
-
   render(): React.Element {
     const students = this.state.students ? this.state.students : [];
     return (

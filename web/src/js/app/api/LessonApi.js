@@ -24,6 +24,9 @@ export class LessonApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
       },
     });
@@ -68,8 +71,11 @@ export class LessonApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 
@@ -89,8 +95,11 @@ export class LessonApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 }

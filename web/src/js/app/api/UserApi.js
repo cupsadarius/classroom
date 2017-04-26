@@ -17,15 +17,18 @@ export class UserApi extends BaseApi {
       success: (response) => {
         const users = response.data.map(user => new User(user));
         Dispatcher.dispatch(new UsersLoadedSuccessfullyEvent(users));
-    },
+      },
       error: (err) => {
         switch (err.status) {
           case 401: {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-    },
+      },
     });
   }
 
@@ -39,7 +42,7 @@ export class UserApi extends BaseApi {
         lastName: event.user.lastName,
         email: event.user.email,
         phoneNumber: event.user.phoneNumber,
-        password: event.user.password
+        password: event.user.password,
       },
       success: (response) => {
         if (response.status) {
@@ -60,8 +63,11 @@ export class UserApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 
@@ -85,11 +91,13 @@ export class UserApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 }
 
 export let instantiateUserApi = generateApi(UserApi);
-

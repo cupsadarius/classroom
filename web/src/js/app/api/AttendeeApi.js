@@ -8,7 +8,7 @@ import {
   LoadTeachersEvent,
   LoadStudentsEvent,
   DeleteAttendeeEvent,
-  AttendeeFormErrorsEvent
+  AttendeeFormErrorsEvent,
 } from '../events/AttendeeEvents.js';
 import LocalStorage from '../helpers/LocalStorage.js';
 import Dispatcher from '../dispatchers/FluxDispatcher.js';
@@ -32,6 +32,9 @@ export class AttendeeApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
       },
     });
@@ -52,6 +55,9 @@ export class AttendeeApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
       },
     });
@@ -67,7 +73,7 @@ export class AttendeeApi extends BaseApi {
         lastName: event.user.lastName,
         email: event.user.email,
         phoneNumber: event.user.phoneNumber,
-        password: event.user.password
+        password: event.user.password,
       },
       success: (response) => {
         if (response.status) {
@@ -88,8 +94,11 @@ export class AttendeeApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 
@@ -114,8 +123,11 @@ export class AttendeeApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 }

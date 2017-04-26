@@ -23,6 +23,9 @@ export class CategoryApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
       },
     });
@@ -56,8 +59,11 @@ export class CategoryApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 
@@ -81,8 +87,11 @@ export class CategoryApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 }

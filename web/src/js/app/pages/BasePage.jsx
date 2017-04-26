@@ -4,4 +4,4 @@ export {React};
 
 export default class BasePage extends BaseComponent {
 
-};
+}

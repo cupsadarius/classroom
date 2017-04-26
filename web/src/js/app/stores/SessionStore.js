@@ -11,7 +11,7 @@ export class SessionStore extends BaseStore {
     this.state = {
       sessions: null,
       selectedSession: new Session(),
-      errors: ''
+      errors: '',
     };
   }
 

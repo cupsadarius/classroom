@@ -5,10 +5,10 @@ import mapperFactory from '../db/mappers/MapperFactory';
 import EventMapper from '../db/mappers/EventMapper';
 import EventMapping from '../db/mappers/mappings/EventMapping';
 
-class Participant {
-    public id: string;
-    public socket: SocketIO.Socket;
-};
+interface Participant {
+    id: string;
+    socket: SocketIO.Socket;
+}
 
 export default class Session extends BaseModel {
     protected participants: Participant[];
@@ -23,10 +23,12 @@ export default class Session extends BaseModel {
     }
 
     public async addParticipant(participant: Participant) {
+        console.log(participant.id);
         await this.getParticipantUpToDate(participant);
         await this.registerListeners(participant);
 
         this.participants.push(participant);
+        return true;
     }
 
     private emitToOthers(event: Event) {
@@ -51,15 +53,15 @@ export default class Session extends BaseModel {
 
     private async getParticipantUpToDate(participant: Participant) {
         const events = await eventService.getBySessionId(this.getId());
-        const sorted = events.sort((a, b) => b.getRevision() - a.getRevision());
-
-        for (const key in events) {
-            participant.socket.emit('receive', events[key]);
-        }
-
+        const sorted = events.sort((a, b) => a.getRevision() - b.getRevision());
+        sorted.forEach((event) => {
+            participant.socket.emit('receive', event);
+        });
         // if reopened old session update current revision id.
         const lastEvent = sorted.pop();
-        this.revision = lastEvent.getRevision() > this.revision ? lastEvent.getRevision() : this.revision;
+        if (lastEvent) {
+            this.revision = lastEvent.getRevision() > this.revision ? lastEvent.getRevision() : this.revision;
+        }
     }
 
     private async registerListeners(participant: Participant) {

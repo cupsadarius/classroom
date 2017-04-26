@@ -49,8 +49,8 @@ export default class SessionForm extends BaseComponent {
 
   handleCategoryChange(event: Object) {
     const newCategoryId = event.target.value;
-    const category = this.props.categories.filter(category => category.id === newCategoryId).pop();
-    this.setState({selectedCategory: category});
+    const selectedCategory = this.props.categories.filter(category => category.id === newCategoryId).pop();
+    this.setState({selectedCategory});
   }
 
   handleLessonChange(event: Object) {
@@ -62,31 +62,33 @@ export default class SessionForm extends BaseComponent {
 
   getCategoryRows() {
     return this.props.categories ? this.props.categories.map(category => {
-        return <option value={category.getId()} key={category.getId()}>{category.getName()}</option>;
-      }) : '';
+      return <option value={category.getId()} key={category.getId()}>{category.getName()}</option>;
+    }) : '';
   }
 
   getLessonRows() {
-    const selectedCategory = this.state.selectedCategory ? this.state.selectedCategory : this.state.session.lesson ? this.state.session.lesson.category : null;
+    const selectedCategory = this.state.selectedCategory || this.state.session.lesson.category;
     return this.props.lessons && selectedCategory ? this.props.lessons.filter(lesson => lesson.category ? lesson.category.id === selectedCategory.id : false).map(lesson => {
-        return <option value={lesson.getId()} key={lesson.getId()}>{lesson.getTitle()}</option>;
-      }) : '';
+      return <option value={lesson.getId()} key={lesson.getId()}>{lesson.getTitle()}</option>;
+    }) : '';
   }
 
   render(): React.Element {
-    const selectedCategory = this.state.selectedCategory ? this.state.selectedCategory : this.state.session.lesson ? this.state.session.lesson.category : null;
+    const selectedCategory = this.state.selectedCategory || this.state.session.lesson.category;
     return (
       <div className="lessonForm">
         <form>
           <div className="form-group">
             <label htmlFor="startDate">Start Date</label>
             <input type="date" className="form-control" id="startDate" placeholder="Start Date"
-                   value={dateFormatter.formatDateShort(this.state.session.startDate)} onChange={this.handleChange.bind(this, 'startDate')}/>
+                   value={dateFormatter.formatDateShort(this.state.session.startDate)}
+                   onChange={this.handleChange.bind(this, 'startDate')}/>
           </div>
           <div className="form-group">
             <label htmlFor="endDate">End Date</label>
             <input type="date" className="form-control" id="endDate" placeholder="End Date"
-                   value={dateFormatter.formatDateShort(this.state.session.endDate)} onChange={this.handleChange.bind(this, 'endDate')}/>
+                   value={dateFormatter.formatDateShort(this.state.session.endDate)}
+                   onChange={this.handleChange.bind(this, 'endDate')}/>
           </div>
           <div className="form-group">
             <label htmlFor="category">Category</label>

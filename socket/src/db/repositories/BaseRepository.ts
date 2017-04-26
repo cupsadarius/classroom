@@ -36,7 +36,7 @@ export default class BaseRepository {
                   if (err) {
                       return reject(err);
                   }
-                  resolve(result.generated_keys[0]);
+                  resolve(true);
               });
        });
     }

@@ -11,7 +11,7 @@ export class CategoryStore extends BaseStore {
     this.state = {
       categories: null,
       selectedCategory: new Category(),
-      errors: ''
+      errors: '',
     };
   }
 

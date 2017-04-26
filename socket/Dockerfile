@@ -11,7 +11,7 @@ ENV DB_HOST db.classroom
 ENV DB_PORT 28015
 ENV DB_NAME classroom
 ENV PORT 80
-ENV SECRET "snasdnadnfiaufnwiqnfyq394bfqiyefbiqw3bfqiw"
+ENV SECRET "averysecretstringhereusedforallkindsofstuff"
 
 # Install app dependencies
 COPY . /usr/classroom/socket

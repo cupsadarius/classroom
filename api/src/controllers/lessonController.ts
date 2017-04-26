@@ -11,7 +11,7 @@ const router = Router();
  * Lesson controller
  */
 
-router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+router.get('/', authenticated, authorizedWithRole('ROLE_STUDENT'), async (req: Request, res: Response) => {
     try {
         const lessons = await lessonService.getAllLessons();
         res.status(200);
@@ -33,7 +33,7 @@ router.post('/', authenticated, authorizedWithRole('ROLE_TEACHER'), upload.field
     }
 });
 
-router.get('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+router.get('/:id', authenticated, authorizedWithRole('ROLE_STUDENT'), async (req: Request, res: Response) => {
     try {
         const lesson = await lessonService.getById(req.params.id);
         res.status(200);

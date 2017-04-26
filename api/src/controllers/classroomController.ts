@@ -10,7 +10,7 @@ const router = Router();
  * Classroom controller
  */
 
-router.get('/', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+router.get('/', authenticated, authorizedWithRole('ROLE_STUDENT'), async (req: Request, res: Response) => {
     try {
         const classrooms = await classroomService.getAllByAttendee(req.user.id);
         res.status(200);
@@ -32,7 +32,7 @@ router.post('/', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: 
     }
 });
 
-router.get('/:id', authenticated, authorizedWithRole('ROLE_TEACHER'), async (req: Request, res: Response) => {
+router.get('/:id', authenticated, authorizedWithRole('ROLE_STUDENT'), async (req: Request, res: Response) => {
     try {
         const classroom = await classroomService.getById((req.params.id));
         res.status(200);

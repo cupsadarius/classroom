@@ -11,7 +11,7 @@ export class ClassroomStore extends BaseStore {
     this.state = {
       classrooms: null,
       selectedClassroom: new Classroom(),
-      errors: ''
+      errors: '',
     };
   }
 

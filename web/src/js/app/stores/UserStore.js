@@ -5,7 +5,7 @@ import {UsersLoadedSuccessfullyEvent, SelectUserEvent, UserFormErrorsEvent} from
 import {
   TeachersLoadedSuccessfullyEvent,
   StudentsLoadedSuccessfullyEvent,
-  AttendeeFormErrorsEvent
+  AttendeeFormErrorsEvent,
 } from '../events/AttendeeEvents.js';
 import User from '../models/User.js';
 

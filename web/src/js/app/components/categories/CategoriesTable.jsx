@@ -22,8 +22,8 @@ export default class CategoriesTable extends BaseComponent {
           <td onClick={() => this.props.selectCategory(category)}><i className="fa fa-edit"></i></td>
           <td onClick={() => this.props.deleteCategory(category.getId())}><i className="fa fa-remove"></i></td>
         </tr>
-      )
-      }) : null;
+      );
+    }) : null;
   }
 
   render(): React.Element {
@@ -42,6 +42,6 @@ export default class CategoriesTable extends BaseComponent {
         {categoryRows}
         </tbody>
       </table>
-    )
+    );
   }
 }

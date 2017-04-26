@@ -8,7 +8,7 @@ export default class EventMapper implements MapperInterface<Event, EventMapping>
         event.setSessionId(data.sessionId || event.getSessionId());
         event.setSlideId(data.slideId || event.getSlideId());
         event.setUserId(data.userId || event.getUserId());
-        event.setRevision(data.revision || event.getRevision());
+        event.setRevision(!isNaN(data.revision) ? data.revision : event.getRevision());
         event.setType(data.type || event.getType());
         event.setData(data.data || event.getData());
 

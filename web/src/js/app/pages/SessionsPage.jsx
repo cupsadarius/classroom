@@ -41,7 +41,7 @@ export default class SessionsPage extends BasePage {
 
   getClassroomRows() {
     return this.state.classrooms.classrooms ? this.state.classrooms.classrooms.map(classroom => {
-      return <option key={classroom.id} value={classroom.id}>{classroom.name}</option>
+      return <option key={classroom.id} value={classroom.id}>{classroom.name}</option>;
     }) : null;
   }
 

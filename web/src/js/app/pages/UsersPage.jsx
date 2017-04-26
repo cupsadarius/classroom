@@ -29,9 +29,7 @@ export default class UsersPage extends BasePage {
     UserActions.deleteUser(userId);
   }
 
-
   render(): React.Element {
-
     return (
       <div className="row">
         <div className="col-xs-2 sidebar"><Sidebar/></div>

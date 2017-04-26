@@ -18,7 +18,7 @@ export class LocalStorage {
   }
 
   exists(key: string) {
-    return !!this.get(key);
+    return Boolean(this.get(key));
   }
 }
 

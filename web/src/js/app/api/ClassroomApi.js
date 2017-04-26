@@ -23,6 +23,9 @@ export class ClassroomApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
       },
     });
@@ -59,8 +62,11 @@ export class ClassroomApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 
@@ -84,8 +90,11 @@ export class ClassroomApi extends BaseApi {
             handleUnauthorizedErrorResponse();
             break;
           }
+          default: {
+            return;
+          }
         }
-      }
+      },
     });
   }
 }

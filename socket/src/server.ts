@@ -16,16 +16,20 @@ initDb().then(() => {
     console.log('DB failed to initialize', err);
 });
 
-room.on('connection', async (socket) => {
-    const sessionId = socket.handshake.query.sessionId;
-    const participantId = socket.handshake.query.participantId;
-    const token = socket.handshake.query.token;
-    const isAuthenticated = await authService.validate(token);
-    if (!isAuthenticated) {
-        socket.disconnect(true);
-    }
-    sessionManager.createSession(sessionId);
-    await sessionManager.addParticipant(sessionId, participantId, socket);
+room.on('connection', (socket) => {
+    socket.on('authentication', async (event: {[key: string]: string}) => {
+        try {
+            const isAuthenticated = await authService.validate(event.token);
+            if (!isAuthenticated) {
+                socket.disconnect(true);
+            }
+
+            sessionManager.createSession(event.sessionId);
+            await sessionManager.addParticipant(event.sessionId, event.participantId, socket);
+        } catch (e) {
+            console.log(e);
+        }
+    });
 });
 
 room.listen(params.APP_PORT);

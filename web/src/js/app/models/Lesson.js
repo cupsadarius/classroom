@@ -20,7 +20,6 @@ export default class Lesson {
     }
   }
 
-
   getId() {
     return this.id;
   }
@@ -59,14 +58,6 @@ export default class Lesson {
 
   setCategory(value: Category) {
     this.category = value;
-  }
-
-  getPastSessions() {
-
-  }
-
-  getFutureSessions() {
-
   }
 
   populate(data: Object) {

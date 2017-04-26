@@ -20,24 +20,24 @@ export default class SessionsTable extends BaseComponent {
 
   getSessionsRows() {
     return this.props.sessions ? this.props.sessions.map((session, index) => {
-        return (
-          <tr key={session.session.getId()} className="text-center">
-            <td>{index + 1}</td>
-            <td>{session.classroom.getName()}</td>
-            <td>{dateFormatter.formatDate(session.session.getStartDate())}</td>
-            <td>{dateFormatter.formatDate(session.session.getEndDate())}</td>
-            <td>{session.session.getLesson().getTitle()}</td>
-            <td>
-              {
-                session.session.getEndDate() < new Date() ||
-                (session.session.getEndDate() > new Date() && session.session.getStartDate() < new Date()) ?
-                  <Link to={`session/${session.session.getId()}`}>Enter</Link> :
-                  ''
-              }
-            </td>
-          </tr>
-        );
-      }) : null;
+      return (
+        <tr key={session.session.getId()} className="text-center">
+          <td>{index + 1}</td>
+          <td>{session.classroom.getName()}</td>
+          <td>{dateFormatter.formatDate(session.session.getStartDate())}</td>
+          <td>{dateFormatter.formatDate(session.session.getEndDate())}</td>
+          <td>{session.session.getLesson().getTitle()}</td>
+          <td>
+            {
+              session.session.getEndDate() < new Date() ||
+              (session.session.getEndDate() > new Date() && session.session.getStartDate() < new Date()) ?
+                <Link to={`session/${session.session.getId()}`}>Enter</Link> :
+                ''
+            }
+          </td>
+        </tr>
+      );
+    }) : null;
   }
 
   render(): React.Element {
@@ -58,6 +58,6 @@ export default class SessionsTable extends BaseComponent {
         {rows}
         </tbody>
       </table>
-    )
+    );
   }
 }

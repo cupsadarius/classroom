@@ -22,6 +22,7 @@ import {instantiateCategoryApi} from './app/api/CategoryApi.js';
 import {instantiateLessonApi} from './app/api/LessonApi.js';
 import {instantiateClassroomApi} from './app/api/ClassroomApi.js';
 import {instantiateSessionApi} from './app/api/SessionApi.js';
+import {instantiateSocketApi} from './app/api/SocketApi.js';
 
 instantiateAuthApi();
 instantiateUserApi();
@@ -30,6 +31,7 @@ instantiateCategoryApi();
 instantiateLessonApi();
 instantiateClassroomApi();
 instantiateSessionApi();
+instantiateSocketApi();
 // init stores
 import {createStore as createAuthStore} from './app/stores/AuthStore.js';
 import {createStore as createUserStore} from './app/stores/UserStore.js';

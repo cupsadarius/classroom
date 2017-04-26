@@ -1,7 +1,6 @@
 /* @flow */
 import BaseComponent, {React} from './BaseComponent.jsx';
 import Login from './auth/Login.jsx';
-import {Link} from 'react-router';
 
 export default class Navigation extends BaseComponent {
 
@@ -10,7 +9,8 @@ export default class Navigation extends BaseComponent {
       <nav className="navbar navbar-default">
         <div className="container-fluid">
           <div className="navbar-header">
-            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
               <span className="sr-only">Toggle navigation</span>
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
@@ -24,7 +24,8 @@ export default class Navigation extends BaseComponent {
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li className="dropdown">
-                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i className="fa fa-user-circle"></i> <span className="caret"></span></a>
+                <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i
+                  className="fa fa-user-circle"></i> <span className="caret"></span></a>
                 <div className="dropdown-menu account-bubble" role="menu">
                   <Login/>
                 </div>

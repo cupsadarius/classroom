@@ -24,8 +24,8 @@ export default class ClassroomsTable extends BaseComponent {
           <td onClick={() => this.props.selectClassroom(classroom)}><i className="fa fa-edit"></i></td>
           <td onClick={() => this.props.deleteClassroom(classroom.getId())}><i className="fa fa-remove"></i></td>
         </tr>
-      )
-      }) : null;
+      );
+    }) : null;
   }
 
   render(): React.Element {
@@ -46,6 +46,6 @@ export default class ClassroomsTable extends BaseComponent {
         {classroomRows}
         </tbody>
       </table>
-    )
+    );
   }
 }

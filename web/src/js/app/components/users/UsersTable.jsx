@@ -25,8 +25,8 @@ export default class UsersTable extends BaseComponent {
           <td onClick={() => this.props.selectUser(user)}><i className="fa fa-edit"></i></td>
           <td onClick={() => this.props.deleteUser(user.id ? user.id : '')}><i className="fa fa-remove"></i></td>
         </tr>
-      )
-      }) : null;
+      );
+    }) : null;
   }
 
   render(): React.Element {
@@ -46,6 +46,6 @@ export default class UsersTable extends BaseComponent {
         {userRows}
         </tbody>
       </table>
-    )
+    );
   }
 }
