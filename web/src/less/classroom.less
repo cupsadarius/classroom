@@ -1,0 +1,33 @@
+.classroom {
+  .sidebar {
+    position: fixed;
+    top: 51px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid #eee;
+    background: @gray_dark;
+  }
+  .tools {
+    position: fixed;
+    top: 51;
+    background: @gray_light;
+    border-bottom:1px solid @gray_dark;
+    height: 40px;
+  }
+  .canvas {
+    position: fixed;
+    top: 91px;
+    bottom: 40px;
+  }
+  .navigation {
+    position: fixed;
+    bottom: 0;
+    background: @gray_light;
+    border-top:1px solid @gray_dark;
+    height: 40px;
+  }
+}

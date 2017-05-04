@@ -13,8 +13,17 @@ export default class SessionsPage extends BasePage {
   }
   render(): React.Element {
     return (
-      <div className="row">
-        <div className="col-md-12">{this.props.params.id}</div>
+      <div className="row classroom">
+        <div className="col-md-2 sidebar"></div>
+        <div className="col-md-10 col-md-offset-2 tools">
+          tools
+        </div>
+        <div className="col-md-10 col-md-offset-2 canvas">
+          container
+        </div>
+        <div className="col-md-10 col-md-offset-2 navigation">
+          botom bar
+        </div>
       </div>
     );
   }
