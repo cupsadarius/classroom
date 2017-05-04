@@ -67,14 +67,14 @@ export default class SessionForm extends BaseComponent {
   }
 
   getLessonRows() {
-    const selectedCategory = this.state.selectedCategory || this.state.session.lesson.category;
+    const selectedCategory = this.state.selectedCategory || this.state.session && this.state.session.lesson.category;
     return this.props.lessons && selectedCategory ? this.props.lessons.filter(lesson => lesson.category ? lesson.category.id === selectedCategory.id : false).map(lesson => {
       return <option value={lesson.getId()} key={lesson.getId()}>{lesson.getTitle()}</option>;
     }) : '';
   }
 
   render(): React.Element {
-    const selectedCategory = this.state.selectedCategory || this.state.session.lesson.category;
+    const selectedCategory = this.state.selectedCategory || this.state.session && this.state.session.lesson.category;
     return (
       <div className="lessonForm">
         <form>
