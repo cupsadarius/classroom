@@ -2,15 +2,22 @@
 
 export const EVENT_TYPES = {
   PARTICIPANT_JOIN: 'participant-join',
+  CHAT_MESSAGE: 'chat-message',
 };
 
 export default class Event {
   sessionId: string;
-  slideId: string;
+  slideId: ?string;
   userId: string;
   revision: number;
   type: string;
   data: {[key: string]: any};
+  className: ?string;
+
+  constructor(sessionId: string, slideId: ?string) {
+    this.sessionId = sessionId;
+    this.slideId = slideId;
+  }
 
   getSessionId() {
     return this.sessionId;

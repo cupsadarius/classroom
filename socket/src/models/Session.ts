@@ -23,19 +23,19 @@ export default class Session extends BaseModel {
     }
 
     public async addParticipant(participant: Participant) {
-        console.log(participant.id);
-        await this.getParticipantUpToDate(participant);
-        await this.registerListeners(participant);
-
         this.participants.push(participant);
+        try {
+            await this.getParticipantUpToDate(participant);
+            await this.registerListeners(participant);
+        } catch (e) {
+            throw e;
+        }
         return true;
     }
 
     private emitToOthers(event: Event) {
-        const others = this.participants.filter(participant => participant.id !== event.getUserId());
-
-        for (const key in others) {
-            others[key].socket.emit('receive', event);
+        for (const key in this.participants) {
+            this.participants[key].socket.emit('receive', event);
         }
     }
 
@@ -54,6 +54,7 @@ export default class Session extends BaseModel {
     private async getParticipantUpToDate(participant: Participant) {
         const events = await eventService.getBySessionId(this.getId());
         const sorted = events.sort((a, b) => a.getRevision() - b.getRevision());
+        console.log(`Getting participant ${participant.id} of ${this.getId()} up to date.`);
         sorted.forEach((event) => {
             participant.socket.emit('receive', event);
         });

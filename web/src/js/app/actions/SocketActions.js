@@ -2,6 +2,9 @@
 
 import BaseAction from './BaseAction.js';
 import Event from '../models/Event.js';
+import User from '../models/User.js';
+
+import * as socketEvents from '../events/SocketEvents.js';
 
 export class SocketActions extends BaseAction {
   connect(sessionId: string) {
@@ -12,6 +15,12 @@ export class SocketActions extends BaseAction {
   }
   disconnect() {
     this.trigger({className: 'SocketDisconnectEvent'});
+  }
+  participantJoined(sessionId: string, participant: User) {
+    this.emit(new socketEvents.ParticipantJoin(sessionId, participant));
+  }
+  sendChatMessage(sessionId: string, participant: User, message: string) {
+    this.emit(new socketEvents.ChatMessage(sessionId, participant, message));
   }
 }
 

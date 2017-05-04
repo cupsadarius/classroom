@@ -10,6 +10,117 @@
     overflow-y: auto;
     border-right: 1px solid #eee;
     background: @gray_dark;
+
+    .attendees.isSingle {
+      .attendee {
+        background: @gray_normal;
+        margin: 10px;
+        border: 1px solid @gray_normal;
+        border-radius: 10px;
+        color: @white;
+
+        .image {
+          text-align: center;
+          .profileImage {
+            margin: 0 auto;
+          }
+        }
+
+        .name {
+          text-align: center;
+        }
+      }
+    }
+
+    .attendees.multiple {
+      .attendee {
+        background: @gray_normal;
+        margin: 10px;
+        border: 1px solid @gray_normal;
+        border-radius: 10px;
+        color: @white;
+        height: 53px;
+
+        .image {
+          float: left;
+          width: 50px;
+        }
+
+        .name {
+          float: right;
+          margin-top: 15px;
+          margin-right: 20px;
+          width: 85px;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .chat {
+      .messages {
+        position: absolute;
+        background: @gray_normal;
+        bottom: 50px;
+        top: 65px;
+        left: 0;
+        right: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        border: 1px solid @gray_normal;
+        border-radius: 10px;
+        text-align: left;
+        .message {
+
+          padding: 10px;
+          border-bottom: 1px solid;
+
+          .name {
+            font-style: italic;
+            font-weight: bold;          }
+          .text {
+
+          }
+        }
+      }
+      .input {
+        position: absolute;
+        bottom: 0;
+        width: 203px;
+        display: block;
+        color: @black;
+        border:1px solid @gray_dark;
+        border-radius: 10px;
+      }
+    }
+
+    .tabs {
+      position: absolute;
+      top: 195px;
+      left: 15px;
+      right: 15px;
+      bottom: 50px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .tabs-nav {
+      position: fixed;
+      bottom: 0;
+      height: 40px;
+
+      .button {
+        background: transparent;
+        color: @orange_light;
+        font-size: 25px;
+        margin-top: -5px;
+        width: 90px;
+
+        &.active {
+          color: @orange;
+        }
+      }
+    }
   }
   .tools {
     position: fixed;

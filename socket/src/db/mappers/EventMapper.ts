@@ -19,7 +19,7 @@ export default class EventMapper implements MapperInterface<Event, EventMapping>
         const mapping = new EventMapping();
         mapping.id = event.getId();
         mapping.sessionId = event.getSessionId();
-        mapping.slideId = event.getSlideId();
+        mapping.slideId = event.getSlideId() || '';
         mapping.userId = event.getUserId();
         mapping.revision = event.getRevision();
         mapping.type = event.getType();

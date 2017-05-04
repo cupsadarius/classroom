@@ -29,7 +29,8 @@ export default class BaseRepository {
      * @param data
      * @returns {Promise<T>}
      */
-    public insert(data: Object) {
+    public insert(data: {[key: string]: any}) {
+       console.log(`saving event of type ${data.type ? data.type : ''} with id ${data.id ? data.id : ''}`);
        return new Promise((resolve, reject) => {
           r.table(this.table).insert(data)
               .run(this.connection, (err: Object, result: DbResult) => {

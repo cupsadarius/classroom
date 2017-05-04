@@ -1,7 +1,7 @@
 /* @flow */
 import BaseComponent, {React} from './BaseComponent.jsx';
 import Login from './auth/Login.jsx';
-
+import {Link} from 'react-router';
 export default class Navigation extends BaseComponent {
 
   render(): React.Component {
@@ -16,7 +16,7 @@ export default class Navigation extends BaseComponent {
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a className="navbar-brand" href="#">Classroom</a>
+            <Link to="/home" className="navbar-brand">Classroom</Link>
           </div>
 
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

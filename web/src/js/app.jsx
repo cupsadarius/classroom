@@ -39,6 +39,7 @@ import {createStore as createCategoryStore} from './app/stores/CategoryStore.js'
 import {createStore as createLessonStore} from './app/stores/LessonStore.js';
 import {createStore as createClassroomStore} from './app/stores/ClassroomStore.js';
 import {createStore as createSessionStore} from './app/stores/SessionStore.js';
+import {createStore as createInstanceStore} from './app/stores/InstanceStore.js';
 
 createAuthStore('auth');
 createUserStore('users');
@@ -46,6 +47,7 @@ createCategoryStore('categories');
 createLessonStore('lessons');
 createClassroomStore('classrooms');
 createSessionStore('sessions');
+createInstanceStore('instance');
 
 export default class App extends BaseComponent {
   render(): React.Element {

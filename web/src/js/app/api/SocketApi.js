@@ -1,7 +1,8 @@
 import * as socket from 'socket.io-client';
 import LocalStorage from '../helpers/LocalStorage.js';
 import BaseApi, {generateApi} from './BaseApi.js';
-import Event from '../models/Event.js';
+import Event, {EVENT_TYPES} from '../models/Event.js';
+import Dispatcher from '../dispatchers/FluxDispatcher.js';
 export const SOCKET_BASE_URL = 'http://socket.classroom.dkr';
 // export const SOCKET_BASE_URL = 'http://localhost:3000';
 
@@ -26,8 +27,22 @@ class SocketApi extends BaseApi {
     this.connection.on('receive', this.handleReceive.bind(this));
   }
 
-  handleReceive(event) {
-    console.log(event);
+  handleReceive(event: Event) {
+    switch (event.type) {
+      case EVENT_TYPES.PARTICIPANT_JOIN: {
+        event.className = 'ParticipantJoin';
+        Dispatcher.dispatch(event);
+        break;
+      }
+      case EVENT_TYPES.CHAT_MESSAGE: {
+        event.className = 'ChatMessage';
+        Dispatcher.dispatch(event);
+        break;
+      }
+      default: {
+        console.warn(`Socket Api: Event type ${event.type} not supported.`);
+      }
+    }
   }
 
   emit(event) {
