@@ -1,5 +1,5 @@
 import BaseModel from './BaseModel';
-import Event from './Event';
+import Event, {PERSISTENCE_LEVEL} from './Event';
 import {eventService} from '../services/eventService';
 import mapperFactory from '../db/mappers/MapperFactory';
 import EventMapper from '../db/mappers/EventMapper';
@@ -14,12 +14,14 @@ export default class Session extends BaseModel {
     protected participants: Participant[];
     protected revision: number;
     protected closeSession: Function;
+    protected ephemeralStorage: Event[];
 
     constructor(closeSession: Function) {
         super();
         this.revision = 0;
         this.participants = [];
         this.closeSession = closeSession;
+        this.ephemeralStorage = [];
     }
 
     public async addParticipant(participant: Participant) {
@@ -47,13 +49,26 @@ export default class Session extends BaseModel {
 
     private async saveEvent(event: Event) {
         event.setRevision(this.revision);
-        await eventService.saveEvent(event);
+        switch (event.getPersistenceLevel()) {
+            case PERSISTENCE_LEVEL.EPHEMERAL: {
+                this.ephemeralStorage.push(event);
+                break;
+            }
+            case PERSISTENCE_LEVEL.PERSISTENT: {
+                await eventService.saveEvent(event);
+                break;
+            }
+            default: {
+                console.log(`Event ${event.getId()} won't be persisted.`);
+            }
+        }
         this.revision++;
     }
 
     private async getParticipantUpToDate(participant: Participant) {
         const events = await eventService.getBySessionId(this.getId());
-        const sorted = events.sort((a, b) => a.getRevision() - b.getRevision());
+
+        const sorted = events.concat(this.ephemeralStorage).sort((a, b) => a.getRevision() - b.getRevision());
         console.log(`Getting participant ${participant.id} of ${this.getId()} up to date.`);
         sorted.forEach((event) => {
             participant.socket.emit('receive', event);

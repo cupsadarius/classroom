@@ -11,7 +11,7 @@ export default class EventMapper implements MapperInterface<Event, EventMapping>
         event.setRevision(!isNaN(data.revision) ? data.revision : event.getRevision());
         event.setType(data.type || event.getType());
         event.setData(data.data || event.getData());
-
+        event.setPersistenceLevel(data.persistenceLevel || event.getPersistenceLevel());
         return event;
     }
 
@@ -24,7 +24,7 @@ export default class EventMapper implements MapperInterface<Event, EventMapping>
         mapping.revision = event.getRevision();
         mapping.type = event.getType();
         mapping.data = event.getData();
-
+        mapping.persistenceLevel = event.getPersistenceLevel();
         return mapping;
     }
 }

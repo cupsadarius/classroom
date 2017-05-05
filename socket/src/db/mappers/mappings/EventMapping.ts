@@ -6,4 +6,5 @@ export default class EventMapping {
     public revision: number;
     public type: string;
     public data: {[key: string]: any};
+    public persistenceLevel: (0 | 1 | 2);
 }

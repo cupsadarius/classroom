@@ -24,7 +24,7 @@ export class DateFormatter {
     const day = date.getDate();
     const monthIndex = date.getMonth() + 1;
     const year = date.getFullYear();
-    return `${year}-${monthIndex < 10 ? `0${monthIndex}` : monthIndex}-${day}`;
+    return `${year}-${monthIndex < 10 ? `0${monthIndex}` : monthIndex}-${day < 10 ? `0${day}` : day}`;
   }
 }
 

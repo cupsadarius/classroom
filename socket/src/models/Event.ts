@@ -1,6 +1,12 @@
 import BaseModel from './BaseModel';
 import * as uuid from 'uuid';
 
+export const PERSISTENCE_LEVEL = {
+    NONE: 0,
+    EPHEMERAL: 1,
+    PERSISTENT: 2,
+};
+
 export default class Event extends BaseModel {
     protected sessionId: string;
     protected slideId: string;
@@ -8,6 +14,7 @@ export default class Event extends BaseModel {
     protected revision: number;
     protected type: string;
     protected data: {[key: string]: any};
+    protected persistenceLevel: (0 | 1 | 2);
 
     constructor() {
         super();
@@ -60,5 +67,13 @@ export default class Event extends BaseModel {
 
     public setData(data: {[key: string]: any}) {
         this.data = data;
+    }
+
+    public setPersistenceLevel(persistenceLevel: (0 | 1 | 2)) {
+        this.persistenceLevel = persistenceLevel;
+    }
+
+    public getPersistenceLevel() {
+        return this.persistenceLevel;
     }
 }

@@ -3,6 +3,13 @@
 export const EVENT_TYPES = {
   PARTICIPANT_JOIN: 'participant-join',
   CHAT_MESSAGE: 'chat-message',
+  SLIDE_CHANGE: 'slide-change',
+};
+
+export const PERSISTENCE_LEVEL = {
+  NONE: 0,
+  EPHEMERAL: 1,
+  PERSISTENT: 2,
 };
 
 export default class Event {
@@ -13,6 +20,7 @@ export default class Event {
   type: string;
   data: {[key: string]: any};
   className: ?string;
+  persistenceLevel: (0 | 1 | 2);
 
   constructor(sessionId: string, slideId: ?string) {
     this.sessionId = sessionId;
@@ -65,5 +73,13 @@ export default class Event {
 
   setData(data: {[key: string]: any}) {
     this.data = data;
+  }
+
+  getPersistenceLevel() {
+    return this.persistenceLevel;
+  }
+
+  setPersistenceLevel(persistenceLevel: (0 | 1 | 2)) {
+    this.persistenceLevel = persistenceLevel;
   }
 }

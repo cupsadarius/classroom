@@ -22,6 +22,9 @@ export class SocketActions extends BaseAction {
   sendChatMessage(sessionId: string, participant: User, message: string) {
     this.emit(new socketEvents.ChatMessage(sessionId, participant, message));
   }
+  changeSlide(sessionId: string, participant: User, direction: (1 | -1)) {
+    this.emit(new socketEvents.SlideChange(sessionId, participant, direction));
+  }
 }
 
 export default new SocketActions();

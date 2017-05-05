@@ -77,7 +77,8 @@
 
           .name {
             font-style: italic;
-            font-weight: bold;          }
+            font-weight: bold;
+          }
           .text {
             word-wrap: break-word;
           }
@@ -86,10 +87,10 @@
       .input {
         position: absolute;
         bottom: 0;
-        width: 203px;
+        width: 100%;
         display: block;
         color: @black;
-        border:1px solid @gray_dark;
+        border: 1px solid @gray_dark;
         border-radius: 10px;
       }
     }
@@ -126,19 +127,33 @@
     position: fixed;
     top: 51;
     background: @gray_light;
-    border-bottom:1px solid @gray_dark;
+    border-bottom: 1px solid @gray_dark;
     height: 40px;
   }
   .canvas {
     position: fixed;
     top: 91px;
-    bottom: 40px;
+    padding: 0;
+    right: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .whiteboard {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+    }
   }
   .navigation {
     position: fixed;
     bottom: 0;
     background: @gray_light;
-    border-top:1px solid @gray_dark;
+    border-top: 1px solid @gray_dark;
     height: 40px;
+
+    .slide-position {
+      margin: 0 20px;
+    }
   }
 }

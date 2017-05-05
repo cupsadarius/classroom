@@ -2,7 +2,7 @@
 
 import BaseStore, {generateCreateStore} from './BaseStore.js';
 import User from '../models/User.js';
-import {ParticipantJoin, ChatMessage} from '../events/SocketEvents.js';
+import {ParticipantJoin, ChatMessage, SlideChange} from '../events/SocketEvents.js';
 
 export type InstanceStoreState = {
   sessionId: string;
@@ -11,6 +11,7 @@ export type InstanceStoreState = {
   chat: {user: string, message: string}[],
   slides: {[key: string]: {drawings: Object[], texts: Object[]}};
   activeTab: string,
+  activeSlide: number,
 }
 
 export class InstanceStore extends BaseStore {
@@ -26,6 +27,7 @@ export class InstanceStore extends BaseStore {
       chat: [],
       slides: {},
       activeTab: 'attendees',
+      activeSlide: 0,
     };
   }
 
@@ -58,6 +60,13 @@ export class InstanceStore extends BaseStore {
   onChatMessage(event: ChatMessage) {
     const state = this.getState();
     state.chat.push(event.data);
+    this.update(state);
+    this.emitChange();
+  }
+
+  onSlideChange(event: SlideChange) {
+    const state = this.getState();
+    state.activeSlide += event.data.direction;
     this.update(state);
     this.emitChange();
   }

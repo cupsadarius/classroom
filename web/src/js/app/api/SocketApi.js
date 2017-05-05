@@ -39,6 +39,11 @@ class SocketApi extends BaseApi {
         Dispatcher.dispatch(event);
         break;
       }
+      case EVENT_TYPES.SLIDE_CHANGE: {
+        event.className = 'SlideChange';
+        Dispatcher.dispatch(event);
+        break;
+      }
       default: {
         console.warn(`Socket Api: Event type ${event.type} not supported.`);
       }

@@ -35,6 +35,10 @@ export class SessionStore extends BaseStore {
     this.update(state);
     this.emitChange();
   }
+
+  getSessionById(id: string) {
+    return this.state.sessions ? this.state.sessions.filter(session => session.getId() === id).pop() : null;
+  }
 }
 
 export let createStore = generateCreateStore(SessionStore);

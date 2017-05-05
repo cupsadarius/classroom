@@ -37,7 +37,7 @@ export class LessonStore extends BaseStore {
   }
 
   getLessonById(lessonId: string) {
-    return this.state.lessons.filter(lesson => lesson.getId() === lessonId).pop();
+    return this.state.lessons ? this.state.lessons.filter(lesson => lesson.getId() === lessonId).pop() : null;
   }
 }
 

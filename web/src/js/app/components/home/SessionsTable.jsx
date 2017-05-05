@@ -31,7 +31,7 @@ export default class SessionsTable extends BaseComponent {
             {
               session.session.getEndDate() < new Date() ||
               (session.session.getEndDate() > new Date() && session.session.getStartDate() < new Date()) ?
-                <Link to={`session/${session.session.getId()}`}>Enter</Link> :
+                <Link to={`session/${session.session.getId()}/${session.session.getLesson().getId()}`}>Enter</Link> :
                 ''
             }
           </td>

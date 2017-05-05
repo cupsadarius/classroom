@@ -57,7 +57,7 @@ export default class App extends BaseComponent {
           <IndexRoute component={LoginPage}/>
           <Route path="login" component={LoginPage}/>
           <Route path="home" component={HomePage}/>
-          <Route path="session/:id" component={Classroom}/>
+          <Route path="session/:sessionId/:lessonId" component={Classroom}/>
           <Route path="management/">
             <Route path="users" component={UsersPage}/>
             <Route path="teachers" component={TeachersPage}/>
