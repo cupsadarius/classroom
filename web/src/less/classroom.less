@@ -129,6 +129,61 @@
     background: @gray_light;
     border-bottom: 1px solid @gray_dark;
     height: 40px;
+
+    .dropdown {
+      display: inline;
+
+      .color-picker {
+        width: 250px;
+        height: 115px;
+        left: -70px;
+        background: @gray_dark;
+        margin-top: 10px;
+        border-radius: 10px;
+
+        .colorTile {
+          width: 20px;
+          height: 20px;
+          display: inline-block;
+          margin: 5px;
+
+          &.active {
+            border: 1px solid @white;
+          }
+        }
+      }
+    }
+
+    .tool {
+      margin: 0 10px;
+      width: 100px;
+      background: transparent;
+      font-size: 25px;
+      padding-top: 2px;
+
+      &:hover {
+        color: @orange_light;
+      }
+
+      &:focus {
+        border: none;
+        outline: none;
+      }
+
+      &:active {
+        color: @orange;
+        border: none;
+        outline: none;
+        box-shadow: none;
+      }
+
+      &.active {
+        color: @orange;
+        border: none;
+        outline: none;
+        box-shadow: none;
+      }
+    }
   }
   .canvas {
     position: fixed;
@@ -137,7 +192,7 @@
     right: 0;
     overflow-x: hidden;
     overflow-y: auto;
-
+    z-index: -1;
     .whiteboard {
       position: absolute;
       left: 0;

@@ -67,7 +67,7 @@ export default class UserForm extends BaseComponent {
         default:
           role = 'Student';
       }
-      return <option value="{allowedRole}" key={index}>{role}</option>;
+      return <option value={allowedRole} key={index}>{role}</option>;
     }) : '';
   }
 

@@ -22,8 +22,23 @@ export class SocketActions extends BaseAction {
   sendChatMessage(sessionId: string, participant: User, message: string) {
     this.emit(new socketEvents.ChatMessage(sessionId, participant, message));
   }
-  changeSlide(sessionId: string, participant: User, direction: (1 | -1)) {
-    this.emit(new socketEvents.SlideChange(sessionId, participant, direction));
+  changeSlide(sessionId: string, direction: (1 | -1)) {
+    this.emit(new socketEvents.SlideChange(sessionId, direction));
+  }
+  addPencilDrawing(sessionId: string, slideId: string, color: string, path: Array<number>) {
+    this.emit(new socketEvents.PencilDrawing(sessionId, slideId, color, path));
+  }
+  addEraserDrawing(sessionId: string, slideId: string, color: string, path: Array<number>) {
+    this.emit(new socketEvents.EraserDrawing(sessionId, slideId, color, path));
+  }
+  addLineDrawing(sessionId: string, slideId: string, color: string, coordinates: {fromX: number, fromY: number, toX: number, toY: number}) {
+    this.emit(new socketEvents.LineDrawing(sessionId, slideId, color, coordinates));
+  }
+  addRectangleDrawing(sessionId: string, slideId: string, color: string, coordinates: {fromX: number, fromY: number, toX: number, toY: number}, filled: boolean) {
+    this.emit(new socketEvents.RectangleDrawing(sessionId, slideId, color, coordinates, filled));
+  }
+  addHighlighterDrawing(sessionId: string, slideId: string, color: string, coordinates: {fromX: number, fromY: number, toX: number, toY: number}) {
+    this.emit(new socketEvents.HighlighterDrawing(sessionId, slideId, color, coordinates));
   }
 }
 

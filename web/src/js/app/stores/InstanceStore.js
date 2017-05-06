@@ -2,16 +2,27 @@
 
 import BaseStore, {generateCreateStore} from './BaseStore.js';
 import User from '../models/User.js';
-import {ParticipantJoin, ChatMessage, SlideChange} from '../events/SocketEvents.js';
+import {
+  ParticipantJoin,
+  ChatMessage,
+  SlideChange,
+  PencilDrawing,
+  EraserDrawing,
+  LineDrawing,
+  RectangleDrawing,
+  HighlighterDrawing,
+} from '../events/SocketEvents.js';
 
 export type InstanceStoreState = {
   sessionId: string;
   teachers: User[];
   students: User[];
   chat: {user: string, message: string}[],
-  slides: {[key: string]: {drawings: Object[], texts: Object[]}};
+  slides: {id: string, drawings: Object[], texts: Object[]}[];
   activeTab: string,
   activeSlide: number,
+  activeTool: string,
+  activeColor: string
 }
 
 export class InstanceStore extends BaseStore {
@@ -25,9 +36,11 @@ export class InstanceStore extends BaseStore {
       teachers: [],
       students: [],
       chat: [],
-      slides: {},
+      slides: [],
       activeTab: 'attendees',
       activeSlide: 0,
+      activeTool: 'none',
+      activeColor: '#000000',
     };
   }
 
@@ -67,6 +80,64 @@ export class InstanceStore extends BaseStore {
   onSlideChange(event: SlideChange) {
     const state = this.getState();
     state.activeSlide += event.data.direction;
+    this.update(state);
+    this.emitChange();
+  }
+
+  onChangeColorEvent(event: {color: string}) {
+    const state = this.getState();
+    state.activeColor = event.color;
+    this.update(state);
+    this.emitChange();
+  }
+
+  onChangeToolEvent(event: {tool: string}) {
+    const state = this.getState();
+    state.activeTool = event.tool;
+    this.update(state);
+    this.emitChange();
+  }
+
+  onPencilDrawing(event: PencilDrawing) {
+    this.addDrawing(event);
+  }
+
+  onEraserDrawing(event: EraserDrawing) {
+    this.addDrawing(event);
+  }
+
+  onLineDrawing(event: LineDrawing) {
+    this.addDrawing(event);
+  }
+
+  onRectangleDrawing(event: RectangleDrawing) {
+    this.addDrawing(event);
+  }
+
+  onOutlineRectangleDrawing(event: RectangleDrawing) {
+    this.addDrawing(event);
+  }
+
+  onHighlighterDrawing(event: HighlighterDrawing) {
+    this.addDrawing(event);
+  }
+
+  addDrawing(event: LineDrawing | EraserDrawing | PencilDrawing | RectangleDrawing | HighlighterDrawing) {
+    const state = this.getState();
+    if (!state.slides.filter(slide => slide.id === event.slideId).length) {
+      state.slides.push({
+        id: event.slideId,
+        drawings: [],
+        texts: [],
+      });
+    }
+    state.slides = state.slides.map(slide => {
+      if (slide.id !== event.slideId) {
+        return slide;
+      }
+      slide.drawings.push({...event.data, type: event.type});
+      return slide;
+    });
     this.update(state);
     this.emitChange();
   }

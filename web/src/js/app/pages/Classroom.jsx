@@ -88,12 +88,19 @@ export default class SessionsPage extends BasePage {
             </div>
           </div>
         </div>
-        <Board lesson={lesson} board={{
-          chat: this.state.instance.chat,
-          slides: this.state.instance.slides,
-          activeSlide: this.state.instance.activeSlide,
-        }} sessionId={this.props.params.sessionId}
-               user={this.state.auth.currentUser} sidebarWidth={this.sidebarWidth}/>
+        <Board
+          lesson={lesson}
+          board={
+            {
+              slides: this.state.instance.slides,
+              activeSlide: this.state.instance.activeSlide,
+              activeTool: this.state.instance.activeTool,
+              activeColor: this.state.instance.activeColor,
+            }
+          }
+          sessionId={this.props.params.sessionId}
+          sidebarWidth={this.sidebarWidth}
+        />
       </div>
     );
   }

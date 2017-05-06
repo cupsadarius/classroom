@@ -44,13 +44,46 @@ class SocketApi extends BaseApi {
         Dispatcher.dispatch(event);
         break;
       }
+      case EVENT_TYPES.PENCIL_DRAWING: {
+        event.className = 'PencilDrawing';
+        Dispatcher.dispatch(event);
+        break;
+      }
+      case EVENT_TYPES.ERASER_DRAWING: {
+        event.className = 'EraserDrawing';
+        Dispatcher.dispatch(event);
+        break;
+      }
+      case EVENT_TYPES.LINE_DRAWING: {
+        event.className = 'LineDrawing';
+        Dispatcher.dispatch(event);
+        break;
+      }
+      case EVENT_TYPES.RECTANGLE_DRAWING: {
+        event.className = 'RectangleDrawing';
+        Dispatcher.dispatch(event);
+        break;
+      }
+      case EVENT_TYPES.OUTLINE_RECTANGLE_DRAWING: {
+        event.className = 'OutlineRectangleDrawing';
+        Dispatcher.dispatch(event);
+        break;
+      }
+      case EVENT_TYPES.HIGHLIGHT_DRAWING: {
+        event.className = 'HighlighterDrawing';
+        Dispatcher.dispatch(event);
+        break;
+      }
       default: {
         console.warn(`Socket Api: Event type ${event.type} not supported.`);
       }
     }
   }
 
-  emit(event) {
+  emit(event: Event) {
+    if (!event.userId) {
+      event.userId = JSON.parse(LocalStorage.get('currentUser')).id;
+    }
     this.connection.emit('distribute', event);
   }
 

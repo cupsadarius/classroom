@@ -2,7 +2,7 @@
 
 import BaseStore, {generateCreateStore as generateApi} from '../stores/BaseStore.js';
 
-export default class BaseApi extends BaseStore {};
+export default class BaseApi extends BaseStore {}
 
 export {generateApi};
 

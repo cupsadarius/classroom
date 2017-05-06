@@ -56,7 +56,9 @@ services:
     expose:
       - 80
     networks:
-      - default
+      default:
+        aliases:
+          - api.classroom
     volumes:
       - uploads:/usr/classroom/api/uploads
     labels:
@@ -74,7 +76,9 @@ services:
     expose:
       - 80
     networks:
-      - default
+      default:
+        aliases:
+          - socket.classroom
     labels:
       - "traefik.port=80"
       - "traefik.backend=socket"

@@ -2,20 +2,22 @@
 import BaseComponent, {React} from '../BaseComponent.jsx';
 import {API_BASE_URL} from '../../api/BaseApi.js';
 import Lesson from '../../models/Lesson.js';
-import User from '../../models/User.js';
 import SocketActions from '../../actions/SocketActions.js';
+import InstanceActions from '../../actions/InstanceActions.js';
 import Whiteboard from './Whiteboard.jsx';
+import ColorPicker from './ColorPicker.jsx';
+import cx from 'classnames';
 const BASE_PAGE_WIDTH = 1000; // The basis width used for coordinates on the page
 
 export type BoardProps = {
   lesson: Lesson,
   board: {
-    chat: { user: string, message: string }[],
-    slides: { [key: string]: { drawings: Object[], texts: Object[] } };
+    slides: {id: string, drawings: Object[], texts: Object[] }[];
     activeSlide: number,
+    activeTool: string,
+    activeColor: string,
   },
   sessionId: string,
-  user: User,
   sidebarWidth: number,
 }
 
@@ -28,6 +30,7 @@ export type BoardState = {
 export default class Board extends BaseComponent {
   props: BoardProps;
   state: BoardState;
+
   constructor(props: BoardProps) {
     super(props);
 
@@ -36,19 +39,6 @@ export default class Board extends BaseComponent {
       windowHeight: $(window).innerHeight(),
       sidebarWidth: $('.sidebar').innerWidth(),
     };
-  }
-
-  shouldComponentUpdate(newProps: BoardProps, newState: BoardState) {
-    if (
-      newProps.board.chat.length === this.props.board.chat.length &&
-      newProps.board.activeSlide === this.props.board.activeSlide &&
-      newProps.sidebarWidth === this.props.sidebarWidth &&
-      newProps.sidebarWidth === newState.sidebarWidth
-    ) {
-      return false;
-    }
-
-    return true;
   }
 
   componentDidMount() {
@@ -75,27 +65,74 @@ export default class Board extends BaseComponent {
   }
 
   changeSlide(direction: (1 | -1)) {
-    SocketActions.changeSlide(this.props.sessionId, this.props.user, direction);
+    SocketActions.changeSlide(this.props.sessionId, direction);
+  }
+
+  getSlideId(activeSlide: number) {
+    return this.props.lesson && this.props.lesson.slides[activeSlide].id;
+  }
+
+  changeColor(color: string) {
+    InstanceActions.changeColor(color);
+  }
+
+  changeTool(tool: string) {
+    InstanceActions.changeTool(tool);
   }
 
   render(): React.Component {
     const lesson = this.props.lesson;
     const activeSlide = this.props.board.activeSlide;
-    let sidebarWidth = this.state.sidebarWidth;
-    let windowWidth = this.state.windowWidth;
-    let windowHeight = this.state.windowHeight - 130;
-    let pageWidth = (windowWidth - sidebarWidth);
-    let pageScaleFactor = pageWidth / BASE_PAGE_WIDTH;
+    const activeSlideId = this.getSlideId(activeSlide);
+    const activeSlideObject = this.props.board.slides.filter(slide => slide && slide.id === activeSlideId).pop();
+    const drawings = activeSlideObject ? activeSlideObject.drawings : [];
+    const texts = activeSlideObject ? activeSlideObject.texts : [];
+    const sidebarWidth = this.state.sidebarWidth;
+    const windowWidth = this.state.windowWidth;
+    const windowHeight = this.state.windowHeight - 130;
+    const pageWidth = (windowWidth - sidebarWidth);
+    const pageScaleFactor = pageWidth / BASE_PAGE_WIDTH;
+    const activeTool = this.props.board.activeTool;
 
     return (
       <div className="col-md-offset-2 col-md-10 row">
-        <div className="col-md-10 tools" style={{left: `${sidebarWidth}px`}}>
-          tools
+        <div className="col-md-10 tools text-center" style={{left: `${sidebarWidth}px`}}>
+          <div className="dropdown">
+            <button className="btn tool" type="button" id="colorPicker" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="true" style={{color: this.props.board.activeColor}}><i className="fa fa-eyedropper"/>
+            </button>
+            <div className="dropdown-menu color-picker" aria-labelledby="colorPicker">
+              <ColorPicker activeColor={this.props.board.activeColor} changeColor={this.changeColor.bind(this)}/>
+            </div>
+          </div>
+          <button className={cx('btn tool', {active: activeTool === 'pencil'})}
+                  onClick={this.changeTool.bind(this, 'pencil')}><i className="fa fa-pencil"/></button>
+          <button className={cx('btn tool', {active: activeTool === 'eraser'})}
+                  onClick={this.changeTool.bind(this, 'eraser')}><i className="fa fa-eraser"/></button>
+          <button className={cx('btn tool', {active: activeTool === 'rectangle'})}
+                  onClick={this.changeTool.bind(this, 'rectangle')}><i className="fa fa-square"/></button>
+          <button className={cx('btn tool', {active: activeTool === 'rectangle-outline'})}
+                  onClick={this.changeTool.bind(this, 'rectangle-outline')}><i className="fa fa-square-o"/></button>
+          <button className={cx('btn tool', {active: activeTool === 'line'})}
+                  onClick={this.changeTool.bind(this, 'line')}><i className="fa fa-long-arrow-right"/></button>
+          {/*<button className={cx('btn tool', {active: activeTool === 'text'})}*/}
+                  {/*onClick={this.changeTool.bind(this, 'text')}><i className="fa fa-font"/></button>*/}
+          <button className={cx('btn tool', {active: activeTool === 'highlight'})}
+                  onClick={this.changeTool.bind(this, 'highlight')}><i className="fa fa-italic"/></button>
         </div>
         <div className="col-md-10 canvas" style={{left: `${sidebarWidth}px`, maxHeight: `${windowHeight}px`}}>
           <img src={`${API_BASE_URL}${lesson.getSlides()[activeSlide].path}`}
                className="img-responsive"/>
-          <Whiteboard scaleFactor={pageScaleFactor}/>
+          <Whiteboard
+            scaleFactor={pageScaleFactor}
+            activeSlideId={this.getSlideId(activeSlide)}
+            activeTool={this.props.board.activeTool}
+            activeColor={this.props.board.activeColor}
+            sessionId={this.props.sessionId}
+            drawings={drawings}
+            texts={texts}
+            sidebarWidth={this.props.sidebarWidth}
+          />
         </div>
         <div className="col-md-10 navigation" style={{left: `${sidebarWidth}px`}}>
           <div className="col-md-8">

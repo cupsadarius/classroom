@@ -4,6 +4,13 @@ export const EVENT_TYPES = {
   PARTICIPANT_JOIN: 'participant-join',
   CHAT_MESSAGE: 'chat-message',
   SLIDE_CHANGE: 'slide-change',
+  PENCIL_DRAWING: 'pencil-drawing',
+  LINE_DRAWING: 'line-drawing',
+  RECTANGLE_DRAWING: 'rectangle-drawing',
+  ERASER_DRAWING: 'eraser-drawing',
+  OUTLINE_RECTANGLE_DRAWING: 'outline-rectangle-drawing',
+  TEXT_DRAWING: 'text-drawing',
+  HIGHLIGHT_DRAWING: 'highlight-drawing',
 };
 
 export const PERSISTENCE_LEVEL = {
