@@ -1,7 +1,11 @@
 {
   "extends": "@classroom/config/tsconfig.nextjs.json",
   "compilerOptions": {
-    "types": ["react"]
+    "types": ["react"],
+    "baseUrl": ".",
+    "paths": {
+      "@classroom/ui/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }

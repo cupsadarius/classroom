@@ -13,7 +13,9 @@
   "aliases": {
     "components": "@classroom/ui/components",
     "utils": "@classroom/ui/lib/utils",
-    "ui": "@classroom/ui/components"
+    "ui": "@classroom/ui/components",
+    "hooks": "@classroom/ui/hooks",
+    "lib": "@classroom/ui/lib"
   },
   "iconLibrary": "lucide"
 }
