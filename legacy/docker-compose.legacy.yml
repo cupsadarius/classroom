@@ -1,0 +1,112 @@
+version: '2'
+services:
+  traefik:
+    image: traefik
+    command: --web --docker --docker.domain="classroom.dkr" --logLevel=DEBUG
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+    networks:
+      - default
+
+  portainer:
+    image: portainer/portainer
+    expose:
+      - 9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - traefik
+    networks:
+      - default
+    labels:
+      - "traefik.port=9000"
+      - "traefik.backend=monitoring"
+      - "traefik.frontend.rule=Host:monitoring.classroom.dkr"
+
+  rethinkdb:
+    image: rethinkdb
+    ports:
+      - 28015:28015
+    expose:
+      - 8080
+    volumes:
+      - storage:/data
+    depends_on:
+      - traefik
+    networks:
+      default:
+        aliases:
+          - db.classroom
+    labels:
+      - "traefik.port=8080"
+      - "traefik.backend=rethinkdb"
+      - "traefik.frontend.rule=Host:db.classroom.dkr"
+
+  api:
+    build:
+      context: ./api
+    image: classroom:api
+    depends_on:
+      - traefik
+      - rethinkdb
+    expose:
+      - 80
+    networks:
+      default:
+        aliases:
+          - api.classroom
+    volumes:
+      - uploads:/usr/classroom/api/uploads
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=api"
+      - "traefik.frontend.rule=Host:api.classroom.dkr"
+
+  socket:
+    build:
+      context: ./socket
+    image: classroom:socket
+    depends_on:
+      - traefik
+      - rethinkdb
+    expose:
+      - 80
+    networks:
+      default:
+        aliases:
+          - socket.classroom
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=socket"
+      - "traefik.frontend.rule=Host:socket.classroom.dkr"
+
+  web:
+    build:
+      context: ./web
+    image: classroom:web
+    depends_on:
+      - traefik
+      - api
+      - socket
+    expose:
+      - 80
+    networks:
+      - default
+    labels:
+      - "traefik.port=80"
+      - "traefik.backend=web"
+      - "traefik.frontend.rule=Host:classroom.dkr"
+
+volumes:
+  storage:
+    driver: local
+  uploads:
+    driver: local
+networks:
+  default:
+    external:
+      name: classroom

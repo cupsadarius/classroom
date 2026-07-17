@@ -1,0 +1,4 @@
+{
+  "extends": "@classroom/config/tsconfig.base.json",
+  "include": ["src"]
+}

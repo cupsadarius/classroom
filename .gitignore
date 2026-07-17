@@ -1,10 +1,29 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# builds
+dist
+.next
+out
+.turbo
+
+# env
+.env
+.env.*.local
+.env.local
+
+# editor / os
 /.project
 .idea
 .vscode
-api/_compiled
-api/dist
-api/node_modules
-socket/node_modules
-socket/dist
-web/public
-web/node_modules
+.DS_Store
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# domain glossary — override global ignore of CONTEXT.md
+!CONTEXT.md

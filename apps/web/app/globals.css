@@ -1,0 +1,5 @@
+@import "@classroom/ui/globals.css";
+
+/* Tailwind v4 can't see workspace packages under node_modules by default. */
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
