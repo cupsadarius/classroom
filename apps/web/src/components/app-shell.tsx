@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@classroom/ui/components/tooltip";
+import { logout } from "@/lib/auth-actions";
 import { NAV, type Role } from "@/lib/nav";
 
 export type ShellUser = { name: string; email: string; initials: string };
@@ -120,9 +121,13 @@ function UserMenu({ user, role }: { user: ShellUser; role: Role }) {
         <DropdownMenuItem>
           <Settings /> Settings
         </DropdownMenuItem>
-        <DropdownMenuItem variant="destructive">
-          <LogOut /> Sign out
-        </DropdownMenuItem>
+        <form action={logout}>
+          <DropdownMenuItem variant="destructive" onSelect={(e) => e.preventDefault()} asChild>
+            <button type="submit" className="w-full">
+              <LogOut /> Sign out
+            </button>
+          </DropdownMenuItem>
+        </form>
       </DropdownMenuContent>
     </DropdownMenu>
   );

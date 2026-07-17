@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { auth } from "@classroom/auth";
 import { AppShell, type ShellUser } from "@/components/app-shell";
@@ -15,13 +16,16 @@ const initialsOf = (name: string) =>
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const session = await auth();
 
-  // TODO(#10 — auth login flow): redirect unauthenticated users to /login.
-  // Until the login flow lands, fall back to a teacher view for local development.
-  const role = effectiveRole(session?.user.roles ?? ["teacher"]);
-  const name = session?.user.name ?? "Prof. Vasile Toma";
+  // Route protection (#10): everything under (app) requires a session. Gated here
+  // in the server-component layout rather than Edge middleware — the Credentials
+  // provider pulls in bcryptjs + Drizzle, which don't run in the Edge runtime.
+  if (!session?.user) redirect("/login");
+
+  const role = effectiveRole(session.user.roles);
+  const name = session.user.name?.trim() || session.user.email || "User";
   const user: ShellUser = {
     name,
-    email: session?.user.email ?? "v.toma@school.ro",
+    email: session.user.email ?? "",
     initials: initialsOf(name),
   };
 
