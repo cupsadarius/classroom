@@ -40,13 +40,22 @@ async function main() {
     try {
       const token = socket.handshake.auth?.token as string | undefined;
       const sessionId = socket.handshake.query?.sessionId as string | undefined;
-      if (!token || !sessionId) return next(new Error("missing token or sessionId"));
+      if (!token || !sessionId) {
+        console.warn("[realtime] reject: missing token or sessionId", { hasToken: !!token, sessionId });
+        return next(new Error("missing token or sessionId"));
+      }
 
       const claims = await verifySessionToken(token);
-      if (!claims) return next(new Error("invalid session"));
+      if (!claims) {
+        console.warn("[realtime] reject: invalid session token");
+        return next(new Error("invalid session"));
+      }
 
       const session = await db.query.sessions.findFirst({ where: eq(sessionsTable.id, sessionId) });
-      if (!session) return next(new Error("session not found"));
+      if (!session) {
+        console.warn("[realtime] reject: session not found", sessionId);
+        return next(new Error("session not found"));
+      }
 
       const membership = await db.query.classroomMembers.findFirst({
         where: and(
@@ -54,20 +63,25 @@ async function main() {
           eq(classroomMembers.userId, claims.id),
         ),
       });
-      if (!membership) return next(new Error("not a member of this session's classroom"));
+      if (!membership) {
+        console.warn("[realtime] reject: not a member", { classroomId: session.classroomId, userId: claims.id });
+        return next(new Error("not a member of this session's classroom"));
+      }
 
       socket.data.user = claims;
       socket.data.sessionId = sessionId;
       socket.data.memberRole = membership.memberRole;
       next();
     } catch (err) {
+      console.error("[realtime] handshake error", err);
       next(err as Error);
     }
   });
 
   io.on("connection", async (socket) => {
     const sessionId = socket.data.sessionId as string;
-    const user = socket.data.user as { id: string; name?: string | null };
+    const user = socket.data.user as { id: string; name?: string | null; email?: string | null };
+    const displayName = user.name || user.email || "Unknown";
     const memberRole = socket.data.memberRole as "teacher" | "student";
     const room = sessionRoom(sessionId);
     await socket.join(room);
@@ -99,6 +113,12 @@ async function main() {
       if (msg.type === "slide_change" && memberRole !== "teacher") {
         ack?.(false);
         return;
+      }
+
+      // Never trust a client-supplied display name (identity spoofing, caught by security
+      // review) — chat_message.data.user is always overwritten with the verified session name.
+      if (msg.type === "chat_message") {
+        msg.data.user = displayName;
       }
 
       if (isPersistentType(msg.type)) {
