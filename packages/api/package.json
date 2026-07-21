@@ -13,6 +13,7 @@
   "dependencies": {
     "@classroom/auth": "workspace:*",
     "@classroom/db": "workspace:*",
+    "@classroom/storage": "workspace:*",
     "@trpc/server": "^11.0.0-rc.660",
     "bcryptjs": "^2.4.3",
     "drizzle-orm": "^0.38.3",

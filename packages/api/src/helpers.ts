@@ -1,8 +1,23 @@
 import { classroomMembers, roles, userRoles, users } from "@classroom/db";
+import { getSlideViewUrl } from "@classroom/storage";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
 import { and, eq, inArray } from "drizzle-orm";
 import type { Context } from "./trpc";
+
+// Attach a freshly-minted presigned GET url to each slide at read time (#13). The DB stores
+// only the object key (`path`); the url is ephemeral and never persisted. Slides with no
+// uploaded asset yet get `url: null`.
+export async function withSlideUrls<T extends { path: string | null }>(
+  slides: T[],
+): Promise<(T & { url: string | null })[]> {
+  return Promise.all(
+    slides.map(async (slide) => ({
+      ...slide,
+      url: slide.path ? await getSlideViewUrl(slide.path) : null,
+    })),
+  );
+}
 
 // Column set safe to return over the wire — never select passwordHash (#11 hardening).
 export const publicUserColumns = {

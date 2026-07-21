@@ -3,7 +3,13 @@
 import type { BroadcastEvent, PersistentEvent } from "@classroom/realtime";
 import { type PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 
-export type DrawTool = "pencil" | "eraser" | "line" | "rectangle" | "rectangle-outline" | "highlight";
+export type DrawTool =
+  | "pencil"
+  | "eraser"
+  | "line"
+  | "rectangle"
+  | "rectangle-outline"
+  | "highlight";
 
 // Legacy's 1000px-wide coordinate grid (#2 §4) — stored/emitted coordinates are
 // resolution-independent; each client scales to its own canvas size on render.
@@ -24,7 +30,8 @@ function renderEvent(ctx: CanvasRenderingContext2D, ev: BroadcastEvent, scale: n
       ctx.lineWidth = (ev.type === "eraser_drawing" ? 15 : 5) * scale;
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
-      ctx.globalCompositeOperation = ev.type === "eraser_drawing" ? "destination-out" : "source-over";
+      ctx.globalCompositeOperation =
+        ev.type === "eraser_drawing" ? "destination-out" : "source-over";
       ctx.beginPath();
       for (let i = 0; i < path.length; i += 2) {
         const x = (path[i] ?? 0) * scale;
@@ -89,12 +96,14 @@ function fitCanvas(canvas: HTMLCanvasElement, width: number, height: number) {
 export function Whiteboard({
   events,
   slideId,
+  imageUrl,
   tool,
   color,
   onEmit,
 }: {
   events: BroadcastEvent[];
   slideId: string;
+  imageUrl: string | null;
   tool: DrawTool;
   color: string;
   onEmit: (payload: EmitPersistent) => void;
@@ -238,7 +247,10 @@ export function Whiteboard({
     } else if (tool === "line") {
       onEmit({
         type: "line_drawing",
-        data: { color, coordinates: { fromX: start.current.x, fromY: start.current.y, toX: x, toY: y } },
+        data: {
+          color,
+          coordinates: { fromX: start.current.x, fromY: start.current.y, toX: x, toY: y },
+        },
         slideId,
       });
     } else if (tool === "rectangle" || tool === "rectangle-outline") {
@@ -256,7 +268,12 @@ export function Whiteboard({
         type: "highlight_drawing",
         data: {
           color: "rgba(238,255,0,0.5)",
-          coordinates: { fromX: start.current.x, fromY: start.current.y, toX: x, toY: start.current.y },
+          coordinates: {
+            fromX: start.current.x,
+            fromY: start.current.y,
+            toX: x,
+            toY: start.current.y,
+          },
         },
         slideId,
       });
@@ -266,6 +283,11 @@ export function Whiteboard({
 
   return (
     <div ref={containerRef} className="relative w-full overflow-hidden rounded-lg border bg-white">
+      {imageUrl ? (
+        // Slide image sits behind both canvases — legacy's Board.jsx <img> backdrop (#13).
+        // Plain <img>: the src is an ephemeral presigned URL, not a static/optimizable asset.
+        <img src={imageUrl} alt="Slide" className="absolute inset-0 size-full object-contain" />
+      ) : null}
       <canvas ref={committedRef} className="absolute inset-0" />
       <canvas
         ref={predrawRef}

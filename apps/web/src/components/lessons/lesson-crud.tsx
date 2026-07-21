@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { createSlideUploadUrl } from "@/lib/actions/lesson-actions";
 import { Button } from "@classroom/ui/components/button";
 import { Input } from "@classroom/ui/components/input";
 import { Label } from "@classroom/ui/components/label";
@@ -20,12 +20,14 @@ import {
   TableHeader,
   TableRow,
 } from "@classroom/ui/components/table";
+import { useRef, useState, useTransition } from "react";
 
 type SlideRow = {
   id?: string;
   name?: string;
   path?: string;
-  type?: "image" | "pdf";
+  type?: "image";
+  url?: string; // presigned GET (existing slides) or a local objectURL (just uploaded)
   order: number;
 };
 
@@ -40,9 +42,14 @@ type LessonRow = {
 
 type ActionResult = { error?: string };
 
+// Slide image upload (#13): images only, ≤10 MB. Mirrors @classroom/storage's server-side gate
+// for immediate UX feedback — the presigned PUT + zod validation are the real enforcement.
+const ALLOWED_MIME = ["image/png", "image/jpeg", "image/gif", "image/webp"];
+const MAX_BYTES = 10 * 1024 * 1024;
+
 // Bespoke lesson CRUD (#11): category select + an ordered, editable slide list — too relational
-// for the generic CrudSection. Slide asset upload is out of scope (uploads-location fog item);
-// `path` is a plain text field.
+// for the generic CrudSection. Each slide carries an uploaded image (#13): the file is PUT
+// directly to storage via a presigned url and only the returned object key is persisted.
 export function LessonCrud({
   lessons,
   categories,
@@ -60,7 +67,9 @@ export function LessonCrud({
   const [creating, setCreating] = useState(false);
   const [slides, setSlides] = useState<SlideRow[]>([]);
   const [error, setError] = useState<string | undefined>();
+  const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
+  const fileInputs = useRef<Record<number, HTMLInputElement | null>>({});
 
   const open = creating || editing !== null;
 
@@ -79,13 +88,52 @@ export function LessonCrud({
   }
 
   function addSlide() {
-    setSlides((s) => [...s, { order: s.length, name: "", path: "", type: "image" }]);
+    setSlides((s) => [...s, { order: s.length, name: "", type: "image" }]);
   }
   function removeSlide(idx: number) {
     setSlides((s) => s.filter((_, i) => i !== idx));
   }
   function updateSlide(idx: number, patch: Partial<SlideRow>) {
     setSlides((s) => s.map((row, i) => (i === idx ? { ...row, ...patch } : row)));
+  }
+
+  async function uploadSlideFile(idx: number, file: File) {
+    setError(undefined);
+    if (!ALLOWED_MIME.includes(file.type)) {
+      setError("Slides must be PNG, JPEG, GIF, or WebP images.");
+      return;
+    }
+    if (file.size > MAX_BYTES) {
+      setError("Slide images must be 10 MB or smaller.");
+      return;
+    }
+    setUploadingIdx(idx);
+    try {
+      const minted = await createSlideUploadUrl({ contentType: file.type, size: file.size });
+      if ("error" in minted || !minted.data) {
+        setError(minted.error ?? "Could not start the upload.");
+        return;
+      }
+      const put = await fetch(minted.data.uploadUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": file.type },
+      });
+      if (!put.ok) {
+        setError("Upload failed. Please try again.");
+        return;
+      }
+      updateSlide(idx, {
+        path: minted.data.key,
+        type: "image",
+        url: URL.createObjectURL(file), // instant local preview until the next reload
+        name: slides[idx]?.name || file.name,
+      });
+    } catch {
+      setError("Upload failed. Please try again.");
+    } finally {
+      setUploadingIdx(null);
+    }
   }
 
   function submit(formData: FormData) {
@@ -112,7 +160,9 @@ export function LessonCrud({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-semibold text-2xl tracking-tight">Lessons</h1>
-          <p className="mt-1 text-muted-foreground text-sm">Slide decks to run in a live session.</p>
+          <p className="mt-1 text-muted-foreground text-sm">
+            Slide decks to run in a live session.
+          </p>
         </div>
         <Button onClick={openCreate}>New</Button>
       </div>
@@ -208,26 +258,53 @@ export function LessonCrud({
               {slides.map((slide, idx) => (
                 <div
                   key={slide.id ?? `new-${idx}`}
-                  className="grid grid-cols-[1fr_1fr_auto_4rem_auto] items-center gap-2"
+                  className="grid grid-cols-[3rem_1fr_4rem_auto] items-center gap-2"
                 >
-                  <Input
-                    placeholder="Name"
-                    value={slide.name ?? ""}
-                    onChange={(e) => updateSlide(idx, { name: e.target.value })}
-                  />
-                  <Input
-                    placeholder="Path/URL"
-                    value={slide.path ?? ""}
-                    onChange={(e) => updateSlide(idx, { path: e.target.value })}
-                  />
-                  <select
-                    value={slide.type ?? "image"}
-                    onChange={(e) => updateSlide(idx, { type: e.target.value as "image" | "pdf" })}
-                    className="h-9 rounded-md border border-input bg-transparent px-2 text-sm"
-                  >
-                    <option value="image">image</option>
-                    <option value="pdf">pdf</option>
-                  </select>
+                  {slide.url ? (
+                    // Plain <img>: presigned/objectURL src, not a static/optimizable asset.
+                    <img
+                      src={slide.url}
+                      alt={slide.name ?? "Slide"}
+                      className="size-12 rounded border object-cover"
+                    />
+                  ) : (
+                    <div className="grid size-12 place-items-center rounded border border-dashed text-muted-foreground text-xs">
+                      —
+                    </div>
+                  )}
+                  <div className="grid gap-1">
+                    <Input
+                      placeholder="Name"
+                      value={slide.name ?? ""}
+                      onChange={(e) => updateSlide(idx, { name: e.target.value })}
+                    />
+                    <input
+                      ref={(el) => {
+                        fileInputs.current[idx] = el;
+                      }}
+                      type="file"
+                      accept={ALLOWED_MIME.join(",")}
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) uploadSlideFile(idx, file);
+                        e.target.value = "";
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={uploadingIdx === idx}
+                      onClick={() => fileInputs.current[idx]?.click()}
+                    >
+                      {uploadingIdx === idx
+                        ? "Uploading…"
+                        : slide.path
+                          ? "Replace image"
+                          : "Upload image"}
+                    </Button>
+                  </div>
                   <Input
                     type="number"
                     value={slide.order}

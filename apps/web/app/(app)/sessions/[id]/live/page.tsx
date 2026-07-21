@@ -24,7 +24,7 @@ export default async function LiveSessionPage({ params }: { params: Promise<{ id
   const slides = (live.lesson?.slides ?? [])
     .slice()
     .sort((a, b) => a.order - b.order)
-    .map((s) => ({ id: s.id, name: s.name }));
+    .map((s) => ({ id: s.id, name: s.name, url: s.url }));
 
   return (
     <LiveSession

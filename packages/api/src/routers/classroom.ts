@@ -2,7 +2,7 @@ import { classroomMembers, classrooms, sessions } from "@classroom/db";
 import { TRPCError } from "@trpc/server";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
-import { assertClassroomMember, publicUserColumns } from "../helpers";
+import { assertClassroomMember, publicUserColumns, withSlideUrls } from "../helpers";
 import { router, studentProcedure, teacherProcedure } from "../trpc";
 
 // Gate map (#7): teacher → classrooms; student → sessions. Mutations additionally require
@@ -23,20 +23,18 @@ export const classroomRouter = router({
     }),
   ),
 
-  create: teacherProcedure
-    .input(z.object({ name: z.string().min(1) }))
-    .mutation(({ ctx, input }) =>
-      ctx.db.transaction(async (tx) => {
-        const [classroom] = await tx.insert(classrooms).values(input).returning();
-        if (!classroom) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        await tx.insert(classroomMembers).values({
-          classroomId: classroom.id,
-          userId: ctx.user.id,
-          memberRole: "teacher",
-        });
-        return classroom;
-      }),
-    ),
+  create: teacherProcedure.input(z.object({ name: z.string().min(1) })).mutation(({ ctx, input }) =>
+    ctx.db.transaction(async (tx) => {
+      const [classroom] = await tx.insert(classrooms).values(input).returning();
+      if (!classroom) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+      await tx.insert(classroomMembers).values({
+        classroomId: classroom.id,
+        userId: ctx.user.id,
+        memberRole: "teacher",
+      });
+      return classroom;
+    }),
+  ),
 
   update: teacherProcedure
     .input(z.object({ id: z.string().uuid(), name: z.string().min(1) }))
@@ -131,7 +129,13 @@ export const sessionRouter = router({
       });
       if (!session) throw new TRPCError({ code: "NOT_FOUND" });
       await assertClassroomMember(ctx, session.classroomId);
-      return session;
+      // Mint presigned GET urls for the slide images at read time (#13).
+      return {
+        ...session,
+        lesson: session.lesson
+          ? { ...session.lesson, slides: await withSlideUrls(session.lesson.slides) }
+          : session.lesson,
+      };
     }),
 
   create: teacherProcedure.input(sessionFields).mutation(async ({ ctx, input }) => {
@@ -158,7 +162,11 @@ export const sessionRouter = router({
       if (fields.classroomId !== existing.classroomId) {
         await assertClassroomMember(ctx, fields.classroomId, "teacher");
       }
-      const [updated] = await ctx.db.update(sessions).set(fields).where(eq(sessions.id, id)).returning();
+      const [updated] = await ctx.db
+        .update(sessions)
+        .set(fields)
+        .where(eq(sessions.id, id))
+        .returning();
       if (!updated) throw new TRPCError({ code: "NOT_FOUND" });
       return updated;
     }),

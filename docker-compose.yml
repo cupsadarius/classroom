@@ -32,8 +32,45 @@ services:
       timeout: 5s
       retries: 5
 
+  # S3-compatible object store for slide-image uploads (#13). The Next server and the browser
+  # both reach it at localhost:9000, so presigned URLs (signed against that host) work in dev.
+  # Console UI at http://localhost:9001.
+  minio:
+    image: minio/minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: classroom
+      MINIO_ROOT_PASSWORD: classroom
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # One-shot: create the bucket on startup, then exit.
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 classroom classroom &&
+      mc mb -p local/classroom &&
+      mc anonymous set none local/classroom;
+      exit 0;
+      "
+
 volumes:
   pgdata:
     driver: local
   redisdata:
+    driver: local
+  miniodata:
     driver: local

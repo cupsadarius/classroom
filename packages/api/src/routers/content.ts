@@ -1,7 +1,14 @@
 import { categories, lessons, slides } from "@classroom/db";
+import {
+  ALLOWED_SLIDE_MIME,
+  MAX_SLIDE_BYTES,
+  createSlideUploadUrl,
+  deleteSlideObject,
+} from "@classroom/storage";
 import { TRPCError } from "@trpc/server";
 import { and, eq, notInArray } from "drizzle-orm";
 import { z } from "zod";
+import { withSlideUrls } from "../helpers";
 import { router, teacherProcedure } from "../trpc";
 
 // Validation min-lengths mirror legacy CategoryValidator/LessonValidator (#2 §1.5–1.6).
@@ -50,8 +57,9 @@ export const categoryRouter = router({
 const slideInput = z.object({
   id: z.string().uuid().optional(),
   name: z.string().min(1).optional(),
+  // `path` is the storage object key (#13), set by the client after a presigned PUT upload.
   path: z.string().optional(),
-  type: z.enum(["image", "pdf"]).optional(),
+  type: z.literal("image").optional(),
   order: z.number().int().min(0),
 });
 
@@ -62,15 +70,32 @@ const lessonFields = {
 };
 
 export const lessonRouter = router({
-  list: teacherProcedure.query(({ ctx }) =>
-    ctx.db.query.lessons.findMany({ with: { category: true, slides: true } }),
-  ),
-  byId: teacherProcedure.input(z.object({ id: z.string().uuid() })).query(({ ctx, input }) =>
-    ctx.db.query.lessons.findFirst({
-      where: eq(lessons.id, input.id),
-      with: { slides: true, category: true },
+  list: teacherProcedure.query(async ({ ctx }) => {
+    const rows = await ctx.db.query.lessons.findMany({ with: { category: true, slides: true } });
+    return Promise.all(rows.map(async (l) => ({ ...l, slides: await withSlideUrls(l.slides) })));
+  }),
+  byId: teacherProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const lesson = await ctx.db.query.lessons.findFirst({
+        where: eq(lessons.id, input.id),
+        with: { slides: true, category: true },
+      });
+      if (!lesson) return lesson;
+      return { ...lesson, slides: await withSlideUrls(lesson.slides) };
     }),
-  ),
+
+  // Mint a presigned PUT so the browser can upload a slide image directly to storage (#13).
+  // Images only; size is validated here against the client-declared byte count (presigned PUT
+  // can't natively cap object size).
+  createUploadUrl: teacherProcedure
+    .input(
+      z.object({
+        contentType: z.enum(ALLOWED_SLIDE_MIME),
+        size: z.number().int().positive().max(MAX_SLIDE_BYTES),
+      }),
+    )
+    .mutation(({ input }) => createSlideUploadUrl(input.contentType)),
 
   create: teacherProcedure
     .input(z.object({ ...lessonFields, slides: z.array(slideInput).default([]) }))
@@ -80,7 +105,9 @@ export const lessonRouter = router({
         const [lesson] = await tx.insert(lessons).values(fields).returning();
         if (!lesson) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
         if (incomingSlides.length) {
-          await tx.insert(slides).values(incomingSlides.map((s) => ({ ...s, lessonId: lesson.id })));
+          await tx
+            .insert(slides)
+            .values(incomingSlides.map((s) => ({ ...s, lessonId: lesson.id })));
         }
         return lesson;
       });
@@ -88,22 +115,33 @@ export const lessonRouter = router({
 
   // NB: legacy's lesson PUT was a stub that never persisted (#2 §1.6) — this actually updates.
   update: teacherProcedure
-    .input(z.object({ id: z.string().uuid(), ...lessonFields, slides: z.array(slideInput).optional() }))
+    .input(
+      z.object({ id: z.string().uuid(), ...lessonFields, slides: z.array(slideInput).optional() }),
+    )
     .mutation(async ({ ctx, input }) => {
       const { id, slides: incomingSlides, ...fields } = input;
       return ctx.db.transaction(async (tx) => {
-        const [updated] = await tx.update(lessons).set(fields).where(eq(lessons.id, id)).returning();
+        const [updated] = await tx
+          .update(lessons)
+          .set(fields)
+          .where(eq(lessons.id, id))
+          .returning();
         if (!updated) throw new TRPCError({ code: "NOT_FOUND" });
 
         if (incomingSlides) {
-          // Replace the ordered slide array wholesale: delete removed, update kept, insert new
-          // (upload wiring deferred — the uploads-location fog item — `path`/`type` are plain fields).
+          // Replace the ordered slide array wholesale: delete removed, update kept, insert new.
           const keepIds = incomingSlides.filter((s) => s.id).map((s) => s.id as string);
-          await tx.delete(slides).where(
-            keepIds.length
-              ? and(eq(slides.lessonId, id), notInArray(slides.id, keepIds))
-              : eq(slides.lessonId, id),
-          );
+          const removalWhere = keepIds.length
+            ? and(eq(slides.lessonId, id), notInArray(slides.id, keepIds))
+            : eq(slides.lessonId, id);
+
+          // Delete-on-save (#13): reap the storage objects of slides being removed so the
+          // bucket doesn't accumulate orphans. Fetch their keys before the row delete.
+          const removed = await tx.select({ path: slides.path }).from(slides).where(removalWhere);
+          await tx.delete(slides).where(removalWhere);
+          for (const { path } of removed) {
+            if (path) await deleteSlideObject(path).catch(() => {});
+          }
           for (const slide of incomingSlides) {
             if (slide.id) {
               await tx

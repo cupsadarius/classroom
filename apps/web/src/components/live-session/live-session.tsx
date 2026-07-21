@@ -31,7 +31,7 @@ export function LiveSession({
 }: {
   sessionId: string;
   lessonTitle: string;
-  slides: { id: string; name: string | null }[];
+  slides: { id: string; name: string | null; url: string | null }[];
   members: RosterMember[];
   currentUserName: string;
   isTeacher: boolean;
@@ -98,6 +98,7 @@ export function LiveSession({
           <Whiteboard
             events={events}
             slideId={currentSlide.id}
+            imageUrl={currentSlide.url}
             tool={tool}
             color={color}
             onEmit={emit}
@@ -117,7 +118,11 @@ export function LiveSession({
           <ChatPanel
             messages={chatMessages}
             onSend={(message) =>
-              emit({ type: "chat_message", data: { user: currentUserName, message }, slideId: null })
+              emit({
+                type: "chat_message",
+                data: { user: currentUserName, message },
+                slideId: null,
+              })
             }
           />
         </div>
