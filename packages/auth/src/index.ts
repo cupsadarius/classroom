@@ -4,7 +4,7 @@ import { authConfig } from "./config";
 export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
 
 export { authConfig } from "./config";
-export { SESSION_COOKIE_NAME, verifySessionToken } from "./verify";
+export { mintRealtimeToken, verifyRealtimeToken, verifySessionToken } from "./verify";
 
 // Session/JWT augmentation — adds our id + roles to the Auth.js types.
 declare module "next-auth" {

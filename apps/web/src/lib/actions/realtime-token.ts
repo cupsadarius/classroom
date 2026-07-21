@@ -1,12 +1,18 @@
 "use server";
 
-import { SESSION_COOKIE_NAME } from "@classroom/auth";
-import { cookies } from "next/headers";
+import { auth, mintRealtimeToken } from "@classroom/auth";
 
-// The socket handshake (apps/realtime) verifies the same encrypted Auth.js session cookie
-// verifySessionToken decodes server-side — but it's httpOnly, so the browser can't read it
-// directly. This reads it server-side and hands the raw value to the client for `auth.token`.
+// The raw Auth.js session cookie must never reach browser JS (it's the full-account
+// credential) — this mints a short-lived, single-purpose token scoped to the socket
+// handshake instead. Even leaked, it can't be replayed as the session cookie (distinct
+// salt) and expires in 5 minutes.
 export async function getRealtimeToken(): Promise<string | null> {
-  const store = await cookies();
-  return store.get(SESSION_COOKIE_NAME)?.value ?? null;
+  const session = await auth();
+  if (!session?.user) return null;
+  return mintRealtimeToken({
+    id: session.user.id,
+    roles: session.user.roles,
+    email: session.user.email,
+    name: session.user.name,
+  });
 }

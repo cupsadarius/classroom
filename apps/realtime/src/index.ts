@@ -1,6 +1,6 @@
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
-import { verifySessionToken } from "@classroom/auth/verify";
+import { verifyRealtimeToken } from "@classroom/auth/verify";
 import { classroomMembers, db, sessions as sessionsTable } from "@classroom/db";
 import {
   SOCKET_EVENTS,
@@ -45,7 +45,7 @@ async function main() {
         return next(new Error("missing token or sessionId"));
       }
 
-      const claims = await verifySessionToken(token);
+      const claims = await verifyRealtimeToken(token);
       if (!claims) {
         console.warn("[realtime] reject: invalid session token");
         return next(new Error("invalid session"));
