@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@classroom/auth";
 import {
@@ -24,6 +25,16 @@ export default async function LoginPage() {
         </CardHeader>
         <CardContent>
           <LoginForm />
+          <p className="mt-4 text-center text-muted-foreground text-sm">
+            New here?{" "}
+            <Link href="/signup/student" className="underline underline-offset-4">
+              Sign up as student
+            </Link>{" "}
+            or{" "}
+            <Link href="/signup/teacher" className="underline underline-offset-4">
+              teacher
+            </Link>
+          </p>
         </CardContent>
       </Card>
     </div>

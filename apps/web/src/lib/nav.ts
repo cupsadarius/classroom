@@ -30,7 +30,8 @@ export type NavItem = {
 const OVERVIEW: NavItem = { key: "overview", label: "Overview", href: "/", icon: LayoutDashboard };
 
 // Role-aware navigation (from #2 §4.1): admin→users/teachers;
-// teacher→students/classrooms/categories/lessons; student→sessions.
+// teacher→students/classrooms/categories/lessons/sessions; student→sessions (read-only —
+// session mutations are teacherProcedure-gated, #11).
 export const NAV: Record<Role, NavItem[]> = {
   admin: [
     OVERVIEW,
@@ -43,6 +44,7 @@ export const NAV: Record<Role, NavItem[]> = {
     { key: "classrooms", label: "Classrooms", href: "/classrooms", icon: School },
     { key: "categories", label: "Categories", href: "/categories", icon: FolderTree },
     { key: "lessons", label: "Lessons", href: "/lessons", icon: BookOpen },
+    { key: "sessions", label: "Sessions", href: "/sessions", icon: MonitorPlay },
   ],
   student: [OVERVIEW, { key: "sessions", label: "Sessions", href: "/sessions", icon: MonitorPlay }],
 };
