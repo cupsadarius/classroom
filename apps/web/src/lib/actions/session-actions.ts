@@ -43,10 +43,10 @@ export async function updateSession(id: string, formData: FormData) {
   return {};
 }
 
-export async function deleteSession(id: string, classroomId: string) {
+export async function deleteSession(id: string) {
   const caller = await getCaller();
   try {
-    await caller.session.delete({ id, classroomId });
+    await caller.session.delete({ id });
   } catch (error) {
     return { error: actionErrorMessage(error) };
   }

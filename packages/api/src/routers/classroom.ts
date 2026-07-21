@@ -131,16 +131,26 @@ export const sessionRouter = router({
     .input(sessionFields.and(z.object({ id: z.string().uuid() })))
     .mutation(async ({ ctx, input }) => {
       const { id, ...fields } = input;
-      await assertClassroomMember(ctx, fields.classroomId, "teacher");
+      // Authorize against the session's ACTUAL classroom, not the client-supplied one — a
+      // client isn't trusted to name its own scope (IDOR, caught by security review).
+      const existing = await ctx.db.query.sessions.findFirst({ where: eq(sessions.id, id) });
+      if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertClassroomMember(ctx, existing.classroomId, "teacher");
+      if (fields.classroomId !== existing.classroomId) {
+        await assertClassroomMember(ctx, fields.classroomId, "teacher");
+      }
       const [updated] = await ctx.db.update(sessions).set(fields).where(eq(sessions.id, id)).returning();
       if (!updated) throw new TRPCError({ code: "NOT_FOUND" });
       return updated;
     }),
 
   delete: teacherProcedure
-    .input(z.object({ id: z.string().uuid(), classroomId: z.string().uuid() }))
+    .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      await assertClassroomMember(ctx, input.classroomId, "teacher");
+      // Same fix as update — derive the authorization scope from the stored row.
+      const existing = await ctx.db.query.sessions.findFirst({ where: eq(sessions.id, input.id) });
+      if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertClassroomMember(ctx, existing.classroomId, "teacher");
       const [deleted] = await ctx.db
         .update(sessions)
         .set({ deletedAt: new Date() })

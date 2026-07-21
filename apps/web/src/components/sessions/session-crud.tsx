@@ -48,7 +48,7 @@ export function SessionCrud({
   lessons: { id: string; title: string }[];
   createAction: (formData: FormData) => Promise<ActionResult>;
   updateAction: (id: string, formData: FormData) => Promise<ActionResult>;
-  deleteAction: (id: string, classroomId: string) => Promise<ActionResult>;
+  deleteAction: (id: string) => Promise<ActionResult>;
   readOnly?: boolean;
 }) {
   const [editing, setEditing] = useState<SessionRow | null>(null);
@@ -76,7 +76,7 @@ export function SessionCrud({
   function remove(row: SessionRow) {
     if (!confirm("Delete this session? This cannot be undone.")) return;
     startTransition(async () => {
-      const result = await deleteAction(row.id, row.classroomId);
+      const result = await deleteAction(row.id);
       if (result?.error) alert(result.error);
     });
   }
