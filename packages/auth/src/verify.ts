@@ -8,8 +8,10 @@ import { decode } from "@auth/core/jwt";
 const secret = process.env.AUTH_SECRET;
 
 // Non-HTTPS dev uses the unprefixed cookie name; production uses the __Secure- prefix.
-const salt =
+// Exported so apps/web can read the same cookie server-side for the socket handshake (#12).
+export const SESSION_COOKIE_NAME =
   process.env.NODE_ENV === "production" ? "__Secure-authjs.session-token" : "authjs.session-token";
+const salt = SESSION_COOKIE_NAME;
 
 export interface SessionTokenClaims {
   id: string;

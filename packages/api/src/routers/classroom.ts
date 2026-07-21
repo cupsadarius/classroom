@@ -115,6 +115,25 @@ export const sessionRouter = router({
     }),
   ),
 
+  // Everything the live-session page needs (#12) — lesson/slides + classroom membership are
+  // otherwise teacherProcedure-gated for management purposes; a student attending the
+  // session still needs to see their classmates and the slide deck, so this is gated on plain
+  // classroom membership (any role) instead.
+  live: studentProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const session = await ctx.db.query.sessions.findFirst({
+        where: eq(sessions.id, input.id),
+        with: {
+          lesson: { with: { slides: true } },
+          classroom: { with: { members: { with: { user: { columns: publicUserColumns } } } } },
+        },
+      });
+      if (!session) throw new TRPCError({ code: "NOT_FOUND" });
+      await assertClassroomMember(ctx, session.classroomId);
+      return session;
+    }),
+
   create: teacherProcedure.input(sessionFields).mutation(async ({ ctx, input }) => {
     await assertClassroomMember(ctx, input.classroomId, "teacher");
     const [session] = await ctx.db.insert(sessions).values(input).returning();

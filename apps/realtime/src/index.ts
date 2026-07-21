@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 import { verifySessionToken } from "@classroom/auth/verify";
+import { classroomMembers, db, sessions as sessionsTable } from "@classroom/db";
 import {
   SOCKET_EVENTS,
   distributeMessage,
@@ -9,6 +10,7 @@ import {
 } from "@classroom/realtime";
 import { createAdapter } from "@socket.io/redis-adapter";
 import { config as loadEnv } from "dotenv";
+import { and, eq } from "drizzle-orm";
 import { createClient } from "redis";
 
 // Load the monorepo-root .env (shared with apps/web and drizzle).
@@ -22,7 +24,8 @@ const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
 async function main() {
   const httpServer = createServer();
   const io = new Server(httpServer, {
-    cors: { origin: process.env.NEXT_PUBLIC_APP_URL ?? "*" },
+    // Never fall back to "*" (#6/#12 hardening) — dev pins to the web app's own origin.
+    cors: { origin: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000" },
   });
 
   // Redis adapter for horizontal scale (fixes legacy single-process cap).
@@ -31,7 +34,8 @@ async function main() {
   await Promise.all([pub.connect(), sub.connect()]);
   io.adapter(createAdapter(pub, sub));
 
-  // Auth handshake: verify the Auth.js JWT with the shared AUTH_SECRET.
+  // Auth handshake: verify the Auth.js JWT, then authorize against classroom membership
+  // (#6/#12 hardening — this previously trusted any valid token for any sessionId).
   io.use(async (socket, next) => {
     try {
       const token = socket.handshake.auth?.token as string | undefined;
@@ -41,8 +45,20 @@ async function main() {
       const claims = await verifySessionToken(token);
       if (!claims) return next(new Error("invalid session"));
 
+      const session = await db.query.sessions.findFirst({ where: eq(sessionsTable.id, sessionId) });
+      if (!session) return next(new Error("session not found"));
+
+      const membership = await db.query.classroomMembers.findFirst({
+        where: and(
+          eq(classroomMembers.classroomId, session.classroomId),
+          eq(classroomMembers.userId, claims.id),
+        ),
+      });
+      if (!membership) return next(new Error("not a member of this session's classroom"));
+
       socket.data.user = claims;
       socket.data.sessionId = sessionId;
+      socket.data.memberRole = membership.memberRole;
       next();
     } catch (err) {
       next(err as Error);
@@ -52,6 +68,7 @@ async function main() {
   io.on("connection", async (socket) => {
     const sessionId = socket.data.sessionId as string;
     const user = socket.data.user as { id: string; name?: string | null };
+    const memberRole = socket.data.memberRole as "teacher" | "student";
     const room = sessionRoom(sessionId);
     await socket.join(room);
 
@@ -59,7 +76,13 @@ async function main() {
     const history = await loadSessionEvents(sessionId);
     socket.emit(SOCKET_EVENTS.REPLAY, history);
 
-    // Presence: announce join (ephemeral — never persisted).
+    // Presence: tell the joiner who's already here (join/leave deltas alone can't — #12),
+    // then announce the join to everyone else (ephemeral — never persisted).
+    const peers = await io.in(room).fetchSockets();
+    const onlineUserIds = peers
+      .map((peer) => (peer.data.user as { id: string }).id)
+      .filter((id) => id !== user.id);
+    socket.emit(SOCKET_EVENTS.ROSTER, { type: "snapshot", userIds: onlineUserIds });
     socket.to(room).emit(SOCKET_EVENTS.ROSTER, { type: "join", userId: user.id });
 
     socket.on(SOCKET_EVENTS.DISTRIBUTE, async (raw, ack?: (ok: boolean) => void) => {
@@ -71,7 +94,12 @@ async function main() {
       const msg = parsed.data;
       const slideId = "slideId" in msg ? (msg.slideId ?? null) : null;
 
-      // TODO(feature build-out): authorize per role/membership for this session.
+      // Session membership is already authorized at the handshake (io.use); the one extra
+      // per-message rule is that only the classroom teacher drives lesson navigation.
+      if (msg.type === "slide_change" && memberRole !== "teacher") {
+        ack?.(false);
+        return;
+      }
 
       if (isPersistentType(msg.type)) {
         const row = await persistEvent({

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useTransition } from "react";
 import { Button } from "@classroom/ui/components/button";
 import { Input } from "@classroom/ui/components/input";
@@ -110,6 +111,9 @@ export function SessionCrud({
                 <TableCell>{s.startDate ? new Date(s.startDate).toLocaleString() : "—"}</TableCell>
                 <TableCell>{s.endDate ? new Date(s.endDate).toLocaleString() : "—"}</TableCell>
                 <TableCell className="text-right">
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link href={`/sessions/${s.id}/live`}>Join</Link>
+                  </Button>
                   {readOnly ? null : (
                     <>
                       <Button variant="ghost" size="sm" onClick={() => setEditing(s)}>

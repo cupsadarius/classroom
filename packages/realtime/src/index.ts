@@ -113,3 +113,12 @@ export const SOCKET_EVENTS = {
 } as const;
 
 export const sessionRoom = (sessionId: string) => `session:${sessionId}`;
+
+// Roster presence — join/leave deltas plus a one-time snapshot of who's already online,
+// sent to each joiner (deltas alone can't tell a joiner who was already in the room, #12).
+export const rosterMessage = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("join"), userId: z.string() }),
+  z.object({ type: z.literal("leave"), userId: z.string() }),
+  z.object({ type: z.literal("snapshot"), userIds: z.array(z.string()) }),
+]);
+export type RosterMessage = z.infer<typeof rosterMessage>;

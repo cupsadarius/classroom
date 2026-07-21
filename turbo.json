@@ -6,7 +6,9 @@
     "AUTH_SECRET",
     "REDIS_URL",
     "REALTIME_URL",
-    "REALTIME_PORT"
+    "REALTIME_PORT",
+    "NEXT_PUBLIC_REALTIME_URL",
+    "NEXT_PUBLIC_APP_URL"
   ],
   "tasks": {
     "build": {
